@@ -10,36 +10,48 @@ import AdminDashboard from './components/admin/AdminDashboard';
 import Landing from './pages/Landing';
 import Sidebar, { SidebarProps } from './components/Sidebar';
 import useAuth from './hooks/useAuth';
+import { LoaderProvider } from './contexts/LoaderContext';
+import Loader from './components/Loader';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { isLoggedIn, userRole } = useAuth();
 
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/email-verify/:token" element={<VerifyEmail />} />
+      <LoaderProvider>
+        <div>
+          <Loader />
+          <Toaster position='top-right' />
+        </div>
+        <div>
+          <Router>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<Login />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
+              <Route path="/email-verify/:token" element={<VerifyEmail />} />
 
-          {/* Protected routes */}
-          {isLoggedIn ? (
-            <>
-              {/* Common layout for normal and admin */}
-              <Route path="/dashboard" element={<WithSidebar><Dashboard /></WithSidebar>} />
-              {userRole === 'admin' && (
-                <Route path="/admin/dashboard" element={<WithSidebar><AdminDashboard /></WithSidebar>} />
+              {/* Protected routes */}
+              {isLoggedIn ? (
+                <>
+                  {/* Common layout for normal and admin */}
+                  <Route path="/dashboard" element={<WithSidebar><Dashboard /></WithSidebar>} />
+                  {userRole === 'admin' && (
+                    <Route path="/admin/dashboard" element={<WithSidebar><AdminDashboard /></WithSidebar>} />
+                  )}
+                </>
+              ) : (
+                <Route path="*" element={<Navigate to="/login" replace />} />
               )}
-            </>
-          ) : (
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          )}
-        </Routes>
-      </Router>
+            </Routes>
+          </Router>
+        </div>
+
+      </LoaderProvider>
     </div>
   );
 }
