@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Dashboard from './components/Dashboard';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
-import Signup from './pages/Signup';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import VerifyEmail from './pages/VerifyEmail';
 import AdminDashboard from './components/admin/AdminDashboard';
 import Landing from './pages/Landing';
@@ -13,6 +13,8 @@ import useAuth from './hooks/useAuth';
 import { LoaderProvider } from './contexts/LoaderContext';
 import Loader from './components/Loader';
 import { Toaster } from 'react-hot-toast';
+import './index.css';
+
 
 function App() {
   const { isLoggedIn, userRole } = useAuth();
@@ -28,7 +30,7 @@ function App() {
           <Router>
             <Routes>
               {/* Public routes */}
-              <Route path="/" element={<Login />} />
+              <Route path="/" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
