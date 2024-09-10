@@ -132,8 +132,8 @@ function Signup() {
     }
 
     return (
-        <div >
-            <Grid container spacing={0} sx={{ margin: "0px", display: "flex", flexWrap: "wrap", width: "100%", height: "100%" }} className='login-page'>
+        <div className='login-page'>
+            <Grid container spacing={0} sx={{ margin: "0px", display: "flex", flexWrap: "wrap", width: "100%", height: "100%" }} >
                 <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%" }} >
                     <div className='left-signup '>
                         <div className='left-theme'>
@@ -146,12 +146,12 @@ function Signup() {
                             </div>
                             {
                                 showFirstStep ?
-                                    <div style={{ display: "flex", justifyContent: "center", marginTop: "5%", height: "100%" }} className='signup-lef-img'>
-                                        <img src="assets/signup-left.svg" width={"600px"} height={"660px"} />
+                                    <div style={{ display: "flex", justifyContent: "center", marginTop: "2%", height: "100%" }} className='signup-lef-img'>
+                                        <img src="assets/signup-left.svg" width={"600px"} />
                                     </div>
                                     :
-                                    <div style={{ display: "flex", justifyContent: "center", marginTop: "5%", height: "100%", paddingBottom: "12%" }} className='signup-lef-img'>
-                                        <img src="assets/signup-second.svg" width={"600px"} height={"660px"} />
+                                    <div style={{ display: "flex", justifyContent: "center", marginTop: "2%", height: "100%" }} className='signup-lef-img'>
+                                        <img src="assets/signup-second.svg" width={"600px"} />
                                     </div>
                             }
 
@@ -175,23 +175,21 @@ function Signup() {
                             {
                                 showFirstStep ?
                                     <div className='step-one'>
-                                        <div style={{ display: "flex" }}>
-                                            <TextField
-                                                required
-                                                id="outlined-required"
-                                                label="Full Name"
-                                                sx={{ marginBottom: "2%", marginRight: "2%", width: "60%" }}
-                                                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                                                value={formData.fullName}
-                                            /><TextField
-                                                required
-                                                id="outlined-required"
-                                                label="Email"
-                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                value={formData.email}
-                                                sx={{ marginBottom: "2%", width: "60%" }}
-                                            />
-                                        </div>
+                                        <TextField
+                                            required
+                                            id="outlined-required"
+                                            label="Full Name"
+                                            sx={{ marginBottom: "3%", marginRight: "2%", width: "100%" }}
+                                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                                            value={formData.fullName}
+                                        /><TextField
+                                            required
+                                            id="outlined-required"
+                                            label="Email"
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            value={formData.email}
+                                            sx={{ marginBottom: "3%", width: "100%" }}
+                                        />
                                         <div style={{ display: "flex" }}>
                                             <TextField
                                                 required
@@ -209,55 +207,56 @@ function Signup() {
                                                 sx={{ marginBottom: "2%", width: "60%" }}
                                             />
                                         </div>
-                                        <div style={{ display: "flex", width: "100%" }}>
+
+                                        <div style={{ display: "flex", width: "100%", marginBottom: "2%", }}>
+                                            <Box sx={{ width: "30%" }}>
+                                                <FormControl sx={{ width: "100%", height: "100%" }}>
+                                                    <InputLabel id="demo-simple-select-label">Country Code</InputLabel>
+                                                    <Select required
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={formData.countryCode}
+                                                        label="Country Code"
+                                                        onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
+                                                    >
+                                                        {Object.keys(countryList).map(cat => <MenuItem value={countryList[cat].dial_code}>
+                                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                                <img width={"30px"} height={"30px"} src={countryList[cat].image} />
+                                                                <span > &nbsp; &nbsp;{countryList[cat].dial_code + " - " + cat}</span>
+                                                            </div></MenuItem>)}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                            <TextField
+                                                required
+                                                id="outlined-required"
+                                                label={"Mobile Number"}
+                                                value={formData.mobileNumber}
+                                                onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
+                                                sx={{ margin: " 1% 2%", width: "100%", height: "100%" }}
+                                            />
+                                        </div>
+                                        <TextField
+                                            required
+                                            value={formData.address}
+                                            id="outlined-required"
+                                            label="Business Address"
+                                            sx={{ marginBottom: "2%", width: "100%", marginRight: "2%" }}
+                                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                        />
+
+                                        <div style={{ display: "flex", justifyContent: "space-between   " }}>
                                             <TextField
                                                 type='number'
                                                 required
                                                 disabled={formData.pincode.length === 6}
                                                 id="outlined-required"
                                                 label="Zip Code"
-                                                sx={{ marginBottom: "2%", marginRight: "2%", width: "30%" }}
+                                                sx={{ marginBottom: "2%", marginRight: "2%", width: "50%" }}
                                                 value={formData.pincode}
                                                 onChange={(e) => handlePincodeChange(e)}
                                             />
-                                            <div style={{ display: "flex", width: "70%" }}>
-                                                <Box sx={{ width: "30%", marginRight: "2%" }}>
-                                                    <FormControl sx={{ width: "100%" }}>
-                                                        <InputLabel id="demo-simple-select-label">Country Code</InputLabel>
-                                                        <Select required
-                                                            labelId="demo-simple-select-label"
-                                                            id="demo-simple-select"
-                                                            value={formData.countryCode}
-                                                            label="Country Code"
-                                                            onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                                                        >
-                                                            {Object.keys(countryList).map(cat => <MenuItem value={countryList[cat].dial_code}>
-                                                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                                                                    <img width={"30px"} height={"30px"} src={countryList[cat].image} />
-                                                                    <span > &nbsp; &nbsp;{countryList[cat].dial_code + " - " + cat}</span>
-                                                                </div></MenuItem>)}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Box>
-                                                <TextField
-                                                    required
-                                                    id="outlined-required"
-                                                    label={"Mobile Number"}
-                                                    value={formData.mobileNumber}
-                                                    onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
-                                                    sx={{ marginBottom: "2%", width: "70%" }}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div style={{ display: "flex" }}>
-                                            <TextField
-                                                required
-                                                value={formData.address}
-                                                id="outlined-required"
-                                                label="Business Address"
-                                                sx={{ marginBottom: "2%", width: "100%", marginRight: "2%" }}
-                                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                            />
+
                                             <TextField
                                                 disabled
                                                 id="outlined-required"
