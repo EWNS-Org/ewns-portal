@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Tailwind breakpoints (based on Tailwind's default values)
 const breakpoints = {
@@ -9,35 +9,47 @@ const breakpoints = {
     '2xl': '(min-width: 1536px)',
 };
 
+// Function to get the current breakpoint
+const getBreakpoint = () => {
+    if (window.matchMedia(breakpoints['2xl']).matches) {
+        return '2xl';
+    } else if (window.matchMedia(breakpoints.xl).matches) {
+        return 'xl';
+    } else if (window.matchMedia(breakpoints.lg).matches) {
+        return 'lg';
+    } else if (window.matchMedia(breakpoints.md).matches) {
+        return 'md';
+    } else if (window.matchMedia(breakpoints.sm).matches) {
+        return 'sm';
+    } else {
+        return 'xs';
+    }
+};
+
 // Custom hook to get current media query
 function useTailwindBreakpoint() {
-    const [breakpoint, setBreakpoint] = useState('');
+    const [breakpoint, setBreakpoint] = useState(getBreakpoint);
+    const previousBreakpoint = useRef(breakpoint);
 
     useEffect(() => {
-        const getBreakpoint = () => {
-            if (window.matchMedia(breakpoints['2xl']).matches) {
-                setBreakpoint('2xl');
-            } else if (window.matchMedia(breakpoints.xl).matches) {
-                setBreakpoint('xl');
-            } else if (window.matchMedia(breakpoints.lg).matches) {
-                setBreakpoint('lg');
-            } else if (window.matchMedia(breakpoints.md).matches) {
-                setBreakpoint('md');
-            } else if (window.matchMedia(breakpoints.sm).matches) {
-                setBreakpoint('sm');
-            } else {
-                setBreakpoint('xs');
+        const handleResize = () => {
+            const newBreakpoint = getBreakpoint();
+            if (newBreakpoint !== previousBreakpoint.current) {
+                previousBreakpoint.current = newBreakpoint; // Update ref to new breakpoint
+                setBreakpoint(newBreakpoint); // Only update state if breakpoint changes
             }
         };
 
-        getBreakpoint(); // Set initial breakpoint on load
+        window.addEventListener('resize', handleResize);
 
-        // Add event listener for window resize
-        window.addEventListener('resize', getBreakpoint);
+        // Initial breakpoint check
+        handleResize();
 
         // Cleanup the event listener on unmount
-        return () => window.removeEventListener('resize', getBreakpoint);
-    }, []);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []); // Empty dependency array ensures effect runs only on mount/unmount
 
     return breakpoint;
 }

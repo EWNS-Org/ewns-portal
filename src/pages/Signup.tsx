@@ -1,78 +1,83 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import "./Signup.css";
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid2';
-import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { fetchPincodeDetails } from '../services/api/postalcode.service';
 import { useLoader } from '../contexts/LoaderContext';
 import toast from 'react-hot-toast';
 import { countryList } from '../utils/country-flag';
 import useTailwindBreakpoint from '../hooks/useBreakpoint';
+import { register } from '../services/api/auth.api.service';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Signup() {
+    const navigate = useNavigate()
     const categories = ["General", "Hospital"];
+    const [hideNext, setHideNext] = useState(true)
 
     const { showLoader, hideLoader } = useLoader();
     const breakpoint = useTailwindBreakpoint();
 
-    const validate = () => {
-        const errors: any = {};
-
-        if (!formData.fullName.trim()) {
-            toast.error("Full Name is required.");
-            return false;
-        }
-
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(formData.email)) {
-            toast.error("Invalid email format.");
-            return false;
-        }
-
-        if (formData.password.length < 6) {
-            toast.error("Password must be at least 6 characters.");
-            return false;
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            toast.error("Passwords do not match.");
-            return false;
-        }
-
-        if (!formData.address.trim()) {
-            toast.error("Address is required.");
-            return false;
-        }
-
-        if (!/^\d{6}$/.test(formData.pincode)) {
-            toast.error("Invalid pincode format.");
-            return false;
-        }
+    const validateStep2 = (showToast: boolean) => {
 
         if (!formData.businessName.trim()) {
-            toast.error("Business Name is required.");
+            showToast ?? toast.error("Business Name is required.");
             return false;
         }
 
-        if (!categories.includes(formData.businessCategory)) {
-            toast.error("Invalid business category.");
+        if (!categories.includes(formData.category)) {
+            showToast ?? toast.error("Invalid business category.");
             return false;
         }
 
-        if (!formData.businessDescription.trim()) {
-            toast.error("Business Description is required.");
+        if (!formData.shortBio.trim()) {
+            showToast ?? toast.error("Business Description is required.");
             return false;
         }
         return true;
     };
 
+    const validateStep1 = (showToast: boolean) => {
+        if (!formData.name.trim()) {
+            showToast ?? toast.error("Full Name is required.");
+            return false;
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(formData.email)) {
+            showToast ?? toast.error("Invalid email format.");
+            return false;
+        }
+
+        if (formData.password.length < 6) {
+            showToast ?? toast.error("Password must be at least 6 characters.");
+            return false;
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            showToast ?? toast.error("Passwords do not match.");
+            return false;
+        }
+
+        if (!formData.address.trim()) {
+            showToast ?? toast.error("Address is required.");
+            return false;
+        }
+
+        if (!/^\d{6}$/.test(formData.pincode)) {
+            showToast ?? toast.error("Invalid pincode format.");
+            return false;
+        }
+        return true;
+    }
+
+
     const [showFirstStep, setShowFirstStep] = React.useState(true);
     const [formData, setFormData] = useState({
-        fullName: "",
+        name: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -82,14 +87,27 @@ function Signup() {
         city: "",
         country: "",
         businessName: "",
-        businessCategory: categories[0],
-        businessDescription: "",
+        category: categories[0],
+        shortBio: "",
         countryCode: countryList["IN"].dial_code,
         mobileNumber: ""
     });
 
-
-
+    useEffect(() => {
+        if (showFirstStep) {
+            if (validateStep1(false)) {
+                setHideNext(false)
+            } else {
+                setHideNext(true)
+            }
+        } else {
+            if (validateStep2(false)) {
+                setHideNext(false)
+            } else {
+                setHideNext(true)
+            }
+        }
+    }, [formData, showFirstStep])
 
     const handlePincodeChange = async (e: any) => {
         const updatedPincode = e.target.value;
@@ -124,15 +142,21 @@ function Signup() {
 
 
     const handleSignup = async () => {
-        if (validate()) {
+        if (validateStep1(true) && validateStep2(true)) {
             showLoader();
-            console.log(formData);
+            let res = await register(formData);
+
+            if (res && res.isSuccess) {
+                navigate("/login")
+            }
             hideLoader();
         }
+        hideLoader();
+
     }
 
     return (
-        <div className='login-page'>
+        <div className='login-page' style={{ height: breakpoint === 'xs' ? "100%" : "1235px" }} >
             <Grid container spacing={0} sx={{ margin: "0px", display: "flex", flexWrap: "wrap", width: "100%", height: "100%" }} >
                 <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%" }} >
                     <div className='left-signup '>
@@ -147,11 +171,11 @@ function Signup() {
                             {
                                 showFirstStep ?
                                     <div style={{ display: "flex", justifyContent: "center", marginTop: "2%", height: "100%" }} className='signup-lef-img'>
-                                        <img src="assets/signup-left.svg" width={"600px"} />
+                                        <img src="assets/signup-left.svg" alt='signup-left' width={"600px"} height={"100%"} />
                                     </div>
                                     :
                                     <div style={{ display: "flex", justifyContent: "center", marginTop: "2%", height: "100%" }} className='signup-lef-img'>
-                                        <img src="assets/signup-second.svg" width={"600px"} />
+                                        <img src="assets/signup-second.svg" alt='signup-left2' width={"600px"} height={"100%"} />
                                     </div>
                             }
 
@@ -159,10 +183,10 @@ function Signup() {
 
                     </div>
                 </Grid>
-                <Grid size={6} sx={{ width: breakpoint === "xs" ? "100%" : "50%" }}>
+                <Grid size={6} sx={{ width: breakpoint === "xs" ? "100%" : "50%", height: "100%" }}>
                     <div className='right-signup'>
                         <div className='right-logo'>
-                            <img src="assets/logo.png" width={"200px"} />
+                            <img src="assets/logo.png" alt='logo' width={"200px"} />
                         </div>
                         <div className='signup-part'>
                             <Typography onClick={() => setShowFirstStep(true)} variant='h2' sx={{ alignItems: "center", justifyContent: "center", display: !showFirstStep ? "flex" : "none", color: "blue", cursor: "pointer" }}> {"<"} </Typography>
@@ -180,8 +204,8 @@ function Signup() {
                                             id="outlined-required"
                                             label="Full Name"
                                             sx={{ marginBottom: "3%", marginRight: "2%", width: "100%" }}
-                                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                                            value={formData.fullName}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            value={formData.name}
                                         /><TextField
                                             required
                                             id="outlined-required"
@@ -219,7 +243,7 @@ function Signup() {
                                                         label="Country Code"
                                                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
                                                     >
-                                                        {Object.keys(countryList).map(cat => <MenuItem value={countryList[cat].dial_code}>
+                                                        {Object.keys(countryList).map(cat => <MenuItem key={countryList[cat].dial_code} value={countryList[cat].dial_code}>
                                                             <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                                                                 <img width={"30px"} height={"30px"} src={countryList[cat].image} />
                                                                 <span > &nbsp; &nbsp;{countryList[cat].dial_code + " - " + cat}</span>
@@ -281,7 +305,7 @@ function Signup() {
                                             />
                                         </div>
                                         {formData.pincode.length === 6 && <Button onClick={() => setFormData({ ...formData, pincode: '', city: '', state: '', country: '' })} sx={{ border: "1px solid blue", width: "fit-content", padding: "0.5% 2%", marginBottom: "2%", cursor: "pointer" }}>change pincode</Button>}
-                                        <Button onClick={() => setShowFirstStep(false)} variant='contained' sx={{ width: "100%", height: "15%" }}>Next</Button>
+                                        <Button disabled={hideNext} onClick={() => setShowFirstStep(false)} variant='contained' sx={{ width: "100%", height: "15%" }}>Next</Button>
                                     </div> :
                                     <div>
                                         <TextField
@@ -299,8 +323,8 @@ function Signup() {
                                             multiline
                                             rows={4}
                                             sx={{ marginBottom: "2%", width: "100%" }}
-                                            onChange={(e) => setFormData({ ...formData, businessDescription: e.target.value })}
-                                            value={formData.businessDescription}
+                                            onChange={(e) => setFormData({ ...formData, shortBio: e.target.value })}
+                                            value={formData.shortBio}
                                         />
                                         <Box sx={{ minWidth: 120, marginY: "2%" }}>
                                             <FormControl sx={{ width: "100%" }}>
@@ -308,15 +332,15 @@ function Signup() {
                                                 <Select required
                                                     labelId="demo-simple-select-label"
                                                     id="demo-simple-select"
-                                                    value={formData.businessCategory}
+                                                    value={formData.category}
                                                     label="Business Category"
-                                                    onChange={(e) => setFormData({ ...formData, businessCategory: e.target.value })}
+                                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                                 >
                                                     {categories.map(cat => <MenuItem value={cat}>{cat}</MenuItem>)}
                                                 </Select>
                                             </FormControl>
                                         </Box>
-                                        <Button onClick={() => handleSignup()} variant='contained' sx={{ width: "100%", height: "15%" }}>Sign up</Button>
+                                        <Button disabled={hideNext} onClick={() => handleSignup()} variant='contained' sx={{ width: "100%", height: "15%" }}>Sign up</Button>
 
                                     </div>
                             }

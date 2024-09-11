@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import "./Login.css";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -11,13 +11,16 @@ import { useLoader } from '../contexts/LoaderContext';
 import toast from 'react-hot-toast';
 import { countryList } from '../utils/country-flag';
 import useTailwindBreakpoint from '../hooks/useBreakpoint';
+import { loginUser } from '../services/api/auth.api.service';
+import useAuth from '../hooks/useAuth';
 
 function Login() {
-    const categories = ["General", "Hospital"];
+    const navigate = useNavigate();
 
     const { showLoader, hideLoader } = useLoader();
     const breakpoint = useTailwindBreakpoint();
 
+    const { login, checkAuth, userRole } = useAuth();
     const validate = () => {
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -29,21 +32,37 @@ function Login() {
         return true;
     };
 
-    const [showFirstStep, setShowFirstStep] = React.useState(true);
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
 
+
+
+
+
     const handleLogin = async () => {
         if (validate()) {
             showLoader();
-            console.log(formData);
+            let res: any = await loginUser(formData);
+
+            if (res && res.isSuccess) {
+                login(res.data.token, res.data.userType);
+
+                if (res.data.userType === 'ADMIN') {
+                    navigate('/admin/dashboard');
+                } else if (res.data.userType === 'MERCHANT') {
+                    navigate('/dashboard');
+                }
+            }
             hideLoader();
         }
     }
+
+
+
     return (
-        <div><div >
+        <div><div style={{ height: breakpoint === 'xs' ? "100%" : "1235px" }} >
             <Grid container spacing={0} sx={{ margin: "0px", display: "flex", flexWrap: "wrap", width: "100%", height: "100%" }} className='login-page'>
                 <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%" }} >
                     <div className='left-signup '>
@@ -67,12 +86,11 @@ function Login() {
                             <img src="assets/logo.png" width={"200px"} />
                         </div>
                         <div className='signup-part'>
-                            <Typography onClick={() => setShowFirstStep(true)} variant='h2' sx={{ alignItems: "center", justifyContent: "center", display: !showFirstStep ? "flex" : "none", color: "blue", cursor: "pointer" }}> {"<"} </Typography>
                             <Typography variant={breakpoint === "xs" ? 'h4' : 'h3'} margin="2%">Log In to your account</Typography>
 
                         </div>
                         <Typography variant='h5' marginY={"2%"} sx={{ color: "gray" }}>It’s time to get your business online</Typography>
-                        <div className='signup-form'>
+                        <div className='login-form'>
                             <div className='step-one'>
                                 <TextField
                                     type="email"
@@ -89,13 +107,13 @@ function Login() {
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     value={formData.password}
                                 />
-                                {<Button onClick={() => window.location.href = "/forgot-password"} sx={{ border: "1px solid blue", width: "fit-content", padding: "0.5% 2%", marginBottom: "2%", cursor: "pointer" }}>Forgot Password</Button>}
+                                {<Button onClick={() => navigate("/forgot-password")} sx={{ border: "1px solid blue", width: "fit-content", padding: "0.5% 2%", marginBottom: "2%", cursor: "pointer" }}>Forgot Password</Button>}
                                 <Button onClick={() => handleLogin()} variant='contained' sx={{ width: "100%", height: "15%" }}>Log In</Button>
                             </div>
                         </div>
                         <div style={{ border: "0.5px  gray", width: "80%", margin: "2% 5%" }}></div>
                         <div style={{}}>
-                            <Button onClick={() => window.location.href = "/"} variant='contained' sx={{ width: "100%", height: "15%" }}>Create New Account</Button>
+                            <Button onClick={() => navigate("/")} variant='contained' sx={{ width: "100%", height: "100%" }}>Create New Account</Button>
                         </div>
                     </div>
                 </Grid>

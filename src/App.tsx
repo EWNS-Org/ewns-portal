@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
@@ -8,66 +8,20 @@ import Signup from './pages/Signup';
 import VerifyEmail from './pages/VerifyEmail';
 import AdminDashboard from './components/admin/AdminDashboard';
 import Landing from './pages/Landing';
-import Sidebar, { SidebarProps } from './components/Sidebar';
+import Sidebar from './components/Sidebar';
 import useAuth from './hooks/useAuth';
 import { LoaderProvider } from './contexts/LoaderContext';
 import Loader from './components/Loader';
 import { Toaster } from 'react-hot-toast';
-import './index.css';
-
+import Logout from './pages/Logout';
+import Home from './components/Home';
 
 function App() {
-  const { isLoggedIn, userRole } = useAuth();
 
   return (
-    <div className="App">
-      <LoaderProvider>
-        <div>
-          <Loader />
-          <Toaster position='top-right' />
-        </div>
-        <div>
-          <Router>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password/:token" element={<ResetPassword />} />
-              <Route path="/email-verify/:token" element={<VerifyEmail />} />
-
-              {/* Protected routes */}
-              {isLoggedIn ? (
-                <>
-                  {/* Common layout for normal and admin */}
-                  <Route path="/dashboard" element={<WithSidebar><Dashboard /></WithSidebar>} />
-                  {userRole === 'admin' && (
-                    <Route path="/admin/dashboard" element={<WithSidebar><AdminDashboard /></WithSidebar>} />
-                  )}
-                </>
-              ) : (
-                <Route path="*" element={<Navigate to="/login" replace />} />
-              )}
-            </Routes>
-          </Router>
-        </div>
-
-      </LoaderProvider>
-    </div>
+    <Home />
   );
 }
 
-const WithSidebar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { userRole } = useAuth(); // Get user role to pass to Sidebar
-  return (
-    <div className="app-container">
-      <Sidebar userRole={userRole} />
-      <div className="main-content">
-        {children}
-      </div>
-    </div>
-  );
-};
 
 export default App;

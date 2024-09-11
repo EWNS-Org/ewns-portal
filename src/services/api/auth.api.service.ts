@@ -4,7 +4,27 @@ import { get, post } from './api-service';
 export const register = async (formData: any) => {
     try {
         const res: any = await post('/auth/register', formData);
-        return res.data
+        return res;
+    } catch (error: any) {
+        toast.error("Error Registration");
+        console.error(error);
+    }
+};
+
+export const loginUser = async (formData: any) => {
+    try {
+        const res: any = await post('/auth/login', formData);
+        return res;
+    } catch (error: any) {
+        toast.error("Error Registration");
+        console.error(error);
+    }
+};
+
+export const verifyEmail = async (token: any) => {
+    try {
+        const res: any = await get('/auth/verify-email/' + token);
+        return res;
     } catch (error: any) {
         toast.error("Error Registration");
         console.error(error);

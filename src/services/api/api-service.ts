@@ -6,18 +6,19 @@ import toast from 'react-hot-toast';
 // Create an instance of axios with default settings
 const apiClient: AxiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL, // Base URL of your API, stored in environment variables
-    timeout: 10000, // Request timeout in milliseconds
+    timeout: 30000, // Request timeout in milliseconds
 });
 
 // Intercept requests to add auth token if needed
 apiClient.interceptors.request.use(
     (config: any) => {
+        toast.loading('Loading...');
+
         const token = localStorage.getItem('authToken'); // Assuming you store the token in localStorage
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
-        toast.loading('Loading...');
         return config;
     },
     (error: any) => {
@@ -31,9 +32,16 @@ apiClient.interceptors.response.use(
     (response: AxiosResponse) => {
         toast.dismiss();
 
+        if (response.data.isSuccess) {
+            toast.success(response.data.message);
+        } else {
+            toast.error(response.data.message);
+        }
         return response;
     },
     (error: any) => {
+        toast.dismiss();
+
 
         if (error.response)
             toast.error(`Error: ${error.response.data.message || 'An error occurred!'}`);
