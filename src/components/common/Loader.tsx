@@ -2,7 +2,7 @@
 import * as React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useLoader } from '../contexts/LoaderContext';
+import { useLoader } from '../../contexts/LoaderContext';
 
 const Loader = () => {
     const { isLoading } = useLoader();

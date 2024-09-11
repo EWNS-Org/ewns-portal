@@ -1,5 +1,7 @@
 
-
+body{
+  font-family: "font-sans";
+}
 .app-container {
   display: flex;
 }
@@ -28,4 +30,11 @@
 .sidebar ul li a {
   color: white;
   text-decoration: none;
+}
+.prose {
+  font-family: "Inter", sans-serif;
+}
+
+.prose strong {
+  font-weight: 600;
 }

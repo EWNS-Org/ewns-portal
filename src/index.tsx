@@ -3,11 +3,18 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles.css';
 import reportWebVitals from './reportWebVitals';
+import { LoaderProvider } from './contexts/LoaderContext';
+import Loader from './components/common/Loader';
+import { Toaster } from 'react-hot-toast';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as any);
 root.render(
   <React.StrictMode>
-    <App />
+    <LoaderProvider>
+      <Loader />
+      <Toaster position='top-right' />
+      <App />
+    </LoaderProvider>
   </React.StrictMode>
 );
 

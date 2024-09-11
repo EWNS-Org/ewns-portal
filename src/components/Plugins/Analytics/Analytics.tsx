@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Analytics() {
+function AnalyticsComponent() {
     return (
-        <div>Analytics</div>
+        <div>Component</div>
     )
 }
 
-export default Analytics
+export default AnalyticsComponent

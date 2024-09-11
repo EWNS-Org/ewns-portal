@@ -1,23 +1,9 @@
 import { useState, useEffect } from 'react';
 
 const useAuth = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
     const [userRole, setUserRole] = useState<'ADMIN' | 'MERCHANT' | null>(null);
-    useEffect(() => {
-        // Retrieve token and role from localStorage
-        const token = localStorage.getItem('token');
-        const role = localStorage.getItem('userRole') as 'ADMIN' | 'MERCHANT' | null;
 
-        if (token && role) {
-            setIsLoggedIn(true);
-            setUserRole(role);
-        } else {
-            setIsLoggedIn(false);
-            setUserRole(null);
-        }
-        console.log(token, role, isLoggedIn)
-
-    }, []);
 
     // Function to set token and role in localStorage
     const login = (token: string, role: 'ADMIN' | 'MERCHANT') => {
@@ -66,7 +52,8 @@ const useAuth = () => {
         login,
         clearAuth,
         logout,
-        checkAuth
+        checkAuth,
+        setIsLoggedIn
     };
 };
 
