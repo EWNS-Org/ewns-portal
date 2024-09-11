@@ -37,10 +37,6 @@ function Login() {
         password: ""
     });
 
-
-
-
-
     const handleLogin = async () => {
         if (validate()) {
             showLoader();

@@ -1,179 +1,122 @@
 import React, { useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Link, useNavigate } from 'react-router-dom';
+
+
+
 
 const Sidebar = ({ userRole }: any) => {
-    const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-    const [isProductsOpen, setIsProductsOpen] = useState(false);
-    const [isServicesOpen, setIsServicesOpen] = useState(false);
-    const [isSectionsOpen, setIsSectionsOpen] = useState(false);
-    const [isMessagesOpen, setIsMessagesOpen] = useState(false);
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-    const sidebarItems = [{
-        name: "Dashboard",
-        hasChild: false,
-        icon: null,
-        isOpen: false
-    }, {
-        name: "Categories",
-        hasChild: false, icon: null,
-        isOpen: false
-    }, {
-        name: "Products",
-        hasChild: false, icon: null,
-        isOpen: false
-    }, {
-        name: "Services",
-        hasChild: false, icon: null,
-        isOpen: false
-    }, {
-        name: "Albums",
-        hasChild: false, icon: null,
-        isOpen: false
-    }, {
-        name: "Appointments",
-        hasChild: false, icon: null,
-        isOpen: false
-    }, {
-        name: "Messages",
-        hasChild: false, icon: null,
-        isOpen: false
-    }, {
-        name: "Settings",
-        hasChild: true,
-        children: [{
-            name: "Themes",
-            hasChild: false, icon: null,
-            isOpen: false
-        }, {
-            name: "Custom Domain",
-            hasChild: false, icon: null,
-            isOpen: false
-        }, {
-            name: "Profile",
-            hasChild: false, icon: null,
-            isOpen: false
-        }, {
-            name: "Subscription",
-            hasChild: false, icon: null,
-            isOpen: false
-        }], icon: null,
-        isOpen: false
-    },]
+    const sidebarItems = [
+        { name: "Dashboard", hasChild: false, icon: "📊", isOpen: false, goto: '/dashboard' },
+        { name: "Profile", hasChild: false, icon: "👤", isOpen: false, goto: '/profile' },
+        { name: "Categories", hasChild: false, icon: "📦", isOpen: false, goto: '/categories' },
+        { name: "Products", hasChild: false, icon: "🛒", isOpen: false, goto: '/products' },
+        { name: "Services", hasChild: false, icon: "💼", isOpen: false, goto: '/services' },
+        { name: "Albums", hasChild: false, icon: "🎵", isOpen: false, goto: '/albums' },
+        { name: "Appointments", hasChild: false, icon: "📅", isOpen: false, goto: '/appointments' },
+        { name: "Messages", hasChild: false, icon: "✉️", isOpen: false, goto: '/messages' },
+        { name: "Subscription", hasChild: false, icon: "📅", isOpen: false, goto: '/subscription' },
+        {
+            name: "Plugins",
+            hasChild: true,
+            icon: "🧩",
+            isOpen: true,
+            children: [
+                { name: "Themes", hasChild: false, icon: "🎨", isOpen: false, goto: '/plugins/themes' },
+                { name: "Custom Domain", hasChild: false, icon: "🌐", isOpen: false, goto: '/plugins/custom-domain' },
+                { name: "Analytics", hasChild: false, icon: "📈", isOpen: false, goto: '/plugins/analytics' },
+                { name: "Marketing", hasChild: false, icon: "📋", isOpen: false, goto: '/plugins/marketing' },
+            ]
+        },
+        {
+            name: "Settings",
+            hasChild: true,
+            icon: "⚙️",
+            isOpen: true,
+            children: [
+                { name: "Account", hasChild: false, icon: "🧑‍💻", isOpen: false, goto: '/settings/account' },
+            ]
+        }
+    ];
+
+
+    const adminSidebarItems = [
+        { name: "All Merchants List", hasChild: false, icon: "📊", isOpen: false, goto: '/admin/all-merchants', children: null },
+        { name: "Analytics", hasChild: false, icon: "📦", isOpen: false, goto: '/analytics' },
+        { name: "Products", hasChild: false, icon: "🛒", isOpen: false, goto: '/products' }
+    ]
+
+    const navigate = useNavigate();
+    const [items, setItems] = useState(userRole === "ADMIN" ? adminSidebarItems : sidebarItems);
+
+    const toggleItem = (index: number) => {
+        const newItems: any = [...items];
+        newItems[index].isOpen = !newItems[index].isOpen;
+        setItems(newItems);
+    };
+
+    const handleChildClick = (child: any) => {
+        console.log(child.goto)
+        navigate(child.goto)
+    }
 
     return (
-        <div className="flex flex-col h-screen bg-white p-4 w-64">
-            {/* Logo */}
-            <div className="flex items-center justify-center mb-10">
-                <img src="your-logo-link-here" alt="Logo" className="h-12" />
+        <div className="flex flex-col h-screen bg-white p-4 w-64 pt-[5%] border font-sans">
+            <div className="flex items-center justify-center ">
+                <img src="/assets/ewns-logo.svg" alt="Logo" className="h-12" />
             </div>
 
-            {/* Navigation */}
-            <nav className="space-y-4">
-
-                {sidebarItems.map((item) => {
-                    if (item.hasChild) {
-                        return (<SidebarDropdown
-                            icon={item.icon}
-                            label={item.name}
-                            isOpen={item.isOpen}
-                            toggleOpen={() => { item.isOpen = !item.isOpen }}
+            <nav className="space-y-4 pt-10">
+                {items.map((item, index) => (
+                    <div key={index} onClick={() => navigate(item.goto as any)} >
+                        <div
+                            className="flex items-center justify-between text-gray-500 hover:text-blue-600 cursor-pointer "
+                            onClick={() => toggleItem(index)}
                         >
-                            {item.children?.map(child => {
-                                return <SidebarSubItem label={child.name} />
-                            })}
-                        </SidebarDropdown>)
-                    } else {
-                        return <SidebarDropdown
-                            icon={item.icon}
-                            label={item.name}
-                            isOpen={item.isOpen}
-                            toggleOpen={() => { item.isOpen = !item.isOpen }}
-                        />
-                    }
-                })}
-                <SidebarItem icon="📊" label="Dashboard" />
+                            <div className="flex items-center space-x-3 ">
+                                {item.icon && <span>{item.icon}</span>}
+                                <span>{item.name}</span>
+                            </div>
+                            {item.hasChild && (
+                                <div>
+                                    {item.isOpen ? (
+                                        <KeyboardArrowUpIcon className="h-5 w-5" />
+                                    ) : (
+                                        <KeyboardArrowDownIcon className="h-5 w-5" />
+                                    )}
+                                </div>
+                            )}
+                        </div>
 
+                        {item.isOpen && item.children && (
+                            <div className="pl-8 flex flex-col space-y-1 text-gray-400 mt-2">
+                                {item.children.map((child, childIndex) => (
 
+                                    <div
 
-                <SidebarDropdown
-                    icon="🛒"
-                    label="Products"
-                    isOpen={isProductsOpen}
-                    toggleOpen={() => setIsProductsOpen(!isProductsOpen)}
-                >
-                    <SidebarSubItem label="Product 1" />
-                    <SidebarSubItem label="Product 2" />
-                </SidebarDropdown>
+                                        className="text-sm cursor-pointer hover:text-blue-500 mt-2"
+                                        key={child.name}
+                                    >
 
-                <SidebarDropdown
-                    icon="💼"
-                    label="Services"
-                    isOpen={isServicesOpen}
-                    toggleOpen={() => setIsServicesOpen(!isServicesOpen)}
-                >
-                    <SidebarSubItem label="Service 1" />
-                    <SidebarSubItem label="Service 2" />
-                </SidebarDropdown>
+                                        <a href={child.goto as any}>
+                                            {child.icon && <span>{child.icon}</span>}
+                                            {child.name}
+                                        </a>
+                                    </div>
 
-                <SidebarDropdown
-                    icon="📂"
-                    label="Sections"
-                    isOpen={isSectionsOpen}
-                    toggleOpen={() => setIsSectionsOpen(!isSectionsOpen)}
-                >
-                    <SidebarSubItem label="Section 1" />
-                    <SidebarSubItem label="Section 2" />
-                </SidebarDropdown>
-
-                <SidebarItem icon="✉️" label="Messages" />
-
-                <SidebarDropdown
-                    icon="⚙️"
-                    label="Settings"
-                    isOpen={isSettingsOpen}
-                    toggleOpen={() => setIsSettingsOpen(!isSettingsOpen)}
-                >
-                    <SidebarSubItem label="Setting 1" />
-                    <SidebarSubItem label="Setting 2" />
-                </SidebarDropdown>
-            </nav>
-        </div>
+                                ))}
+                            </div>
+                        )
+                        }
+                    </div >
+                ))
+                }
+            </nav >
+        </div >
     );
 };
 
-// Single Sidebar Item Component
-const SidebarItem = ({ icon, label }: any) => (
-    <div className="flex items-center space-x-3 text-gray-500 hover:text-blue-600 cursor-pointer">
-        <span>{icon}</span>
-        <span>{label}</span>
-    </div>
-);
-
-// Sidebar Dropdown Component
-const SidebarDropdown = ({ icon, label, isOpen, toggleOpen, children }: any) => (
-    <div className="flex flex-col space-y-2">
-        <div className="flex items-center justify-between text-gray-500 hover:text-blue-600 cursor-pointer" onClick={toggleOpen}>
-            <div className="flex items-center space-x-3">
-                <span>{icon}</span>
-                <span>{label}</span>
-            </div>
-            {isOpen ? <KeyboardArrowUpIcon className="h-5 w-5" /> : <KeyboardArrowDownIcon className="h-5 w-5" />}
-        </div>
-        {isOpen && (
-            <div className="pl-8 flex flex-col space-y-1 text-gray-400">
-                {children}
-            </div>
-        )}
-    </div>
-);
-
-// Sidebar Sub-item Component
-const SidebarSubItem = ({ label }: any) => (
-    <div className="text-sm cursor-pointer hover:text-blue-500">
-        {label}
-    </div>
-);
 
 export default Sidebar;

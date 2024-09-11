@@ -12,12 +12,21 @@ import Sidebar from './Sidebar'
 import useAuth from '../hooks/useAuth'
 import Logout from '../pages/Logout'
 import AdminDashboard from './admin/AdminDashboard'
-import Dashboard from './Dashboard'
+import Dashboard from './Dashboard/Dashboard'
+import Categories from './Categories/Categories'
+import Products from './Products/Products'
+import Services from './Services/Services'
+import { Album, Analytics, Message } from '@mui/icons-material'
+import Appointment from './Appointments/Appointment'
+import Profile from './Profile/Profile'
+import Subscription from './Subscription/Subscription'
+import Themes from './Plugins/Themes/Themes'
+import CustomDomain from './Plugins/CustomDomain/CustomDomain'
+import Marketing from './Plugins/Marketing/Marketing'
+import Account from './Settings/Account/Account'
 
 function Home() {
     const { isLoggedIn, userRole, checkAuth } = useAuth();
-    console.log(isLoggedIn)
-
     useEffect(() => {
         checkAuth();
     }, [])
@@ -33,13 +42,26 @@ function Home() {
                         <Routes>
                             {isLoggedIn ? (
                                 <>
+                                    <Route path="/plugins/themes" element={<WithSidebar><Themes /></WithSidebar>} />
+                                    <Route path="/plugins/custom-domain" element={<WithSidebar><CustomDomain /></WithSidebar>} />
+                                    <Route path="/plugins/analytics" element={<WithSidebar><Analytics /></WithSidebar>} />
+                                    <Route path="/plugins/marketing" element={<WithSidebar><Marketing /></WithSidebar>} />
+                                    <Route path="/settings/account" element={<WithSidebar><Account /></WithSidebar>} />
                                     <Route path="/dashboard" element={<WithSidebar><Dashboard /></WithSidebar>} />
+                                    <Route path="/categories" element={<WithSidebar><Categories /></WithSidebar>} />
+                                    <Route path="/products" element={<WithSidebar><Products /></WithSidebar>} />
+                                    <Route path="/services" element={<WithSidebar><Services /></WithSidebar>} />
+                                    <Route path="/albums" element={<WithSidebar><Album /></WithSidebar>} />
+                                    <Route path="/appointments" element={<WithSidebar><Appointment /></WithSidebar>} />
+                                    <Route path="/messages" element={<WithSidebar><Message /></WithSidebar>} />
+                                    <Route path="/profile" element={<WithSidebar><Profile /></WithSidebar>} />
+                                    <Route path="/subscription" element={<WithSidebar><Subscription /></WithSidebar>} />
+
                                     <Route path="/logout" element={<Logout />} />
 
                                     {userRole === 'ADMIN' && (
                                         <Route path="/admin/dashboard" element={<WithSidebar><AdminDashboard /></WithSidebar>} />
                                     )}
-                                    <Route path="*" element={<Navigate to="/dashboard" />} />
                                 </>
                             ) : (<>
                                 <Route path="/" element={<Signup />} />
@@ -48,7 +70,6 @@ function Home() {
                                 <Route path="/forgot-password" element={<ForgotPassword />} />
                                 <Route path="/reset-password/:token" element={<ResetPassword />} />
                                 <Route path="/verify-email/:token" element={<VerifyEmail />} />
-                                <Route path="*" element={<Navigate to="/login" />} />
                             </>
                             )}
 
