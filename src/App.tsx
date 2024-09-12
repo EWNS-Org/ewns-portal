@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, BrowserRouter } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
 import ResetPassword from './pages/ResetPassword';
@@ -31,27 +31,18 @@ import AnalyticsComponent from './components/Plugins/Analytics/Analytics';
 
 
 function App() {
-  const { isLoggedIn, userRole, checkAuth, setIsLoggedIn } = useAuth();
-  const { showLoader, hideLoader } = useLoader();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
   useEffect(() => {
     let token = localStorage.getItem("token");
     let role = localStorage.getItem("userRole");
 
     if (token && role) {
       setIsLoggedIn(true);
+      setUserRole(role);
     }
   }, []);
 
-
-  useEffect(() => {
-    // Simulate a delay in determining authentication status
-    const checkAuthStatus = async () => {
-      const loggedInStatus = checkAuth(); // Your auth check logic here
-      setIsLoggedIn(loggedInStatus);
-    };
-
-    checkAuthStatus();
-  }, []);
 
   useEffect(() => {
     if (isLoggedIn === false) {
@@ -60,10 +51,8 @@ function App() {
   }, [isLoggedIn]);
 
   if (isLoggedIn === null) {
-    showLoader();
     return <></>;
   } else {
-    hideLoader();
   }
 
   return (
@@ -114,7 +103,7 @@ const PrivateRoute = ({ isLoggedIn, children }: any) => {
 
 const PublicRoute = ({ isLoggedIn, children }: any) => {
 
-  return !isLoggedIn ? children : <Navigate to="/login" />;
+  return isLoggedIn ? children : <Navigate to="/login" />;
 };
 
 export default App;

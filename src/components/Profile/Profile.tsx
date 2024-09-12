@@ -102,82 +102,96 @@ const ProfileTab = () => {
                             </FormControl>
                         </Box>
                     </div>
+                    <div className="col-span-1">
+                        <div className="mb-6">
+                            <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
+                            <div className="w-full">
+                                <div style={{ display: "flex", width: "60%", }}>
+                                    <Box sx={{ width: "30%" }}>
+                                        <FormControl sx={{ width: "100%", height: "100%" }}>
+                                            <InputLabel id="demo-simple-select-label">Country Code</InputLabel>
+                                            <Select required
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={""}
+                                                label="Country Code"
+                                            //onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
+                                            >
+                                                {Object.keys(countryList).map(cat => <MenuItem key={countryList[cat].dial_code} value={countryList[cat].dial_code}>
+                                                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                        <img width={"30px"} height={"30px"} src={countryList[cat].image} />
+                                                        <span > &nbsp; &nbsp;{countryList[cat].dial_code + " - " + cat}</span>
+                                                    </div></MenuItem>)}
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label={"Mobile Number"}
+                                        value={""}
+                                        //onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
+                                        sx={{ marginX: "2%", width: "100%", height: "100%" }}
+                                    />
 
-
-                    <div className="mb-6">
-                        <h2 className="text-xl font-semibold mb-4">Subscription Information</h2>
-                        <Card sx={{ maxWidth: 345, cursor: "pointer", display: "flex", flexDirection: "column" }} onClick={() => navigate("/subscriptions")}>
-                            <CardHeader
-                                title="Basic Subscription"
-                                subheader="September 14, 2016"
-                            />
-
-                            <CardContent>
-                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                    <strong>Days Left : </strong>Unlimited
-                                </Typography>
-                            </CardContent>
-                        </Card>
-
-                    </div>
-
-                </div>
-
-                {/* Social Network & Contact Information */}
-                <div className="col-span-1">
-                    <div className="mb-6">
-                        <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
-                        <div className="w-full">
-                            <div style={{ display: "flex", width: "60%", }}>
-                                <Box sx={{ width: "30%" }}>
-                                    <FormControl sx={{ width: "100%", height: "100%" }}>
-                                        <InputLabel id="demo-simple-select-label">Country Code</InputLabel>
-                                        <Select required
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={""}
-                                            label="Country Code"
-                                        //onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                                        >
-                                            {Object.keys(countryList).map(cat => <MenuItem key={countryList[cat].dial_code} value={countryList[cat].dial_code}>
-                                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                                                    <img width={"30px"} height={"30px"} src={countryList[cat].image} />
-                                                    <span > &nbsp; &nbsp;{countryList[cat].dial_code + " - " + cat}</span>
-                                                </div></MenuItem>)}
-                                        </Select>
-                                    </FormControl>
-                                </Box>
+                                </div>
                                 <TextField
-                                    required
                                     id="outlined-required"
-                                    label={"Mobile Number"}
-                                    value={""}
+                                    label={"Business Email"}
+                                    value={"business@gmail.com"}
                                     //onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
-                                    sx={{ marginX: "2%", width: "100%", height: "100%" }}
+                                    sx={{ marginY: "2%", width: "100%", height: "100%" }}
                                 />
-
                             </div>
+                        </div>
+
+                        <div className="mb-6">
                             <TextField
+                                disabled={true}
                                 id="outlined-required"
-                                label={"Business Email"}
-                                value={"business@gmail.com"}
+                                label={"Business URL"}
+                                value={"https://demo.ewns.in"}
                                 //onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
-                                sx={{ marginY: "2%", width: "100%", height: "100%" }}
+                                sx={{ width: "100%", height: "100%" }}
                             />
+
                         </div>
                     </div>
 
-                    <div className="mb-6">
+
+
+
+                </div>
+
+                <div className="mb-6">
+                    <h2 className="text-xl font-semibold mb-4">Google Business Profile</h2>
+
+                    <div className="col-span-1 mb-6">
                         <TextField
-                            disabled={true}
+                            required
                             id="outlined-required"
-                            label={"Business URL"}
-                            value={"https://demo.ewns.in"}
+                            label={"Business Profile URL"}
+                            value={""}
                             //onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
                             sx={{ width: "100%", height: "100%" }}
                         />
-
                     </div>
+
+
+                    <h2 className="text-xl font-semibold mb-4">Subscription Information</h2>
+                    <Card sx={{ maxWidth: 345, cursor: "pointer", display: "flex", flexDirection: "column" }} onClick={() => navigate("/subscription")}>
+                        <CardHeader
+                            title="Basic Subscription"
+                            subheader="September 14, 2016"
+                        />
+
+                        <CardContent>
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                <strong>Days Left : </strong>Unlimited
+                            </Typography>
+                        </CardContent>
+                    </Card>
+
                 </div>
             </div>
 
