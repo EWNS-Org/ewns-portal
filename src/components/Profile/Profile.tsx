@@ -14,21 +14,20 @@ const PersonalProfile = () => {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            {/* Tabs Section */}
-            <div className="border-b mb-6">
-                <ul className="flex space-x-6">
+        <div className="w-full p-10" style={{ border: "solid 1px" }}>
+            <div className="w-full " style={{ border: "solid 1px", display: "flex", backgroundColor: "white" }}>
+                <div className="" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     {['Profile', 'About', 'Images', 'Business Hours', 'Address', 'Social Media'].map((tab) => (
-                        <li
+                        <div
                             key={tab}
-                            className={`cursor-pointer py-2 ${activeTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'
+                            className={`cursor-pointer py-2 ${activeTab === tab ? 'border-t-2 border-blue-500 text-blue-500' : 'text-gray-500'
                                 }`}
                             onClick={() => handleTabChange(tab)}
                         >
                             {tab}
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
 
             {/* Render content based on active tab */}
@@ -66,7 +65,7 @@ const ProfileTab = () => {
     };
 
     return (
-        <div className="container mx-auto p-6 w-full">
+        <div className="container mx-auto p-6 w-full" style={{ fontFamily: "source Sans pro" }}>
             <div className="flex justify-between items-center border-b pb-3 mb-6">
                 <div>
                     <h1 className="text-2xl font-semibold">Profile</h1>

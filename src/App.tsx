@@ -9,7 +9,6 @@ import VerifyEmail from './pages/VerifyEmail';
 import AdminDashboard from './components/admin/AdminDashboard';
 import Landing from './pages/Landing';
 import Sidebar from './components/common/Sidebar';
-import useAuth from './hooks/useAuth';
 import { LoaderProvider, useLoader } from './contexts/LoaderContext';
 import Loader from './components/common/Loader';
 import { Toaster } from 'react-hot-toast';
@@ -27,83 +26,230 @@ import Marketing from './components/Plugins/Marketing/Marketing';
 import Account from './components/Settings/Account/Account';
 import Albums from './components/Albums/Album';
 import Messages from './components/Messages/Messages';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AnalyticsComponent from './components/Plugins/Analytics/Analytics';
 
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-    let role = localStorage.getItem("userRole");
-
-    if (token && role) {
-      setIsLoggedIn(true);
-      setUserRole(role);
-    }
-  }, []);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { isAuthenticated, logout } = useAuth(); // Getting from context
 
   useEffect(() => {
-    if (isLoggedIn === false) {
-      window.location.href = "/login"
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("userRole");
+    if (!token || !role) {
+      logout();
     }
-  }, [isLoggedIn]);
+    setIsLoading(false); // Now we can render the app
+  }, [logout]);
 
-  if (isLoggedIn === null) {
-    return <></>;
-  } else {
+  if (isLoading) {
+    // Loading state until auth state is checked
+    return <div>Loading...</div>;
   }
 
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<PublicRoute isLoggedIn={isLoggedIn}><Signup /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute isLoggedIn={isLoggedIn}><Login /></PublicRoute>} />
-        <Route path="/signup" element={<PublicRoute isLoggedIn={isLoggedIn}><Signup /></PublicRoute>} />
-        <Route path="/forgot-password" element={<PublicRoute isLoggedIn={isLoggedIn}><ForgotPassword /></PublicRoute>} />
-        <Route path="/reset-password/:token" element={<PublicRoute isLoggedIn={isLoggedIn}><ResetPassword /></PublicRoute>} />
-        <Route path="/verify-email/:token" element={<PublicRoute isLoggedIn={isLoggedIn}><VerifyEmail /></PublicRoute>} />
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
-        {/* Private Routes */}
-        <Route path="/dashboard" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Dashboard /></Sidebar></PrivateRoute>} />
-        <Route path="/categories" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Categories /></Sidebar></PrivateRoute>} />
-        <Route path="/products" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Products /></Sidebar></PrivateRoute>} />
-        <Route path="/services" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Services /></Sidebar></PrivateRoute>} />
-        <Route path="/albums" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Albums /></Sidebar></PrivateRoute>} />
-        <Route path="/appointments" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Appointment /></Sidebar></PrivateRoute>} />
-        <Route path="/messages" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Messages /></Sidebar></PrivateRoute>} />
-        <Route path="/profile" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Profile /></Sidebar></PrivateRoute>} />
-        <Route path="/subscription" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Subscription /></Sidebar></PrivateRoute>} />
-        <Route path="/logout" element={<PrivateRoute isLoggedIn={isLoggedIn}><Logout /></PrivateRoute>} />
-
-        {/* Plugin Routes */}
-        <Route path="/plugins/themes" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Themes /></Sidebar></PrivateRoute>} />
-        <Route path="/plugins/custom-domain" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><CustomDomain /></Sidebar></PrivateRoute>} />
-        <Route path="/plugins/analytics" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><AnalyticsComponent /></Sidebar></PrivateRoute>} />
-        <Route path="/plugins/marketing" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Marketing /></Sidebar></PrivateRoute>} />
-
-        {/* Admin Routes */}
-        <Route path="/admin/dashboard" element={<PrivateRoute isLoggedIn={isLoggedIn && userRole === 'ADMIN'}><Sidebar userRole={userRole}><AdminDashboard /></Sidebar></PrivateRoute>} />
-
-        {/* Account Settings */}
-        <Route path="/settings/your-account" element={<PrivateRoute isLoggedIn={isLoggedIn}><Sidebar userRole={userRole}><Account /></Sidebar></PrivateRoute>} />
-      </Routes>
-    </BrowserRouter>
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Dashboard />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/categories"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Categories />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Products />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/services"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Services />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/appointments"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Appointment />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Messages />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Profile />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/subscription"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Subscription />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/logout"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Logout />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/plugins/themes"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Themes />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/plugins/custom-domain"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <CustomDomain />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/plugins/analytics"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <AnalyticsComponent />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/plugins/marketing"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Marketing />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <AdminDashboard />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/settings/your-account"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Account />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter >
   );
 }
 
+// PrivateRoute component that checks authentication
+const PrivateRoute = ({ element }: { element: JSX.Element }) => {
+  const { isAuthenticated } = useAuth();
 
-const PrivateRoute = ({ isLoggedIn, children }: any) => {
-  console.log(children, isLoggedIn);
-  debugger
-  return isLoggedIn ? children : <Navigate to="/dashboard" />;
-};
-
-const PublicRoute = ({ isLoggedIn, children }: any) => {
-
-  return isLoggedIn ? children : <Navigate to="/login" />;
+  return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
 export default App;

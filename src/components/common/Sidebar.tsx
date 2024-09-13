@@ -104,17 +104,17 @@ const Sidebar = ({ userRole, children }: any) => {
                 <Header />
             </div>
             <div className=" h-[98vh] w-full flex "  >
-                <nav className="h-full w-64 space-y-4 pt-5  bg-white py-4 pl-4   font-sans" style={{ backgroundColor: "lavender", }}>
+                <nav className="h-full w-64 space-y-4 pt-5  bg-white py-4 px-4   font-sans" style={{}}>
                     {items.map((item: any, index: any) => (
-                        <div key={index} style={{ borderTopLeftRadius: "10px", borderBottomLeftRadius: "10px", padding: "5px", ...(selectedItem === item.goto ? { backgroundColor: "rgba(89, 50, 234, 1)" } : {}) }}>
+                        <div key={index} style={{ borderRadius: "10px", padding: "5px", ...(selectedItem === item.goto ? { backgroundColor: "rgba(89, 50, 234, 1)" } : {}) }}>
                             <div
-                                className={`flex items-center justify-between cursor-pointer ${selectedItem === item.goto ? "text-white" : ""}  `}
+                                className={`flex items-center justify-between cursor-pointer ${selectedItem === item.goto ? "text-white" : "text-gray-500"}  `}
                                 style={{ marginBottom: "2%", }}
                                 onClick={() => handleItemClick(item, index)}
                             >
                                 <div className="flex items-center space-x-3" style={{}}>
-                                    {item.icon && <span>{item.icon}</span>}
-                                    <span>{item.name}</span>
+                                    {item.icon && item.icon}
+                                    <span >{item.name}</span>
                                 </div>
                                 {item.hasChild && (
                                     <div>
@@ -133,7 +133,7 @@ const Sidebar = ({ userRole, children }: any) => {
                                     {item.children.map((child: any, childIndex: any) => (
                                         <span
                                             key={child.name}
-                                            className={`pl-4 py-2 text-sm cursor-pointer  ${selectedItem === child.goto ? "text-white" : ""} `}
+                                            className={`pl-4 py-2 text-sm cursor-pointer  ${selectedItem === child.goto ? "text-white" : "text-gray-500"} `}
                                             onClick={() => handleItemClick(child, childIndex)}
                                             style={{ marginBottom: "4%", borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px", ...(selectedItem === child.goto ? { backgroundColor: "rgba(89, 50, 234, 1)", content: "white" } : {}) }}
                                         >
@@ -147,7 +147,7 @@ const Sidebar = ({ userRole, children }: any) => {
                     ))
                     }
                 </nav >
-                <div className='w-full p-[2%] justify-center align-center flex'>
+                <div className='w-full p-[2%] justify-center align-center flex' style={{ backgroundColor: "lavender" }}>
                     {children}
                 </div>
             </div >

@@ -15,7 +15,33 @@ import { useNavigate } from 'react-router-dom';
 
 function Signup() {
     const navigate = useNavigate()
-    const categories = ["General", "Hospital"];
+    const categories = [
+        "General",
+        "Manufacturers",
+        "Doctors",
+        "Restaurants",
+        "Automobiles",
+        "Hospitals",
+        "InteriorDesign",
+        "RealEstate",
+        "Boutique",
+        "Hotel",
+        "Education",
+        "Electronics",
+        "Spa",
+        "Logistics",
+        "Schools",
+        "KinderGarden",
+        "Pubs",
+        "Traders",
+        "ExportsNImports",
+        "Saloon",
+        "SwimmingPools",
+        "DigitalMarketing",
+        "Marketing",
+        "Institutes",
+        "Other"
+    ];
     const [hideNext, setHideNext] = useState(true)
 
     const { showLoader, hideLoader } = useLoader();

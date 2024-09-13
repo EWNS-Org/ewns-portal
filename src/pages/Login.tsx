@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 import { countryList } from '../utils/country-flag';
 import useTailwindBreakpoint from '../hooks/useBreakpoint';
 import { loginUser } from '../services/api/auth.api.service';
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '../contexts/AuthContext';
 
 function Login() {
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ function Login() {
     const { showLoader, hideLoader } = useLoader();
     const breakpoint = useTailwindBreakpoint();
 
-    const { login, checkAuth, userRole } = useAuth();
+    const { login } = useAuth();
     const validate = () => {
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,14 +90,14 @@ function Login() {
                             <div className='step-one'>
                                 <TextField
                                     type="email"
-                                    id="outlined-required"
+                                    id="outlined-required-email"
                                     value={formData.email}
                                     label="Email"
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     sx={{ marginBottom: "2%", marginRight: "2%", width: "100%" }}
                                 /><TextField
                                     type="password"
-                                    id="outlined-required"
+                                    id="outlined-required-password"
                                     label="Password"
                                     sx={{ marginBottom: "2%", width: "100%%" }}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
