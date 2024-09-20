@@ -1,35 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
 import { Button, MenuItem } from '@mui/material';
 import "./Header.css"
 import Popup from './Popup';
-import { countryList } from '../../utils/country-flag';
-function Header() {
+import { countryList } from '../../utils/constants/country-flag';
+import { categories } from '../../utils/constants/categories';
+import { fetchPincodeDetails } from '../../services/api/postalcode.service';
+import { useLoader } from '../../contexts/LoaderContext';
+import { useDispatch } from 'react-redux';
+import { createBusinessAction } from '../../Redux/Actions/BusinessActions/business.actions';
+import toast from 'react-hot-toast';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from '../../contexts/AuthContext';
+function Header({ isPopupOpen, handlePopupClose, handlePopupOpen }: any) {
 
-    const navigate = useNavigate();
-    const categories = ["General", "Hospital"]
-    const handleSubmit = () => { }
-
-    const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
-
-    const handlePopupOpen = () => {
-        setPopupOpen(true);
-    };
-
-    const handlePopupClose = () => {
-        setPopupOpen(false);
-    };
-
-    const createBusinessActions = [
-        { label: 'Create Business', onClick: handleSubmit, className: 'submit-btn' }
-    ];
-
-    const createBusinessInputs = [
-        { label: 'Name', name: 'business-name', type: 'text', width: "100%" },
-        { label: 'Email', name: 'business-email', type: 'email', width: "100%" },
+    const { logout } = useAuth()
+    const newBusinessInputs = [
+        { label: 'Name', name: 'businessName', type: 'text', width: "100%" },
+        { label: 'Email', name: 'email', type: 'email', width: "100%" },
         {
-            label: 'Country Code', name: 'business-country-code', type: 'select', width: "100%", menuItems: [...(
+            label: 'Country Code', name: 'countryCode', type: 'select', width: "100%", menuItems: [...(
                 Object.keys(countryList).map(cat => <MenuItem key={countryList[cat].dial_code} value={countryList[cat].dial_code}>
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                         <img width={"30px"} height={"30px"} src={countryList[cat].image} />
@@ -37,19 +28,159 @@ function Header() {
                     </div></MenuItem>)
             )]
         },
-        { label: 'Phone', name: 'business-phone', type: 'number', width: "100%" },
-        { label: 'Category', name: 'business-category', type: 'select', options: categories, width: "100%" },
+        { label: 'Phone', name: 'phone', type: 'number', width: "100%" },
+        { label: 'Category', name: 'category', type: 'select', options: categories, width: "100%" },
 
-        { label: 'Address', name: 'business-address', type: 'text', width: "100%" },
-        { label: 'Pincode', name: 'business-pincode', type: 'number', width: "100%" },
-        { label: 'State', name: 'business-state', type: 'text', disabled: true, width: "100%" },
-        { label: 'City', name: 'business-city', type: 'number', disabled: true, width: "100%" },
-        { label: 'Country', name: 'business-country', type: 'number', disabled: true, width: "100%" },
-        { label: 'Short Bio', name: 'business-short-bio', type: 'text-area', rows: 4, width: "204%" },
+        { label: 'Address', name: 'address', type: 'text', width: "100%" },
+        { label: 'Pincode', name: 'pincode', type: 'number', width: "100%" },
+        { label: 'State', name: 'state', type: 'text', disabled: true, width: "100%" },
+        { label: 'City', name: 'city', type: 'number', disabled: true, width: "100%" },
+        { label: 'Country', name: 'country', type: 'number', disabled: true, width: "100%" },
+        { label: 'Short Bio', name: 'shortBio', type: 'text-area', rows: 4, width: "204%" },
+    ];
+    const initialFormData = {
+        businessName: "",
+        category: "General",
+        shortBio: "",
+        email: "",
+        phone: "",
+        address: "",
+        pincode: "",
+        state: "",
+        country: "",
+        countryCode: countryList["IN"].dial_code,
+        city: ""
+    };
 
-    ]
+
+
+    const navigate = useNavigate();
+    const { showLoader, hideLoader } = useLoader();
+    const dispatch = useDispatch();
+
+
+    const [formValues, setFormValues] = useState(initialFormData)
+
+    useEffect(() => {
+    }, [formValues]);
+
+    const [createBusinessInputs, setBusinessInputs] = useState(newBusinessInputs);
+
+
+    const handleChangePincode = () => {
+
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            state: "",
+            country: "",
+            pincode: "",
+            city: ""
+        }));
+        let temp = createBusinessInputs.filter((action: any) => {
+            if (action.name === "pincode") {
+                action.disabled = false;
+            }
+            return action;
+        });
+        let temp2 = createBusinessActions.map((action: any) => {
+            if (action.label === "Change Pincode") {
+                action.display = "none"
+            }
+            return action;
+        })
+        setBusinessInputs([...temp]);
+        setBusinessActions([...temp2]);
+    }
+
+    const handleResetForNewBusiness = () => {
+        setFormValues(initialFormData);
+        let temp = newBusinessInputs.filter((action: any) => {
+            if (action.name === "pincode") {
+                action.disabled = false;
+            }
+            return action;
+        });
+        let temp2 = newBusinessActions.map((action: any) => {
+            if (action.label === "Change Pincode") {
+                action.display = "none"
+            }
+            return action;
+        })
+
+        setBusinessInputs(temp);
+        setBusinessActions(temp2);
+    }
+    const handleCreateBusiness = () => {
+        let formData = {};
+        setFormValues((prevValues) => {
+            formData = prevValues;
+            return { ...prevValues };
+        });
+        try {
+            dispatch(createBusinessAction(formData) as any);
+            handlePopupClose();
+            setFormValues(initialFormData);
+        }
+        catch (error: any) {
+            toast.error("Unable to create business");
+        }
+    }
+    const newBusinessActions = [
+        { label: 'Change Pincode', onClick: handleChangePincode, className: 'mr-2', variant: 'outlined', display: "none" },
+        { label: 'Reset', onClick: handleResetForNewBusiness, className: 'mr-2', variant: 'outlined', display: "block" },
+        { label: 'Create Business', onClick: handleCreateBusiness, className: 'ml-2', variant: 'contained', display: 'block' },
+    ];
+
+    const [createBusinessActions, setBusinessActions] = useState(newBusinessActions);
+
+    const handlePopupInputChange = async (name: any, value: any) => {
+        setFormValues({
+            ...formValues,
+            [name]: value,
+        });
+
+        if (name === "pincode" && /^\d{6}$/.test(value)) {
+            try {
+                showLoader();
+                const res: any = await fetchPincodeDetails(value);
+
+                setFormValues(prevFormData => ({
+                    ...prevFormData,
+                    city: res.city,
+                    country: res.country,
+                    state: res.state,
+                }));
+                hideLoader();
+                let temp = createBusinessInputs.filter((action: any) => {
+                    if (action.name === "pincode") {
+                        action.disabled = true;
+                    }
+                    return action;
+                });
+                let temp2 = createBusinessActions.map((action: any) => {
+                    if (action.label === "Change Pincode") {
+                        action.display = "block"
+                    }
+                    return action;
+                })
+                setBusinessInputs([...temp]);
+                setBusinessActions([...temp2]);
+            } catch (error) {
+                console.error('Error fetching pincode details:', error);
+                hideLoader();
+            }
+        }
+    }
+
+
+    const handleReset = () => {
+
+    }
+
+
+
     return (
-        <div className='flex items-center justify-between p-4 bg-white shadow-md w-full ml-[2.25%]'>
+        <div className='flex justify-between p-4 bg-white shadow-md w-full' style={{ alignItems: "center" }}>
             <header className="flex items-center justify-between w-full">
                 <div className="flex items-center w-full">
                     <input
@@ -77,6 +208,8 @@ function Header() {
                         <span className="text-gray-700 font-medium">{"Your Account"}</span>
 
                     </div>
+                    <LogoutIcon sx={{ color: "blue", cursor: "pointer" }} onClick={() => logout()} />
+
                 </div>
 
             </header>
@@ -85,6 +218,9 @@ function Header() {
                 inputs={createBusinessInputs}
                 buttons={createBusinessActions}
                 onClose={handlePopupClose}
+                formValues={formValues}
+                setFormValues={setFormValues}
+                handleInputChange={handlePopupInputChange}
             />}
         </div>
     )

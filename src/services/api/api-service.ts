@@ -14,7 +14,7 @@ apiClient.interceptors.request.use(
     (config: any) => {
         toast.loading('Loading...');
 
-        const token = localStorage.getItem('authToken'); // Assuming you store the token in localStorage
+        const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
@@ -47,7 +47,7 @@ apiClient.interceptors.response.use(
             toast.error(`Error: ${error.response.data.message || 'An error occurred!'}`);
         else
             toast.error('Network error or server not reachable!');
-
+        console.log(error)
         if (error.response && error.response.status === 401) {
             console.error('Unauthorized, redirecting to login...');
             localStorage.clear();

@@ -38,7 +38,7 @@
   }
   
   /* Input field styling */
-  .popup-input input, .popup-input {
+   .popup-input {
     width: 49%;
     border-radius: 4px;
   }

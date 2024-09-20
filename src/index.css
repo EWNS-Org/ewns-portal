@@ -1,6 +1,6 @@
 
 body{
-  font-family: "font-sans";
+  font-family: monospace !important;
 }
 .app-container {
   display: flex;
@@ -38,3 +38,4 @@ body{
 .prose strong {
   font-weight: 600;
 }
+

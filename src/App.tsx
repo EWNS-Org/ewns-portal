@@ -28,6 +28,7 @@ import Albums from './components/Albums/Album';
 import Messages from './components/Messages/Messages';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AnalyticsComponent from './components/Plugins/Analytics/Analytics';
+import Testimonials from './components/Testimonials/Testimonials';
 
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("userRole");
     if (!token || !role) {
-      logout();
+      localStorage.clear();
     }
     setIsLoading(false); // Now we can render the app
   }, [logout]);
@@ -96,6 +97,18 @@ function App() {
             }
           />
           <Route
+            path="/albums"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Albums />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
             path="/services"
             element={
               <PrivateRoute
@@ -138,6 +151,18 @@ function App() {
                 element={
                   <Sidebar>
                     <Profile />
+                  </Sidebar>
+                }
+              />
+            }
+          />
+          <Route
+            path="/testimonials"
+            element={
+              <PrivateRoute
+                element={
+                  <Sidebar>
+                    <Testimonials />
                   </Sidebar>
                 }
               />

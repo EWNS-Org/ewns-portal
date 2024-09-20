@@ -6,42 +6,17 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Typograph
 import { fetchPincodeDetails } from '../services/api/postalcode.service';
 import { useLoader } from '../contexts/LoaderContext';
 import toast from 'react-hot-toast';
-import { countryList } from '../utils/country-flag';
+import { countryList } from '../utils/constants/country-flag';
 import useTailwindBreakpoint from '../hooks/useBreakpoint';
 import { register } from '../services/api/auth.api.service';
 import { useNavigate } from 'react-router-dom';
+import { categories } from '../utils/constants/categories';
+import { validateFields } from '../Helpers/common.helper';
 
 
 
 function Signup() {
     const navigate = useNavigate()
-    const categories = [
-        "General",
-        "Manufacturers",
-        "Doctors",
-        "Restaurants",
-        "Automobiles",
-        "Hospitals",
-        "InteriorDesign",
-        "RealEstate",
-        "Boutique",
-        "Hotel",
-        "Education",
-        "Electronics",
-        "Spa",
-        "Logistics",
-        "Schools",
-        "KinderGarden",
-        "Pubs",
-        "Traders",
-        "ExportsNImports",
-        "Saloon",
-        "SwimmingPools",
-        "DigitalMarketing",
-        "Marketing",
-        "Institutes",
-        "Other"
-    ];
     const [hideNext, setHideNext] = useState(true)
 
     const { showLoader, hideLoader } = useLoader();
@@ -121,19 +96,20 @@ function Signup() {
 
     useEffect(() => {
         if (showFirstStep) {
-            if (validateStep1(false)) {
+            if (validateFields(["name", "email", "password", "confirmPassword", "address", "pincode"], false, formData)) {
                 setHideNext(false)
             } else {
                 setHideNext(true)
             }
         } else {
-            if (validateStep2(false)) {
+            if (validateFields(["businessName", "category", "shortBio"], false, formData)) {
                 setHideNext(false)
             } else {
                 setHideNext(true)
             }
         }
     }, [formData, showFirstStep])
+
 
     const handlePincodeChange = async (e: any) => {
         const updatedPincode = e.target.value;
@@ -168,7 +144,7 @@ function Signup() {
 
 
     const handleSignup = async () => {
-        if (validateStep1(true) && validateStep2(true)) {
+        if (validateFields(["name", "email", "password", "confirmPassword", "address", "pincode", "businessName", "category", "shortBio"], true, formData)) {
             showLoader();
             let res = await register(formData);
 

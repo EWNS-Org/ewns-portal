@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
 import './Popup.css'; // Optional for styling
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { countryList } from '../../utils/country-flag';
+import { countryList } from '../../utils/constants/country-flag';
 import CloseIcon from '@mui/icons-material/Close';
 
 const Popup = ({
     header,
     inputs = [],
     buttons = [],
-    onClose
+    onClose,
+    handleInputChange,
+    formValues,
+    setFormValues,
+    children
 }: any) => {
-    const [formValues, setFormValues] = useState<any>({
-        'business-category': 'General',
-        'business-country-code': countryList["IN"].dial_code
-    });
-
-    const handleInputChange = (name: any, value: any) => {
-        setFormValues({
-            ...formValues,
-            [name]: value,
-        });
-    };
+    console.log(children)
 
     return (
         <div className="popup-overlay">
@@ -33,6 +27,7 @@ const Popup = ({
                     {inputs.map((input: any, index: any) => (
                         <div key={index} className="popup-input">
                             {(input.type === "text" || input.type === "number" || input.type === "email") && <TextField
+                                key={index}
                                 required
                                 label={input.label}
                                 sx={{ marginBottom: "2%", width: input.width, height: "100%" }}
@@ -60,7 +55,7 @@ const Popup = ({
                                             }}
                                         >
                                             {input?.options &&
-                                                input.options.map((cat: any) => <MenuItem value={cat}>{cat}</MenuItem>)}
+                                                input.options.map((cat: any) => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
                                             {input?.menuItems && input.menuItems.map((item: any) => item)}
                                         </Select>
                                     </FormControl>
@@ -68,6 +63,7 @@ const Popup = ({
                             }
                             {
                                 input.type === "text-area" && <TextField
+                                    key={index}
                                     required
                                     id="outlined-required"
                                     label="Business Description"
@@ -83,10 +79,13 @@ const Popup = ({
                 </div>
                 <div className="popup-actions">
                     {buttons.map((button: any, index: any) => (
-                        <Button onClick={() => button.onClick} className={button.className} variant='contained' sx={{ width: "100%", height: "15%" }}>{button.label}</Button>
+                        <Button key={button.label} className={button.className} onClick={() => button.onClick()} variant={button.variant} sx={{ width: "100%", height: "15%", display: button.display }}>{button.label}</Button>
 
                     ))}
                 </div>
+                {children?.length > 0 && children.map((x: any) => {
+                    return x;
+                })}
             </div>
         </div >
     );

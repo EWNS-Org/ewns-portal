@@ -9,7 +9,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, T
 import { fetchPincodeDetails } from '../services/api/postalcode.service';
 import { useLoader } from '../contexts/LoaderContext';
 import toast from 'react-hot-toast';
-import { countryList } from '../utils/country-flag';
+import { countryList } from '../utils/constants/country-flag';
 import useTailwindBreakpoint from '../hooks/useBreakpoint';
 import { loginUser } from '../services/api/auth.api.service';
 import { useAuth } from '../contexts/AuthContext';
