@@ -6,12 +6,12 @@
   /* Popup overlay styling */
   .popup-overlay {
     position: fixed; position: fixed; /* Or relative */
-    z-index: 500;
     /* Other styling */
+    z-index: 0.5;
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
@@ -27,6 +27,9 @@
     width: 100%;
     z-index: 10000;
     box-sizing: border-box;
+    max-height: 50%;
+    height: fit-content;
+    overflow-y: auto;
   }
   
   /* Popup header */
@@ -50,7 +53,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
   }
-  
+
   /* Popup actions buttons styling */
   .popup-actions {
     display: flex;

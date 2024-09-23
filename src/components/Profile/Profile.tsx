@@ -18,6 +18,9 @@ import ProfileTab from './ProfileTab';
 import AboutUsTab from './AboutTab';
 import ImagesTab from './ImagesTab';
 import BusinessHours from './BusinessHours';
+import AddressTab from './AddressTab';
+import ExternalLinksTab from './ExternalLinksTab';
+import FAQTab from './FAQTab';
 
 
 
@@ -91,7 +94,6 @@ const PersonalProfile = () => {
     };
     const businessDetails = useSelector((state: any) => state.business.businessDetails);
 
-
     const [profile, setProfile] = useState(initialProfileDetails);
     const [previewData, setPreviewData] = useState({
         logoImage: null,
@@ -99,9 +101,9 @@ const PersonalProfile = () => {
         bannerImage: null,
         isBannerFeaturedImage: null
     })
+    const [showButtons, setShowButtons] = useState<boolean>(true);
 
     const dispatch = useDispatch();
-
 
     useEffect(() => {
         if (businessDetails) {
@@ -114,6 +116,14 @@ const PersonalProfile = () => {
             } as any);
         }
     }, [businessDetails, setProfile]);
+
+    useEffect(() => {
+        if (["Address", "External Links", "FAQs"].includes(activeTab)) {
+            setShowButtons(false);
+        } else {
+            setShowButtons(true);
+        }
+    }, [activeTab])
 
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
@@ -155,7 +165,7 @@ const PersonalProfile = () => {
     }
 
     return (
-        <div className="w-full p-10 h-[65vh] font-semibold" style={{ fontFamily: "monospace", fontSize: "20px" }}>
+        <div className="w-full p-10 h-[65vh] font-semibold font-sans" style={{ fontSize: "20px" }}>
             <div className="w-full p-2" style={{ display: "flex", backgroundColor: "white" }}>
                 <div className="w-full" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     {['Profile', 'About', 'Images', 'Timings', 'Address', 'External Links', 'FAQs'].map((tab) => (
@@ -198,41 +208,23 @@ const PersonalProfile = () => {
                 {activeTab === 'Images' && <ImagesTab previewData={previewData} setPreviewData={setPreviewData} />}
                 {activeTab === 'Timings' && <BusinessHours profile={profile} setProfile={setProfile} />}
                 {activeTab === 'Address' && <AddressTab />}
-                {activeTab === 'External Links' && <SocialMediaTab />}
+                {activeTab === 'External Links' && <ExternalLinksTab profile={profile} setProfile={setProfile} />}
+                {activeTab === 'FAQs' && <FAQTab profile={profile} setProfile={setProfile} />}
             </div>
 
-            <div className="flex  my-1 w-full" style={{ justifyContent: "space-between" }}>
-                <Button variant='outlined' onClick={() => setProfile(businessDetails)}>
-                    Reset
-                </Button>
-                <Button variant='contained' onClick={() => handleUpdateProfile()} >
-                    Update Profile
-                </Button>
-            </div>
+            {
+                showButtons && <div className="flex  my-1 w-full" style={{ justifyContent: "space-between" }}>
+                    <Button variant='outlined' onClick={() => setProfile(businessDetails)}>
+                        Reset
+                    </Button>
+                    <Button variant='contained' onClick={() => handleUpdateProfile()} >
+                        Update Profile
+                    </Button>
+                </div>
+            }
+
+
         </div >
-    );
-};
-
-
-/* Address Tab Content */
-const AddressTab = () => {
-    return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Address</h2>
-            <p>Manage your business address information.</p>
-            {/* Add address input fields */}
-        </div>
-    );
-};
-
-/* Social Media Tab Content */
-const SocialMediaTab = () => {
-    return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Social Media</h2>
-            <p>Add links to your social media profiles for better engagement.</p>
-            {/* Add social media input fields */}
-        </div>
     );
 };
 

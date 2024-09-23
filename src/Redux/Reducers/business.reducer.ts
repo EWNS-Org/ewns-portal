@@ -9,11 +9,15 @@ import {
     GET_BUSINESS_DETAILS_SUCCESS,
     GET_BUSINESS_DETAILS_FAILURE,
     UPDATE_BUSINESS_PROFILE,
+    GET_ALL_BUSINESS_ADDRESSES,
+    GET_ALL_BUSINESS_LINKS,
 } from '../Actions/BusinessActions/business.action.types';
 
 const initialState = {
     businesses: [],
     businessDetails: null,
+    businessAddresses: [],
+    businessLinks: [],
     loading: false,
     error: null,
 };
@@ -33,7 +37,10 @@ export const businessReducer = (state = initialState, action: any) => {
             return { ...state, businessDetails: action.payload };
         case GET_BUSINESS_DETAILS_FAILURE:
             return { ...state, businessDetails: null };
-
+        case GET_ALL_BUSINESS_ADDRESSES:
+            return { ...state, businessAddresses: action.payload };
+        case GET_ALL_BUSINESS_LINKS:
+            return { ...state, businessLinks: action.payload };
         default:
             return state;
     }

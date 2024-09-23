@@ -17,9 +17,9 @@ import 'dayjs/locale/en-gb';
 import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { profile } from 'console';
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
-
-
+dayjs.extend(customParseFormat);
 
 const locales = ['en', 'en-gb', 'de'];
 
@@ -38,17 +38,13 @@ function BusinessHours({ profile, setProfile }: any) {
     };
 
     return (
-        <div className="container  w-full" style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+        <div className="container  w-full" style={{ fontFamily: "source Sans pro", }}>
+            <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Stack spacing={4} width={"100%"}>
+                    <Stack spacing={4} width={"100%"} style={{ marginTop: "2%" }}>
                         <Card sx={{ margin: 'auto', mt: 4 }}>
                             <CardContent sx={{ width: "100%" }}>
-                                <div>
-                                    <Typography variant="h5" component="div" sx={{ mb: 2, width: "20%" }}>
-                                        Business Hours
-                                    </Typography>
-                                </div>
+
                                 {Object.keys(profile.timings).map((day) => (
                                     <div style={{ display: "flex", justifyContent: "space-between", width: "100%", height: "100%", alignItems: "center", padding: "1% 2%", margin: "0% 2%" }}>
                                         <div style={{ width: "20%", height: "60px", alignItems: "center", justifyContent: "start", display: "flex" }}>
@@ -64,7 +60,7 @@ function BusinessHours({ profile, setProfile }: any) {
                                                     <TimePicker
                                                         ampm={false} // Disables AM/PM to force 24-hour format
                                                         label="Open Time"
-                                                        value={!profile.timings[day].isClosed ? dayjs(`1970-01-01T${profile.timings[day].open}:00`) : null}
+                                                        value={!profile.timings[day].isClosed ? dayjs(`${profile.timings[day].open}`, 'HH:mm') : null}
                                                         onChange={(newValue) => handleTimeChange(day, 'open', newValue)}
                                                     />
                                                 )}
@@ -78,7 +74,7 @@ function BusinessHours({ profile, setProfile }: any) {
                                                     <TimePicker
                                                         ampm={false} // Disables AM/PM to force 24-hour format
                                                         label="Close Time"
-                                                        value={profile.timings[day].close ? dayjs(`1970-01-01T${profile.timings[day].close}:00`) : null}
+                                                        value={!profile.timings[day].isClosed ? dayjs(`${profile.timings[day].close}`, 'HH:mm') : null}
                                                         onChange={(newValue) => handleTimeChange(day, 'close', newValue)}
                                                     />
                                                 )}

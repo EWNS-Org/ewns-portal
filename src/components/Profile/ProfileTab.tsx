@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Button, Checkbox, FormControlLabel, Typography, Switch, SwitchProps, Theme, Tooltip } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Button, Checkbox, FormControlLabel, Typography, Switch, SwitchProps, Theme, Tooltip, Card } from "@mui/material";
 import { categories } from "../../utils/constants/categories";
 import { countryList } from "../../utils/constants/country-flag";
 import * as React from 'react';
@@ -74,117 +74,121 @@ const ProfileTab = ({ setProfile, profile }: any) => {
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
             <div className="h-[800px] bg-white p-6  shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
-                <div className="h-full w-full">
-                    <h2 className="text-xl font-semibold mb-4">Business Profile Information</h2>
+                <Stack spacing={4} width={"100%"} style={{ marginTop: "2%" }}>
+                    <Card sx={{ margin: 'auto', mt: 4, padding: "2%" }}>
+                        <div className="h-full w-full">
+                            <h2 className="text-xl font-semibold mb-4">Business Profile Information</h2>
 
-                    <div className="mb-[2%]">
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label={"Business Name"}
-                            value={profile.businessName}
-                            onChange={(e) => setProfile({ ...profile, businessName: e.target.value })}
-                            sx={{ width: "100%", height: "100%", marginBottom: "2%" }}
-                        />
-
-                        <Box sx={{ minWidth: 120, cursor: "zoom-in", marginBottom: "2%" }}>
-                            <FormControl sx={{ width: "100%" }} >
-                                <InputLabel id="demo-simple-select-label">Business Category</InputLabel>
-                                <Select disabled
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={profile.category}
-                                    label="Business Category"
-                                >
-                                    {categories.map(cat => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
-                                </Select>
-                            </FormControl>
-                        </Box>
-
-                        <div className='flex'  >
-                            <Tooltip title="Visit" arrow>
+                            <div className="mb-[2%]">
                                 <TextField
+                                    required
                                     id="outlined-required"
-                                    label={"Business URL"}
-                                    value={"https://" + profile.url}
-                                    sx={{
-                                        width: "50%", height: "100%", marginRight: "2%", input: { cursor: 'pointer' }, color: "gray",
-                                    }}
-                                    onClick={() => window.open("https://" + profile.url, "_blank")}
+                                    label={"Business Name"}
+                                    value={profile.businessName}
+                                    onChange={(e) => setProfile({ ...profile, businessName: e.target.value })}
+                                    sx={{ width: "100%", height: "100%", marginBottom: "2%" }}
                                 />
-                            </Tooltip>
 
-
-                        </div>
-                    </div>
-                    <div className="w-full">
-                        <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
-
-                        <div className="h-full w-full mb-[2%]">
-                            <div style={{ display: "flex", width: "100%" }}>
-                                <Box sx={{ width: "10%" }}>
-                                    <FormControl sx={{ width: "100%", height: "100%" }}>
-                                        <InputLabel id="demo-simple-select-label">Country Code</InputLabel>
-                                        <Select required
+                                <Box sx={{ minWidth: 120, cursor: "zoom-in", marginBottom: "2%" }}>
+                                    <FormControl sx={{ width: "100%" }} >
+                                        <InputLabel id="demo-simple-select-label">Business Category</InputLabel>
+                                        <Select disabled
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
-                                            value={profile.countryCode}
-                                            label="Country Code"
-                                            onChange={(e) => setProfile({ ...profile, countryCode: e.target.value })}
+                                            value={profile.category}
+                                            label="Business Category"
                                         >
-                                            {Object.keys(countryList).map(cat => <MenuItem key={countryList[cat].dial_code} value={countryList[cat].dial_code}>
-                                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                                                    <img width={"30px"} height={"30px"} src={countryList[cat].image} />
-                                                    <span > &nbsp; &nbsp;{countryList[cat].dial_code + " - " + cat}</span>
-                                                </div></MenuItem>)}
+                                            {categories.map(cat => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
                                         </Select>
                                     </FormControl>
                                 </Box>
-                                <TextField
-                                    type="number"
-                                    id="outlined-required"
-                                    label={"Mobile Number"}
-                                    value={profile.phone}
-                                    onInput={(e: any) => {
-                                        e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 10)
-                                    }}
-                                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                                    sx={{ marginX: "1%", width: "40%", height: "100%" }}
-                                />
-                                <TextField
-                                    id="outlined-required"
-                                    label={"Business Email"}
-                                    value={profile.email}
-                                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                                    sx={{ width: "50%", height: "100%" }}
-                                />
+
+                                <div className='flex'  >
+                                    <Tooltip title="Visit" arrow>
+                                        <TextField
+                                            id="outlined-required"
+                                            label={"Business URL"}
+                                            value={"https://" + profile.url}
+                                            sx={{
+                                                width: "50%", height: "100%", marginRight: "2%", input: { cursor: 'pointer' }, color: "gray",
+                                            }}
+                                            onClick={() => window.open("https://" + profile.url, "_blank")}
+                                        />
+                                    </Tooltip>
+
+
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                            <div className="w-full">
+                                <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
 
-                    <div className="mb-[2%] w-full h-full">
-                        <h2 className="text-xl font-semibold mb-4">Google Business Profile</h2>
-                        <div className="col-span-1 mb-6">
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label={"Business Profile URL"}
-                                value={profile.googleProfileUrl}
-                                onChange={(e) => setProfile({ ...profile, googleProfileUrl: e.target.value })}
-                                sx={{ width: "100%", height: "100%" }}
-                            />
-                        </div>
-                        <div style={{ display: "flex" }}>
-                            <FormControlLabel
-                                control={<IOSSwitch sx={{ m: 1 }} checked={profile.isActive} />}
-                                label={`Business is ${profile.isActive ? "Active" : "Disabled"}`}
-                                onChange={(e: any) => setProfile({ ...profile, isActive: e.target.checked })}
-                            />
-                        </div>
-                    </div>
+                                <div className="h-full w-full mb-[2%]">
+                                    <div style={{ display: "flex", width: "100%" }}>
+                                        <Box sx={{ width: "10%" }}>
+                                            <FormControl sx={{ width: "100%", height: "100%" }}>
+                                                <InputLabel id="demo-simple-select-label">Country Code</InputLabel>
+                                                <Select required
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={profile.countryCode}
+                                                    label="Country Code"
+                                                    onChange={(e) => setProfile({ ...profile, countryCode: e.target.value })}
+                                                >
+                                                    {Object.keys(countryList).map(cat => <MenuItem key={countryList[cat].dial_code} value={countryList[cat].dial_code}>
+                                                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                            <img width={"30px"} height={"30px"} src={countryList[cat].image} />
+                                                            <span > &nbsp; &nbsp;{countryList[cat].dial_code + " - " + cat}</span>
+                                                        </div></MenuItem>)}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                        <TextField
+                                            type="number"
+                                            id="outlined-required"
+                                            label={"Mobile Number"}
+                                            value={profile.phone}
+                                            onInput={(e: any) => {
+                                                e.target.value = Math.max(0, parseInt(e.target.value)).toString().slice(0, 10)
+                                            }}
+                                            onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                                            sx={{ marginX: "1%", width: "40%", height: "100%" }}
+                                        />
+                                        <TextField
+                                            id="outlined-required"
+                                            label={"Business Email"}
+                                            value={profile.email}
+                                            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                                            sx={{ width: "50%", height: "100%" }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mb-[2%] w-full h-full">
+                                <h2 className="text-xl font-semibold mb-4">Google Business Profile</h2>
+                                <div className="col-span-1 mb-6">
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label={"Business Profile URL"}
+                                        value={profile.googleProfileUrl}
+                                        onChange={(e) => setProfile({ ...profile, googleProfileUrl: e.target.value })}
+                                        sx={{ width: "100%", height: "100%" }}
+                                    />
+                                </div>
+                                <div style={{ display: "flex" }}>
+                                    <FormControlLabel
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={profile.isActive} />}
+                                        label={`Business is ${profile.isActive ? "Active" : "Disabled"}`}
+                                        onChange={(e: any) => setProfile({ ...profile, isActive: e.target.checked })}
+                                    />
+                                </div>
+                            </div>
 
 
-                </div>
+                        </div>
+                    </Card>
+                </Stack>
             </div>
 
         </div >

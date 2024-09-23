@@ -14,7 +14,7 @@ const Popup = ({
     setFormValues,
     children
 }: any) => {
-    console.log(children)
+    console.log(formValues)
 
     return (
         <div className="popup-overlay">
@@ -66,7 +66,7 @@ const Popup = ({
                                     key={index}
                                     required
                                     id="outlined-required"
-                                    label="Business Description"
+                                    label={input.label}
                                     multiline
                                     rows={4}
                                     sx={{ marginBottom: "2%", width: input.width }}
@@ -83,9 +83,10 @@ const Popup = ({
 
                     ))}
                 </div>
-                {children?.length > 0 && children.map((x: any) => {
+                {Array.isArray(children) && children?.length > 0 && children.map((x: any) => {
                     return x;
                 })}
+                {!Array.isArray(children) && children}
             </div>
         </div >
     );

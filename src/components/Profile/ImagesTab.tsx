@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@mui/material";
+import { Button, Card, IconButton, Stack } from "@mui/material";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -68,144 +68,147 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
             <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={previewData.isBannerFeaturedImage}
-                            onChange={(e) =>
-                                setPreviewData({ ...previewData, isBannerFeaturedImage: e.target.checked })
+                <Stack spacing={4} width={"100%"} style={{}}>
+                    <Card sx={{ margin: 'auto', mt: 4, padding: "1%" }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={previewData.isBannerFeaturedImage}
+                                    onChange={(e) =>
+                                        setPreviewData({ ...previewData, isBannerFeaturedImage: e.target.checked })
+                                    }
+                                />
                             }
+                            label="Use Banner as Featured Image"
+                            sx={{}}
                         />
-                    }
-                    label="Use Banner as Featured Image"
-                    sx={{}}
-                />
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
 
-                    <div style={{ width: "100%", height: "60%" }}>
-                        <h2 className="text-xl font-semibold mb-4">Logo</h2>
+                            <div style={{ width: "100%", height: "60%" }}>
+                                <h2 className="text-xl font-semibold mb-4">Logo</h2>
 
-                        <div className="containerr" style={{ width: "400px", height: "300px", justifyContent: "center" }}>
-                            <img src={previewData?.logoImage || "https://placehold.co/600x400.png?text=No+Logo"} alt="Avatar" className="image" style={{ width: "100%" }} />
-                            <div className="middle">
-                                <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <IconButton component="label" sx={{ color: "blue" }}>
-                                        <EditIcon fontSize="large" />
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            hidden
-                                            onChange={(e) => handleImageChange(e, "logoImage")}
-                                        />
-                                    </IconButton>
-                                    <IconButton
-                                        sx={{ color: "blue" }}
-                                        onClick={() => handlePreview("Logo Image")}
-                                        disabled={!previewData.logoImage}
-                                    >
-                                        <VisibilityIcon fontSize="large" />
-                                    </IconButton>
+                                <div className="containerr" style={{ width: "400px", height: "300px", justifyContent: "center" }}>
+                                    <img src={previewData?.logoImage || "https://placehold.co/600x400.png?text=No+Logo"} alt="Avatar" className="image" style={{ width: "100%" }} />
+                                    <div className="middle">
+                                        <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                            <IconButton component="label" sx={{ color: "blue" }}>
+                                                <EditIcon fontSize="large" />
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    hidden
+                                                    onChange={(e) => handleImageChange(e, "logoImage")}
+                                                />
+                                            </IconButton>
+                                            <IconButton
+                                                sx={{ color: "blue" }}
+                                                onClick={() => handlePreview("Logo Image")}
+                                                disabled={!previewData.logoImage}
+                                            >
+                                                <VisibilityIcon fontSize="large" />
+                                            </IconButton>
 
-                                    <IconButton
-                                        sx={{ color: "blue" }}
-                                        onClick={() => handleDeleteImage("logoImage")}
-                                        disabled={!previewData.logoImage}
-                                    >
-                                        <DeleteIcon fontSize="large" />
-                                    </IconButton>
+                                            <IconButton
+                                                sx={{ color: "blue" }}
+                                                onClick={() => handleDeleteImage("logoImage")}
+                                                disabled={!previewData.logoImage}
+                                            >
+                                                <DeleteIcon fontSize="large" />
+                                            </IconButton>
+                                        </div>
+
+
+                                    </div>
                                 </div>
+                            </div>
+
+                            {/* Banner Image Section */}
+                            <div style={{ width: "100%", height: "60%" }}>
+                                <h2 className="text-xl font-semibold mb-4">Featured Image</h2>
+
+                                <div className="containerr" style={{ width: "400px", height: "300px" }}>
+                                    <img src={previewData.featuredImage || "https://placehold.co/600x400.png?text=No+Banner"} alt="Avatar" className="image" style={{ width: "100%" }} />
+                                    <div className="middle">
+                                        <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                            <IconButton component="label" sx={{ color: "blue" }}>
+                                                <EditIcon fontSize="large" />
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    hidden
+                                                    onChange={(e) => handleImageChange(e, "featuredImage")}
+                                                />
+                                            </IconButton>
+                                            <IconButton
+                                                sx={{ color: "blue" }}
+                                                onClick={() => handlePreview("Featured Image")}
+                                                disabled={!previewData.featuredImage}
+                                            >
+                                                <VisibilityIcon fontSize="large" />
+                                            </IconButton>
+
+                                            <IconButton
+                                                sx={{ color: "blue" }}
+                                                onClick={() => handleDeleteImage("featuredImage")}
+                                                disabled={!previewData.featuredImage}
+                                            >
+                                                <DeleteIcon fontSize="large" />
+                                            </IconButton>
+                                        </div>
 
 
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Banner Image Section */}
-                    <div style={{ width: "100%", height: "60%" }}>
-                        <h2 className="text-xl font-semibold mb-4">Featured Image</h2>
 
-                        <div className="containerr" style={{ width: "400px", height: "300px" }}>
-                            <img src={previewData.featuredImage || "https://placehold.co/600x400.png?text=No+Banner"} alt="Avatar" className="image" style={{ width: "100%" }} />
-                            <div className="middle">
-                                <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <IconButton component="label" sx={{ color: "blue" }}>
-                                        <EditIcon fontSize="large" />
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            hidden
-                                            onChange={(e) => handleImageChange(e, "featuredImage")}
-                                        />
-                                    </IconButton>
-                                    <IconButton
-                                        sx={{ color: "blue" }}
-                                        onClick={() => handlePreview("Featured Image")}
-                                        disabled={!previewData.featuredImage}
-                                    >
-                                        <VisibilityIcon fontSize="large" />
-                                    </IconButton>
+                        {/* Featured Image Checkbox */}
 
-                                    <IconButton
-                                        sx={{ color: "blue" }}
-                                        onClick={() => handleDeleteImage("featuredImage")}
-                                        disabled={!previewData.featuredImage}
-                                    >
-                                        <DeleteIcon fontSize="large" />
-                                    </IconButton>
+
+                        {/* Conditionally Render Featured Image Section */}
+                        {!previewData.isBannerFeaturedImage && (
+                            <div style={{ width: "100%" }}>
+                                <h2 className="text-xl font-semibold mb-4">Banner Image</h2>
+
+                                <div className="containerr" style={{ width: "400px", height: "300px" }}>
+                                    <img src={previewData.bannerImage || "https://placehold.co/600x200.png?text=No+Banner+Image"} alt="Avatar" className="image" style={{ width: "100%" }} />
+                                    <div className="middle">
+                                        <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                            <IconButton component="label" sx={{ color: "blue" }}>
+                                                <EditIcon fontSize="large" />
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    hidden
+                                                    onChange={(e) => handleImageChange(e, "bannerImage")}
+                                                />
+                                            </IconButton>
+                                            <IconButton
+                                                sx={{ color: "blue" }}
+                                                onClick={() => handlePreview("Banner Image")}
+                                                disabled={!previewData.bannerImage}
+                                            >
+                                                <VisibilityIcon fontSize="large" />
+                                            </IconButton>
+
+                                            <IconButton
+                                                sx={{ color: "blue" }}
+                                                onClick={() => handleDeleteImage("bannerImage")}
+                                                disabled={!previewData.bannerImage}
+                                            >
+                                                <DeleteIcon fontSize="large" />
+                                            </IconButton>
+                                        </div>
+
+
+                                    </div>
                                 </div>
-
-
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        )}
 
-
-                {/* Featured Image Checkbox */}
-
-
-                {/* Conditionally Render Featured Image Section */}
-                {!previewData.isBannerFeaturedImage && (
-                    <div style={{ width: "100%" }}>
-                        <h2 className="text-xl font-semibold mb-4">Banner Image</h2>
-
-                        <div className="containerr" style={{ width: "400px", height: "300px" }}>
-                            <img src={previewData.bannerImage || "https://placehold.co/600x200.png?text=No+Banner+Image"} alt="Avatar" className="image" style={{ width: "100%" }} />
-                            <div className="middle">
-                                <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                    <IconButton component="label" sx={{ color: "blue" }}>
-                                        <EditIcon fontSize="large" />
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            hidden
-                                            onChange={(e) => handleImageChange(e, "bannerImage")}
-                                        />
-                                    </IconButton>
-                                    <IconButton
-                                        sx={{ color: "blue" }}
-                                        onClick={() => handlePreview("Banner Image")}
-                                        disabled={!previewData.bannerImage}
-                                    >
-                                        <VisibilityIcon fontSize="large" />
-                                    </IconButton>
-
-                                    <IconButton
-                                        sx={{ color: "blue" }}
-                                        onClick={() => handleDeleteImage("bannerImage")}
-                                        disabled={!previewData.bannerImage}
-                                    >
-                                        <DeleteIcon fontSize="large" />
-                                    </IconButton>
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-
+                    </Card>
+                </Stack>
             </div>
             {isPreviewPopupOpen && <Popup
                 header={`${"Logo"} Preview`}

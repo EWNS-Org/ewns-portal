@@ -1,10 +1,9 @@
 import toast from "react-hot-toast";
-import { get, post, put } from "./api-service"
+import { del, get, post, put } from "./api-service"
 
 
 export const getAllBusinesses = async () => {
     try {
-        console.log("Call Business");
 
         const res: any = await get(`/business/get/all`);
 
@@ -66,6 +65,58 @@ export const uploadBusinessImages = async (businessId: any, bodyData: any) => {
         return res.data;
     }
     catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+
+export const createBusinessLink = async (linkData: any, businessId: any) => {
+    try {
+        let body = {
+            logo: linkData.logo,
+            title: linkData.title,
+            url: linkData.url,
+        }
+        const res: any = await post(`/business/link/create?businessId=${businessId}`, body);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+
+}
+
+export const updateBusinessLink = async (linkData: any, businessId: any, linkId: any) => {
+    try {
+        let body = {
+            logo: linkData.logo,
+            title: linkData.title,
+            url: linkData.url,
+        }
+        const res: any = await put(`/business/link/update?businessId=${businessId}&linkId=${linkId}`, body);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+
+}
+
+export const getAllBusinessLinks = async (businessId: any) => {
+    try {
+        const res: any = await get(`/business/link/getAll?businessId=${businessId}`);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+
+export const deleteBusinessLink = async (businessId: any, linkId: any) => {
+    try {
+        const res: any = await del(`/business/link/delete?businessId=${businessId}&linkId=${linkId}`);
+        return res.data;
+    } catch (error: any) {
         toast.error(error.message || error);
         console.log(error)
     }

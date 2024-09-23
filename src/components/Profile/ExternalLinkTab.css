@@ -1,0 +1,67 @@
+.business-links {
+    padding: 20px;
+  }
+  
+  .link-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .link-form input {
+    padding: 8px;
+    width: 150px;
+  }
+  
+  .link-form button {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .popular-sites {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .popular-site {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .links-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .links-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .links-list img {
+    border-radius: 50%;
+  }
+  
+  .links-list button {
+    padding: 5px 8px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .link-tooltip{
+    display: none;
+  }
+  .link-hover:hover + .link-tooltip{
+    display: block
+
+  }
+

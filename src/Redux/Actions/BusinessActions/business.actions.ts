@@ -10,10 +10,15 @@ import {
     GET_BUSINESS_DETAILS_SUCCESS,
     GET_BUSINESS_DETAILS_FAILURE,
     UPDATE_BUSINESS_PROFILE,
+    CREATE_BUSINESS_ADDRESS,
+    UPDATE_BUSINESS_ADDRESS,
+    GET_ALL_BUSINESS_ADDRESSES,
+    GET_ALL_BUSINESS_LINKS,
 
 } from './business.action.types';
-import { createBusiness, getAllBusinesses, getBusinessDetails, updateBusiness, uploadBusinessImages } from '../../../services/api/business.service';
+import { createBusiness, createBusinessLink, deleteBusinessLink, getAllBusinessLinks, getAllBusinesses, getBusinessDetails, updateBusiness, updateBusinessLink, uploadBusinessImages } from '../../../services/api/business.service';
 import toast from 'react-hot-toast';
+import { createBusinessAddress, defaultBusinessAddress, deleteBusinessAddress, getAllBusinessAddresses, updateBusinessAddress } from '../../../services/api/address.service';
 
 // Action creators for fetching businesses
 export const getAllBusinessesRequest = () => ({
@@ -61,9 +66,15 @@ export const createBusinessFailure = (error: any) => ({
     payload: error,
 });
 
-export const updateBusinessProfile = (businessDetails: any) => ({
-    type: UPDATE_BUSINESS_PROFILE,
-    payload: businessDetails,
+export const getAllBusinessAddressesRequest = (addresses: any) => ({
+    type: GET_ALL_BUSINESS_ADDRESSES,
+    payload: addresses,
+});
+
+
+export const getAllBusinessLinksRequest = (links: any) => ({
+    type: GET_ALL_BUSINESS_LINKS,
+    payload: links,
 });
 
 
@@ -120,3 +131,84 @@ export const uploadBusinessImagesAction = (businessId: any, bodyData: any) => as
         dispatch(createBusinessFailure(error.message || 'Failed to create business'));
     }
 }
+
+export const createBusinessAddressAction = (addressDetails: any, businessId: any) => async (dispatch: any) => {
+    try {
+        const response = await createBusinessAddress(addressDetails, businessId);
+        dispatch(createBusinessSuccess(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to create business address'));
+    }
+};
+
+export const updateBusinessAddressAction = (addressDetails: any, businessId: any, addressId: any) => async (dispatch: any) => {
+    try {
+        const response = await updateBusinessAddress(addressDetails, businessId, addressId);
+        dispatch(createBusinessSuccess(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to update business address'));
+    }
+};
+
+export const getAllBusinessAddressesAction = (businessId: any) => async (dispatch: any) => {
+    try {
+        const response = await getAllBusinessAddresses(businessId);
+        dispatch(getAllBusinessAddressesRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to get business addresses'));
+    }
+};
+
+export const deleteBusinessAddressAction = (businessId: any, addressId: any) => async (dispatch: any) => {
+    try {
+        const response = await deleteBusinessAddress(businessId, addressId);
+        dispatch(getAllBusinessAddressesRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessSuccess(error.message || 'Failed to delete business address'));
+    }
+};
+
+export const makeBusinessAddressDefaultAction = (businessId: any, addressId: any) => async (dispatch: any) => {
+    try {
+        const response = await defaultBusinessAddress(businessId, addressId);
+        dispatch(getAllBusinessAddressesRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessSuccess(error.message || 'Failed to default business address'));
+    }
+};
+
+export const createBusinessLinkAction = (linkData: any, businessId: any) => async (dispatch: any) => {
+    try {
+        const response = await createBusinessLink(linkData, businessId);
+        dispatch(createBusinessSuccess(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to create business address'));
+    }
+};
+
+export const updateBusinessLinkAction = (linkData: any, businessId: any, linkId: any) => async (dispatch: any) => {
+    try {
+        const response = await updateBusinessLink(linkData, businessId, linkId);
+        dispatch(createBusinessSuccess(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to update business address'));
+    }
+};
+
+export const getAllBusinessLinksAction = (businessId: any) => async (dispatch: any) => {
+    try {
+        const response = await getAllBusinessLinks(businessId);
+        dispatch(getAllBusinessLinksRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to get business addresses'));
+    }
+};
+
+export const deleteBusinessLinkAction = (businessId: any, linkId: any) => async (dispatch: any) => {
+    try {
+        const response = await deleteBusinessLink(businessId, linkId);
+        dispatch(getAllBusinessAddressesRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessSuccess(error.message || 'Failed to delete business address'));
+    }
+};
