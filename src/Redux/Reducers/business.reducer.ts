@@ -11,6 +11,7 @@ import {
     UPDATE_BUSINESS_PROFILE,
     GET_ALL_BUSINESS_ADDRESSES,
     GET_ALL_BUSINESS_LINKS,
+    GET_ALL_BUSINESS_FAQS,
 } from '../Actions/BusinessActions/business.action.types';
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
     businessDetails: null,
     businessAddresses: [],
     businessLinks: [],
+    businessFAQs: [],
     loading: false,
     error: null,
 };
@@ -41,6 +43,9 @@ export const businessReducer = (state = initialState, action: any) => {
             return { ...state, businessAddresses: action.payload };
         case GET_ALL_BUSINESS_LINKS:
             return { ...state, businessLinks: action.payload };
+        case GET_ALL_BUSINESS_FAQS:
+            console.log(action.payload)
+            return { ...state, businessFAQs: action.payload };
         default:
             return state;
     }

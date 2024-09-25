@@ -342,7 +342,7 @@ function AddressTab() {
                                     variant="contained"
                                     color="primary"
                                     onClick={() => { setFormValues(initialFormData); setIsPopupOpen({ ...isPopupOpen, createAddressPopup: true }); }}
-                                    sx={{ marginBottom: '20px' }}
+                                    sx={{ marginBottom: '20px', backgroundColor: "rgba(89, 50, 234, 1)" }}
                                 >
                                     Add New Address
                                 </Button>
@@ -379,8 +379,8 @@ function AddressTab() {
                                             </CardContent>
                                             <CardActions sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
                                                 <div style={{ width: "20%", display: "flex", justifyContent: "space-between" }}>
-                                                    <EditIcon onClick={() => editAddress(address._id)} sx={{ cursor: "pointer" }} />
-                                                    <DeleteIcon onClick={() => deleteAddress(address._id)} sx={{ cursor: "pointer" }} />
+                                                    <EditIcon onClick={() => editAddress(address._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
+                                                    <DeleteIcon onClick={() => deleteAddress(address._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
                                                 </div>
 
                                                 <div style={{ display: "flex" }}>

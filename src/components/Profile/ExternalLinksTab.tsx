@@ -36,7 +36,9 @@ const initialLinks = [
 
 const ExternalLinksTab = ({ profile, setProfile }: any) => {
     const [links, setLinks] = useState(initialLinks);
-    const businessLinks = useSelector((state: any) => state.business.businessLinks);
+    const businessLinks = useSelector((state: any) => {
+        return state.business.businessLinks
+    });
     const [isPopupOpen, setIsPopupOpen] = useState({
         editAddressPopup: false,
         createAddressPopup: false
@@ -194,7 +196,7 @@ const ExternalLinksTab = ({ profile, setProfile }: any) => {
                                     variant="contained"
                                     color="primary"
                                     onClick={() => { setFormValues(initialFormData); setIsPopupOpen({ ...isPopupOpen, createAddressPopup: true }); }}
-                                    sx={{ marginBottom: '20px', zIndex: 0 }}
+                                    sx={{ marginBottom: '20px', zIndex: 0, backgroundColor: "rgba(89, 50, 234, 1)" }}
                                 >
                                     Add New Link
                                 </Button>
@@ -216,8 +218,8 @@ const ExternalLinksTab = ({ profile, setProfile }: any) => {
                                                     </div>
                                                 </Tooltip>
                                                 <CardActions sx={{ display: "flex", }}>
-                                                    <EditIcon onClick={() => editLink(link._id)} sx={{ cursor: "pointer" }} />
-                                                    <DeleteIcon onClick={() => deleteLink(link._id)} sx={{ cursor: "pointer" }} />
+                                                    <EditIcon onClick={() => editLink(link._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
+                                                    <DeleteIcon onClick={() => deleteLink(link._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
                                                 </CardActions>
 
                                             </CardContent>

@@ -14,9 +14,10 @@ import {
     UPDATE_BUSINESS_ADDRESS,
     GET_ALL_BUSINESS_ADDRESSES,
     GET_ALL_BUSINESS_LINKS,
+    GET_ALL_BUSINESS_FAQS,
 
 } from './business.action.types';
-import { createBusiness, createBusinessLink, deleteBusinessLink, getAllBusinessLinks, getAllBusinesses, getBusinessDetails, updateBusiness, updateBusinessLink, uploadBusinessImages } from '../../../services/api/business.service';
+import { createBusiness, createBusinessFAQ, createBusinessLink, deleteBusinessFAQ, deleteBusinessLink, getAllBusinessFAQs, getAllBusinessLinks, getAllBusinesses, getBusinessDetails, toggleBusinessFAQ, updateBusiness, updateBusinessFAQ, updateBusinessLink, uploadBusinessImages } from '../../../services/api/business.service';
 import toast from 'react-hot-toast';
 import { createBusinessAddress, defaultBusinessAddress, deleteBusinessAddress, getAllBusinessAddresses, updateBusinessAddress } from '../../../services/api/address.service';
 
@@ -75,6 +76,11 @@ export const getAllBusinessAddressesRequest = (addresses: any) => ({
 export const getAllBusinessLinksRequest = (links: any) => ({
     type: GET_ALL_BUSINESS_LINKS,
     payload: links,
+});
+
+export const getAllBusinessFAQSRequest = (faqs: any) => ({
+    type: GET_ALL_BUSINESS_FAQS,
+    payload: faqs,
 });
 
 
@@ -182,7 +188,7 @@ export const createBusinessLinkAction = (linkData: any, businessId: any) => asyn
         const response = await createBusinessLink(linkData, businessId);
         dispatch(createBusinessSuccess(response));
     } catch (error: any) {
-        dispatch(createBusinessFailure(error.message || 'Failed to create business address'));
+        dispatch(createBusinessFailure(error.message || 'Failed to create business link'));
     }
 };
 
@@ -191,7 +197,7 @@ export const updateBusinessLinkAction = (linkData: any, businessId: any, linkId:
         const response = await updateBusinessLink(linkData, businessId, linkId);
         dispatch(createBusinessSuccess(response));
     } catch (error: any) {
-        dispatch(createBusinessFailure(error.message || 'Failed to update business address'));
+        dispatch(createBusinessFailure(error.message || 'Failed to update business link'));
     }
 };
 
@@ -200,7 +206,7 @@ export const getAllBusinessLinksAction = (businessId: any) => async (dispatch: a
         const response = await getAllBusinessLinks(businessId);
         dispatch(getAllBusinessLinksRequest(response));
     } catch (error: any) {
-        dispatch(createBusinessFailure(error.message || 'Failed to get business addresses'));
+        dispatch(createBusinessFailure(error.message || 'Failed to get business link'));
     }
 };
 
@@ -209,6 +215,51 @@ export const deleteBusinessLinkAction = (businessId: any, linkId: any) => async 
         const response = await deleteBusinessLink(businessId, linkId);
         dispatch(getAllBusinessAddressesRequest(response));
     } catch (error: any) {
-        dispatch(createBusinessSuccess(error.message || 'Failed to delete business address'));
+        dispatch(createBusinessSuccess(error.message || 'Failed to delete business link'));
+    }
+};
+
+export const createBusinessFAQAction = (faqData: any, businessId: any) => async (dispatch: any) => {
+    try {
+        const response = await createBusinessFAQ(faqData, businessId);
+        dispatch(createBusinessSuccess(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to create business faq'));
+    }
+};
+
+export const updateBusinessFAQAction = (faqData: any, businessId: any, faqId: any) => async (dispatch: any) => {
+    try {
+        const response = await updateBusinessFAQ(faqData, businessId, faqId);
+        dispatch(createBusinessSuccess(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to update business faq'));
+    }
+};
+
+export const getAllBusinessFAQAction = (businessId: any) => async (dispatch: any) => {
+    try {
+        const response = await getAllBusinessFAQs(businessId);
+        dispatch(getAllBusinessFAQSRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessFailure(error.message || 'Failed to get business faq'));
+    }
+};
+
+export const deleteBusinessFAQAction = (businessId: any, faqId: any) => async (dispatch: any) => {
+    try {
+        const response = await deleteBusinessFAQ(businessId, faqId);
+        dispatch(getAllBusinessAddressesRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessSuccess(error.message || 'Failed to delete business faq'));
+    }
+};
+
+export const toggleBusinessFAQAction = (businessId: any, faqId: any, isActive: any) => async (dispatch: any) => {
+    try {
+        const response = await toggleBusinessFAQ(businessId, faqId, isActive);
+        dispatch(getAllBusinessAddressesRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessSuccess(error.message || 'Failed to toggle business faq'));
     }
 };

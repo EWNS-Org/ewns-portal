@@ -88,6 +88,8 @@ function BusinessHours({ profile, setProfile }: any) {
                                                         <Checkbox
                                                             checked={profile.timings[day].isClosed}
                                                             onChange={() => handleClosedChange(day)}
+                                                            sx={{ color: "rgba(89, 50, 234, 1)", }}
+                                                            color="primary"
                                                         />
                                                     }
                                                     label="Closed"

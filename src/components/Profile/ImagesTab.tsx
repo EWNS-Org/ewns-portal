@@ -91,8 +91,8 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                     <img src={previewData?.logoImage || "https://placehold.co/600x400.png?text=No+Logo"} alt="Avatar" className="image" style={{ width: "100%" }} />
                                     <div className="middle">
                                         <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                            <IconButton component="label" sx={{ color: "blue" }}>
-                                                <EditIcon fontSize="large" />
+                                            <IconButton component="label" sx={{ color: "rgba(89, 50, 234, 1)" }}>
+                                                <EditIcon fontSize="large" sx={{ color: "rgba(89, 50, 234, 1)" }} />
                                                 <input
                                                     type="file"
                                                     accept="image/*"
@@ -101,7 +101,7 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                                 />
                                             </IconButton>
                                             <IconButton
-                                                sx={{ color: "blue" }}
+                                                sx={{ color: "rgba(89, 50, 234, 1)" }}
                                                 onClick={() => handlePreview("Logo Image")}
                                                 disabled={!previewData.logoImage}
                                             >
@@ -109,7 +109,7 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                             </IconButton>
 
                                             <IconButton
-                                                sx={{ color: "blue" }}
+                                                sx={{ color: "rgba(89, 50, 234, 1)" }}
                                                 onClick={() => handleDeleteImage("logoImage")}
                                                 disabled={!previewData.logoImage}
                                             >
@@ -130,8 +130,8 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                     <img src={previewData.featuredImage || "https://placehold.co/600x400.png?text=No+Banner"} alt="Avatar" className="image" style={{ width: "100%" }} />
                                     <div className="middle">
                                         <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                            <IconButton component="label" sx={{ color: "blue" }}>
-                                                <EditIcon fontSize="large" />
+                                            <IconButton component="label" sx={{ color: "rgba(89, 50, 234, 1)" }}>
+                                                <EditIcon fontSize="large" sx={{ color: "rgba(89, 50, 234, 1)" }} />
                                                 <input
                                                     type="file"
                                                     accept="image/*"
@@ -140,7 +140,7 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                                 />
                                             </IconButton>
                                             <IconButton
-                                                sx={{ color: "blue" }}
+                                                sx={{ color: "rgba(89, 50, 234, 1)" }}
                                                 onClick={() => handlePreview("Featured Image")}
                                                 disabled={!previewData.featuredImage}
                                             >
@@ -148,7 +148,7 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                             </IconButton>
 
                                             <IconButton
-                                                sx={{ color: "blue" }}
+                                                sx={{ color: "rgba(89, 50, 234, 1)" }}
                                                 onClick={() => handleDeleteImage("featuredImage")}
                                                 disabled={!previewData.featuredImage}
                                             >
@@ -175,8 +175,8 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                     <img src={previewData.bannerImage || "https://placehold.co/600x200.png?text=No+Banner+Image"} alt="Avatar" className="image" style={{ width: "100%" }} />
                                     <div className="middle">
                                         <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                            <IconButton component="label" sx={{ color: "blue" }}>
-                                                <EditIcon fontSize="large" />
+                                            <IconButton component="label" sx={{ color: "rgba(89, 50, 234, 1)" }}>
+                                                <EditIcon fontSize="large" sx={{ color: "rgba(89, 50, 234, 1)" }} />
                                                 <input
                                                     type="file"
                                                     accept="image/*"
@@ -185,7 +185,7 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                                 />
                                             </IconButton>
                                             <IconButton
-                                                sx={{ color: "blue" }}
+                                                sx={{ color: "rgba(89, 50, 234, 1)" }}
                                                 onClick={() => handlePreview("Banner Image")}
                                                 disabled={!previewData.bannerImage}
                                             >
@@ -193,7 +193,7 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                             </IconButton>
 
                                             <IconButton
-                                                sx={{ color: "blue" }}
+                                                sx={{ color: "rgba(89, 50, 234, 1)" }}
                                                 onClick={() => handleDeleteImage("bannerImage")}
                                                 disabled={!previewData.bannerImage}
                                             >

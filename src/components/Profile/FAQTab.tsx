@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Card, CardActions, CardContent, Checkbox, Grid, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import Popup from '../common/Popup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLoader } from '../../contexts/LoaderContext';
 import { validateFields } from '../../Helpers/common.helper';
-import { createBusinessLinkAction, deleteBusinessLinkAction, getAllBusinessLinksAction, updateBusinessAddressAction, updateBusinessLinkAction } from '../../Redux/Actions/BusinessActions/business.actions';
+import { createBusinessFAQAction, createBusinessLinkAction, deleteBusinessFAQAction, deleteBusinessLinkAction, getAllBusinessFAQAction, getAllBusinessLinksAction, toggleBusinessFAQAction, updateBusinessAddressAction, updateBusinessFAQAction, updateBusinessLinkAction } from '../../Redux/Actions/BusinessActions/business.actions';
 import toast from 'react-hot-toast';
 import { fetchPincodeDetails } from '../../services/api/postalcode.service';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { FormControl, InputLabel, Select, TextField, Theme, Tooltip, styled } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, Grid, MenuItem, Stack, Switch, SwitchProps, Typography } from '@mui/material'
 import { popularFAQs } from '../../utils/constants/faqs';
 
 
-const initialLinks = [
+
+const initialFaqs = [
     {
         question: "0lfjwaofp;jwgfjewgjresgkrkl;grl;ghkdr;lghkdr;lkghdr;lhkrd;lhk ;drk ;hkd ;kdr;;hlkrdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
         answer: "w;lfjwaofp;jwgfjewgjresgkrkl;grl;ghkdr;lghkdr;lkghdr;lhkrd;lhk ;drk ;hkd ;kdr;;hlkrddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddlfjwaofp;jwgfjewgjresgkrkl;grl;ghkdr;lghkdr;lkghdr;lhkrd;lhk ;drk ;hkd ;kdr;;hlkrdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd lfjwaofp;jwgfjewgjresgkrkl;grl;ghkdr;lghkdr;lkghdr;lhkrd;lhk ;drk ;hkd ;kdr;;hlkrdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
@@ -22,8 +24,10 @@ const initialLinks = [
 ];
 
 const FAQTab = ({ profile, setProfile }: any) => {
-    const [links, setLinks] = useState(initialLinks);
-    const faqs = useSelector((state: any) => state.business.faqs);
+    const [allFaqs, setAllFaqs] = useState(initialFaqs);
+    const faqs = useSelector((state: any) => {
+        return state.business.businessFAQs
+    });
     const [isPopupOpen, setIsPopupOpen] = useState({
         editFAQPopup: false,
         createFAQPopup: false,
@@ -57,34 +61,28 @@ const FAQTab = ({ profile, setProfile }: any) => {
                 formData = prevValues;
                 return { ...prevValues };
             });
-            console.log(formData)
             let businessId = localStorage.getItem("activeBusinessId");
 
-            if (!formData.logo || formData.logo === "") {
-                toast.error("Please add logo url");
+            if (!formData.question || formData.question === "") {
+                toast.error("Please add question.");
                 hideLoader();
                 return;
             }
 
-            if (!formData.title || formData.title === "") {
-                toast.error("Please add title");
+            if (!formData.answer || formData.answer === "") {
+                toast.error("Please add answer");
                 hideLoader();
                 return;
             }
 
-            if (!formData.url || formData.url === "") {
-                toast.error("Please add URL link");
-                hideLoader();
-                return;
-            }
             if (type === "CREATE") {
-                await dispatch(createBusinessLinkAction(formData, businessId) as any);
+                await dispatch(createBusinessFAQAction(formData, businessId) as any);
             } else if (type === "UPDATE") {
-                await dispatch(updateBusinessLinkAction(formData, businessId, id) as any);
+                await dispatch(updateBusinessFAQAction(formData, businessId, id) as any);
             }
             setIsPopupOpen({ createFAQPopup: false, editFAQPopup: false, popularFAQPopup: false });
             setFormValues(initialFormData);
-            await dispatch(getAllBusinessLinksAction(businessId) as any);
+            await dispatch(getAllBusinessFAQAction(businessId) as any);
         }
         catch (error: any) {
             toast.error("Unable to create address");
@@ -119,7 +117,7 @@ const FAQTab = ({ profile, setProfile }: any) => {
     }
 
     const editLink = (id: any) => {
-        let link = links.filter((x: any) => x._id === id);
+        let link = allFaqs.filter((x: any) => x._id === id);
         if (link.length === 1) {
             setFormValues({ ...link[0] });
             setIsPopupOpen({ ...isPopupOpen, editFAQPopup: true });
@@ -129,66 +127,45 @@ const FAQTab = ({ profile, setProfile }: any) => {
     const deleteLink = async (id: any) => {
         showLoader();
         const businessId = localStorage.getItem("activeBusinessId");
-        await dispatch(deleteBusinessLinkAction(businessId, id) as any);
-        await dispatch(getAllBusinessLinksAction(businessId) as any);
+        await dispatch(deleteBusinessFAQAction(businessId, id) as any);
+        await dispatch(getAllBusinessFAQAction(businessId) as any);
         hideLoader();
     }
 
     useEffect(() => {
         showLoader();
-        let businessId = localStorage.getItem("activeBusinessId");
 
-        if (businessId)
-            dispatch(getAllBusinessLinksAction(businessId) as any)
+        async function getFAQS() {
+            let businessId = localStorage.getItem("activeBusinessId");
 
+            if (businessId)
+                await dispatch(getAllBusinessFAQAction(businessId) as any)
+        }
+
+        getFAQS();
         hideLoader();
     }, [dispatch]);
 
     useEffect(() => {
         showLoader();
 
-        setLinks(faqs);
+        setAllFaqs(faqs);
         hideLoader();
 
-    }, [faqs])
+    }, [faqs, dispatch])
 
     const handlePopupClose = (popupType: string) => {
         setIsPopupOpen({ ...isPopupOpen, [popupType]: false });
     }
 
-    const getAddFAQContainer = () => {
-        return (
-            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", width: "100%", padding: "2%" }}>
-                <TextField
-                    required
-                    id="outlined-required"
-                    label={"Question"}
-                    multiline
-                    rows={4}
-                    sx={{ marginBottom: "4%", width: "100%" }}
-                    onChange={(e) => handlePopupInputChange("question", e.target.value)}
-                    value={formValues["question"]}
-                />
-                <TextField
-                    required
-                    id="outlined-required"
-                    label={"Answer"}
-                    multiline
-                    rows={4}
-                    sx={{ marginBottom: "2%", width: "100%" }}
-                    onChange={(e: any) => handlePopupInputChange("answer", e.target.value)}
-                    value={formValues["answer"]}
-                />
-                <div style={{ display: "flex", justifyContent: "space-between", width: "100%", marginTop: "2%" }}>
-                    <Button variant='outlined' onClick={() => setIsPopupOpen({ ...isPopupOpen, popularFAQPopup: true })}>
-                        Show Popular FAQS
-                    </Button>
-                    <Button variant='contained'>
-                        Create FAQ
-                    </Button>
-                </div>
-            </div >)
+
+    const toggleFAQ = async (id: any, isChecked: any) => {
+        let bussId = localStorage.getItem("activeBusinessId");
+        await dispatch(toggleBusinessFAQAction(bussId, id, isChecked) as any);
+        await dispatch(getAllBusinessFAQAction(bussId) as any);
     }
+
+
 
     const getPopularFAQs = () => {
         return (
@@ -206,38 +183,107 @@ const FAQTab = ({ profile, setProfile }: any) => {
                 }
             </div >)
     }
+
+    const IOSSwitch = styled((props: SwitchProps) => (
+        <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+    ))(({ theme }) => ({
+        width: 42,
+        height: 26,
+        padding: 0,
+        '& .MuiSwitch-switchBase': {
+            padding: 0,
+            margin: 2,
+            transitionDuration: '300ms',
+            '&.Mui-checked': {
+                transform: 'translateX(16px)',
+                color: '#fff',
+                '& + .MuiSwitch-track': {
+                    backgroundColor: 'rgba(89, 50, 234, 1)',
+                    opacity: 1,
+                    border: 0,
+                    ...theme.applyStyles('dark', {
+                        backgroundColor: '#2ECA45',
+                    }),
+                },
+                '&.Mui-disabled + .MuiSwitch-track': {
+                    opacity: 0.5,
+                },
+            },
+            '&.Mui-focusVisible .MuiSwitch-thumb': {
+                color: '#33cf4d',
+                border: '6px solid #fff',
+            },
+            '&.Mui-disabled .MuiSwitch-thumb': {
+                color: theme.palette.grey[100],
+                ...theme.applyStyles('dark', {
+                    color: theme.palette.grey[600],
+                }),
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+                opacity: 0.7,
+                ...theme.applyStyles('dark', {
+                    opacity: 0.3,
+                }),
+            },
+        },
+        '& .MuiSwitch-thumb': {
+            boxSizing: 'border-box',
+            width: 22,
+            height: 22,
+        },
+        '& .MuiSwitch-track': {
+            borderRadius: 26 / 2,
+            backgroundColor: '#E9E9EA',
+            opacity: 1,
+            transition: theme.transitions.create(['background-color'], {
+                duration: 500,
+            }),
+            ...theme.applyStyles('dark', {
+                backgroundColor: '#39393D',
+            }),
+        },
+    }));
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
             <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
                 <Stack spacing={4} width={"100%"} style={{ marginTop: "1%" }}>
-                    <Card sx={{ margin: '1%', padding: "2%" }}>
-                        <Box sx={{ height: "700px" }}>
+                    <Card sx={{ margin: '1%', padding: "2%", }}>
+                        <Box sx={{ height: "680px" }}>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <Typography variant='h5'>All FAQs</Typography>
                                 <Button
                                     variant="contained"
                                     color="primary"
                                     onClick={() => { setFormValues(initialFormData); setIsPopupOpen({ ...isPopupOpen, createFAQPopup: true }); }}
-                                    sx={{ marginBottom: '20px', zIndex: 0 }}
+                                    sx={{ marginBottom: '20px', zIndex: 0, backgroundColor: "rgba(89, 50, 234, 1)" }}
                                 >
                                     Add New FAQ
                                 </Button>
                             </div>
 
-                            <Grid container spacing={2} sx={{ padding: "1%" }}>
-                                {links?.length > 0 ? links.map((link: any) => (
-                                    <Grid item md={12} key={link._id} sx={{ width: "100%", height: "100%" }} >
-                                        <Card sx={{ borderTop: "1px solid gray", width: "100%", height: "100%" }}>
-                                            <CardContent sx={{ display: "flex", width: "100%", justifyContent: "space-between", }}>
+                            <Grid container sx={{ padding: "2%", overflow: "auto", height: "100%", justifyContent: "center", display: "flex" }}>
+                                {allFaqs?.length > 0 ? allFaqs.map((faq: any, index: number) => (
+                                    <Grid item key={index} sx={{ width: "100%", height: "30%", }} >
+                                        <Card sx={{ padding: "1% 2%", width: "100%", display: "flex", }}>
+                                            <div style={{ cursor: "pointer", padding: "2% 0%", width: "90%" }} >
+                                                <Typography variant='h6'>{faq.question}</Typography>
+                                                <Typography color='gray' sx={{ fontSize: "15px", marginTop: "2%" }}>{faq.answer}</Typography>
+                                            </div>
+                                            <CardActions sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                                                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", marginBottom: "30%" }}>
+                                                    <EditIcon onClick={() => editLink(faq._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
+                                                    <DeleteIcon onClick={() => deleteLink(faq._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
+                                                </div>
 
-                                                <Typography variant="h6" sx={{ marginLeft: "5%", }}>{link.title}</Typography>
-                                                <CardActions sx={{ display: "flex", }}>
-                                                    <EditIcon onClick={() => editLink(link._id)} sx={{ cursor: "pointer" }} />
-                                                    <DeleteIcon onClick={() => deleteLink(link._id)} sx={{ cursor: "pointer" }} />
-                                                </CardActions>
-
-                                            </CardContent>
-
+                                                <FormControlLabel
+                                                    sx={{ height: "20%" }}
+                                                    control={<IOSSwitch sx={{}} checked={faq.isActive} />}
+                                                    label={``}
+                                                    onChange={(e: any) =>
+                                                        toggleFAQ(faq._id, e.target.checked)
+                                                    }
+                                                />
+                                            </CardActions>
                                         </Card>
                                     </Grid>)) :
                                     <Typography > No Question and Answers found</Typography>}
@@ -251,7 +297,11 @@ const FAQTab = ({ profile, setProfile }: any) => {
                     isPopupOpen.createFAQPopup && <Popup
                         header={"Create New FAQ"}
                         onClose={() => handlePopupClose("createFAQPopup")}
-                        children={getAddFAQContainer()}
+                        formValues={formValues}
+                        setFormValues={setFormValues}
+                        inputs={createFAQInputs}
+                        buttons={createFAQActions}
+                        handleInputChange={handlePopupInputChange}
                     />
                 }
 
@@ -277,7 +327,7 @@ const FAQTab = ({ profile, setProfile }: any) => {
             </div>
 
 
-        </div>
+        </div >
     )
 }
 export default FAQTab;

@@ -121,3 +121,64 @@ export const deleteBusinessLink = async (businessId: any, linkId: any) => {
         console.log(error)
     }
 }
+
+export const createBusinessFAQ = async (faqData: any, businessId: any) => {
+    try {
+        let body = {
+            question: faqData.question,
+            answer: faqData.answer,
+        }
+        const res: any = await post(`/business/faq/create?businessId=${businessId}`, body);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+
+}
+
+export const updateBusinessFAQ = async (faqData: any, businessId: any, faqId: any) => {
+    try {
+        let body = {
+            question: faqData.question,
+            answer: faqData.answer,
+        }
+        const res: any = await put(`/business/faq/update?businessId=${businessId}&faqId=${faqId}`, body);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+
+}
+
+export const getAllBusinessFAQs = async (businessId: any) => {
+    try {
+        const res: any = await get(`/business/faq/getAll?businessId=${businessId}`);
+        console.log(res.data);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+
+export const deleteBusinessFAQ = async (businessId: any, faqId: any) => {
+    try {
+        const res: any = await del(`/business/faq/delete?businessId=${businessId}&faqId=${faqId}`);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+
+export const toggleBusinessFAQ = async (businessId: any, faqId: any, isActive: any) => {
+    try {
+        const res: any = await get(`/business/faq/active?businessId=${businessId}&faqId=${faqId}&isActive=${isActive}`);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}

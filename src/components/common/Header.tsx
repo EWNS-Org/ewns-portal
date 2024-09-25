@@ -192,6 +192,8 @@ function Header({ isPopupOpen, handlePopupClose, handlePopupOpen }: any) {
 
                 <div className="flex items-center space-x-6 w-full justify-end">
                     <Button
+                        variant='outlined'
+                        sx={{ color: "rgba(89, 50, 234, 1)" }}
                         className="px-4 py-2 "
                         onClick={() => handlePopupOpen()}
                     >Create a new Business</Button>
