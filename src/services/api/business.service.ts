@@ -59,9 +59,9 @@ export const updateBusiness = async (businessDetails: any, businessId: any) => {
     }
 }
 
-export const uploadBusinessImages = async (businessId: any, bodyData: any) => {
+export const uploadBusinessImages = async (businessId: any, bodyData: any, type: any) => {
     try {
-        const res: any = await post(`/business/upload?businessId=${businessId}`, bodyData);
+        const res: any = await post(`/business/upload?businessId=${businessId}&type=${type}`, bodyData);
         return res.data;
     }
     catch (error: any) {
@@ -176,6 +176,46 @@ export const deleteBusinessFAQ = async (businessId: any, faqId: any) => {
 export const toggleBusinessFAQ = async (businessId: any, faqId: any, isActive: any) => {
     try {
         const res: any = await get(`/business/faq/active?businessId=${businessId}&faqId=${faqId}&isActive=${isActive}`);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+
+export const toggleBusinessActive = async (businessId: any, isActive: any) => {
+    try {
+        const res: any = await get(`/business/active?businessId=${businessId}&isActive=${isActive}`);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+
+export const fetchShortDescriptions = async (businessId: any, pageSize: any, pageNumber: any) => {
+    try {
+        const res: any = await get(`/business/descriptions/short/get?businessId=${businessId}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+
+export const fetchLongDescriptions = async (businessId: any, pageSize: any, pageNumber: any) => {
+    try {
+        const res: any = await get(`/business/descriptions/long/get?businessId=${businessId}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+
+export const fetchBusinessFAQs = async (businessId: any, pageSize: any, pageNumber: any) => {
+    try {
+        const res: any = await get(`/business/faqs/get?businessId=${businessId}&pageSize=${pageSize}&pageNumber=${pageNumber}`);
         return res.data;
     } catch (error: any) {
         toast.error(error.message || error);

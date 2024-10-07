@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { validateFields } from '../../Helpers/common.helper';
 import MapPopup from '../common/MapPopup';
+import zIndex from '@mui/material/styles/zIndex';
 
 
 const initialAddresses = [
@@ -276,6 +277,7 @@ function AddressTab() {
         width: 42,
         height: 26,
         padding: 0,
+        zIndex:0,
         '& .MuiSwitch-switchBase': {
             padding: 0,
             margin: 2,
@@ -332,10 +334,10 @@ function AddressTab() {
 
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
-                <Stack spacing={4} width={"100%"} style={{ marginTop: "1%" }}>
-                    <Card sx={{ margin: 'auto', mt: 4, padding: "2%" }}>
-                        <Box sx={{ padding: '20px' }}>
+            <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+                <Stack spacing={4} width={"100%"} style={{  }}>
+                    <Card sx={{ padding: "2%", height:"630px" }}>
+                        <Box sx={{  }}>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <Typography variant='h5'>All Addresses</Typography>
                                 <Button
@@ -426,11 +428,12 @@ function AddressTab() {
                 handleInputChange={handlePopupInputChange}
             />}
 
-            <MapPopup
+            {isMapOpen && <MapPopup
+            sx={{zIndex:1111}}
                 isOpen={isMapOpen}
                 onClose={() => setIsMapOpen(false)}
                 onSelectCoordinates={handleSelectCoordinates}
-            />
+            />}
         </div>
     )
 }

@@ -16,7 +16,7 @@ root.render(
     <Provider store={store}>
       <LoaderProvider>
         <Loader />
-        <Toaster position='top-right' />
+        <Toaster position='top-right' toastOptions={{duration:1000}} />
         <App />
       </LoaderProvider>
     </Provider>

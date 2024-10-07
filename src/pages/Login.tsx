@@ -58,14 +58,11 @@ function Login() {
 
 
     return (
-        <div><div style={{ height: breakpoint === 'xs' ? "100%" : "1235px" }} >
-            <Grid container spacing={0} sx={{ margin: "0px", display: "flex", flexWrap: "wrap", width: "100%", height: "100%" }} className='login-page'>
-                <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%" }} >
-                    <div className='left-signup '>
-                        <div className='left-theme'>
-                            <div className='logo'>
-                                <img src="assets/logo.png" width={"200px"} />
-                            </div>
+        <div><div style={{ height: "1000px", overflow:"hidden" }} >
+            <Grid container spacing={0} sx={{ display: "flex",  flexWrap: "wrap", width: "100%", height: "100%" }} className='login-page'>
+                <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%",  }} >
+                    <div className='left-signup'>
+                        <div className='left-theme' style={{padding:"5%",}}>
                             <div className='left-content'>
                                 <Typography variant='h4' color='rgba(1, 82, 168, 1)' fontSize={"40px"} >Take Your <span style={{ fontWeight: "bold" }}>Business Online </span>
                                     within minutes !!</Typography>
@@ -76,7 +73,7 @@ function Login() {
                         </div>
                     </div>
                 </Grid>
-                <Grid size={6} sx={{ width: breakpoint === "xs" ? "100%" : "50%" }}>
+                <Grid size={6} sx={{ width:"50%" }}>
                     <div className='right-signup'>
                         <div className='right-logo'>
                             <img src="assets/logo.png" width={"200px"} />

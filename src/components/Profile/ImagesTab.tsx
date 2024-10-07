@@ -6,8 +6,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import "./Profile.css";
 import Popup from "../common/Popup";
 import { useEffect, useState } from "react";
+import { uploadBusinessImagesAction } from "../../Redux/Actions/BusinessActions/business.actions";
+import { ACTIVE_BUSINESS_ID } from "../../utils/constants";
+import { useDispatch } from "react-redux";
 
-const ImagesTab = ({ previewData, setPreviewData }: any) => {
+const ImagesTab = ({ profile, setProfile }: any) => {
+    const [previewData, setPreviewData] = useState({
+            logoImage: profile?.logo?.logoUrl || null,
+            featuredImage: profile?.featuredImage?.featuredUrl || null,
+            bannerImage: profile.isBannerFeaturedImage ? null : profile.bannerImage?.bannerUrl,
+            isBannerFeaturedImage: profile.isBannerFeaturedImage
+    });
+    const dispatch = useDispatch();
 
     const handleImageChange = (event: any, field: any) => {
         const file = event.target.files[0];
@@ -24,6 +34,15 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
     };
     const [childrenPopup, setChildrenPopup] = useState([]);
 
+    useEffect(()=>{
+        console.log(profile)
+        setPreviewData({
+            logoImage: profile?.logo?.logoUrl || null,
+            featuredImage: profile?.featuredImage?.featuredUrl || null,
+            bannerImage: profile.isBannerFeaturedImage ? null : profile.bannerImage?.bannerUrl,
+            isBannerFeaturedImage: profile.isBannerFeaturedImage
+    })
+    }, [profile]);
 
 
     const getPreviewContent = (label: string, url: any) => {
@@ -59,7 +78,18 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
 
     }
 
-
+    const handleUpdateProfile = async () => {
+        let businessId = localStorage.getItem(ACTIVE_BUSINESS_ID);
+            if (previewData.logoImage !== profile.logo?.logoUrl) {
+                dispatch(uploadBusinessImagesAction(businessId, {logoContent: previewData.logoImage}, "LOGO_IMAGE") as any);
+            }
+            if (previewData.featuredImage !== profile.featuredImage?.featuredUrl) {
+                dispatch(uploadBusinessImagesAction(businessId, {featuredContent: previewData.featuredImage}, "FEATURED_IMAGE") as any);
+            }
+            if (!previewData.isBannerFeaturedImage && previewData.bannerImage !== profile.bannerImage?.bannerUrl) {
+                dispatch(uploadBusinessImagesAction(businessId, {bannerContent: previewData.bannerImage}, "BANNER_IMAGE") as any);
+            };
+    }
 
     const [isPreviewPopupOpen, setIsPreviewPopupOpen] = useState(false);
 
@@ -67,22 +97,11 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
 
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
-                <Stack spacing={4} width={"100%"} style={{}}>
-                    <Card sx={{ margin: 'auto', mt: 4, padding: "1%" }}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={previewData.isBannerFeaturedImage}
-                                    onChange={(e) =>
-                                        setPreviewData({ ...previewData, isBannerFeaturedImage: e.target.checked })
-                                    }
-                                />
-                            }
-                            label="Use Banner as Featured Image"
-                            sx={{}}
-                        />
-                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div className=" bg-white p-4 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+                <Stack width={"100%"} style={{}}>
+                    <Card sx={{  padding: "2%", height:"560px" }}>
+                        
+                        <div className="w-full" style={{ alignItems: "center", justifyContent:"space-between", display:"flex", marginTop:"5%" }}>
 
                             <div style={{ width: "100%", height: "60%" }}>
                                 <h2 className="text-xl font-semibold mb-4">Logo</h2>
@@ -160,14 +179,8 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-
-                        {/* Featured Image Checkbox */}
-
-
-                        {/* Conditionally Render Featured Image Section */}
-                        {!previewData.isBannerFeaturedImage && (
+                            {!previewData.isBannerFeaturedImage && (
                             <div style={{ width: "100%" }}>
                                 <h2 className="text-xl font-semibold mb-4">Banner Image</h2>
 
@@ -206,9 +219,17 @@ const ImagesTab = ({ previewData, setPreviewData }: any) => {
                                 </div>
                             </div>
                         )}
-
+                        </div>
                     </Card>
                 </Stack>
+                <div style={{display:"flex", justifyContent:"space-between", marginTop: "2%"}}>
+                    <Button variant='outlined' >
+                        Reset
+                    </Button>
+                    <Button variant='contained' onClick={handleUpdateProfile} >
+                        Update Profile
+                    </Button>
+                </div>
             </div>
             {isPreviewPopupOpen && <Popup
                 header={`${"Logo"} Preview`}

@@ -3,11 +3,9 @@
     overflow: hidden;
   }
   
-  /* Popup overlay styling */
   .popup-overlay {
-    position: fixed; position: fixed; /* Or relative */
-    /* Other styling */
-    z-index: 0.5;
+    position: fixed; position: fixed; 
+    z-index: 2;
     top: 0;
     left: 0;
     width: 100vw;
@@ -27,7 +25,7 @@
     width: 100%;
     z-index: 10000;
     box-sizing: border-box;
-    max-height: 50%;
+    max-height: 95%;
     height: fit-content;
     overflow-y: auto;
   }

@@ -1,0 +1,15 @@
+
+export const CREATE_ALBUM = 'CREATE_ALBUM';
+export const GET_ALL_ALBUMS = 'GET_ALL_ALBUMS';
+export const GET_ALBUM_DETAILS = 'GET_ALBUM_DETAILS';
+export const UPDATE_ALBUM = 'UPDATE_ALBUM';
+export const DELETE_ALBUM = 'DELETE_ALBUM';
+export const ADD_IMAGE = 'ADD_IMAGE';
+export const UPDATE_VIDEO = 'UPDATE_VIDEO';
+export const UPDATE_IMAGE = 'UPDATE_IMAGE';
+export const DELETE_IMAGE = 'DELETE_IMAGE';
+export const DELETE_VIDEO = 'DELETE_VIDEO';
+export const ADD_VIDEO = 'ADD_VIDEO';
+
+export const ALBUM_START_LOADING = 'ALBUM_START_LOADING';
+export const ALBUM_STOP_LOADING = 'ALBUM_STOP_LOADING';

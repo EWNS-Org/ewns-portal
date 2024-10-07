@@ -1,9 +1,15 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { ThunkMiddleware, thunk } from 'redux-thunk';
 import { businessReducer } from './Reducers/business.reducer';
+import { appointmentsReducer } from './Reducers/appointment.reducer';
+import { categoriesReducer } from './Reducers/categories.reducer';
+import { albumsReducer} from './Reducers/albums.reducer';
 
 const rootReducer = combineReducers({
     business: businessReducer,
+    appointments: appointmentsReducer,
+    categories: categoriesReducer,
+    albums: albumsReducer
 });
 
 export const store = createStore(

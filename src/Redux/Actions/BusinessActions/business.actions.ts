@@ -17,7 +17,7 @@ import {
     GET_ALL_BUSINESS_FAQS,
 
 } from './business.action.types';
-import { createBusiness, createBusinessFAQ, createBusinessLink, deleteBusinessFAQ, deleteBusinessLink, getAllBusinessFAQs, getAllBusinessLinks, getAllBusinesses, getBusinessDetails, toggleBusinessFAQ, updateBusiness, updateBusinessFAQ, updateBusinessLink, uploadBusinessImages } from '../../../services/api/business.service';
+import { createBusiness, createBusinessFAQ, createBusinessLink, deleteBusinessFAQ, deleteBusinessLink, getAllBusinessFAQs, getAllBusinessLinks, getAllBusinesses, getBusinessDetails, toggleBusinessActive, toggleBusinessFAQ, updateBusiness, updateBusinessFAQ, updateBusinessLink, uploadBusinessImages } from '../../../services/api/business.service';
 import toast from 'react-hot-toast';
 import { createBusinessAddress, defaultBusinessAddress, deleteBusinessAddress, getAllBusinessAddresses, updateBusinessAddress } from '../../../services/api/address.service';
 
@@ -128,9 +128,9 @@ export const updateBusinessProfileAction = (businessDetails: any, businessId: an
     }
 }
 
-export const uploadBusinessImagesAction = (businessId: any, bodyData: any) => async (dispatch: any) => {
+export const uploadBusinessImagesAction = (businessId: any, bodyData: any, type: any) => async (dispatch: any) => {
     try {
-        const response = await uploadBusinessImages(businessId, bodyData);
+        const response = await uploadBusinessImages(businessId, bodyData, type);
         toast.success(response.message);
 
     } catch (error: any) {
@@ -261,5 +261,14 @@ export const toggleBusinessFAQAction = (businessId: any, faqId: any, isActive: a
         dispatch(getAllBusinessAddressesRequest(response));
     } catch (error: any) {
         dispatch(createBusinessSuccess(error.message || 'Failed to toggle business faq'));
+    }
+};
+
+export const toggleBusinessActiveAction = (businessId: any, isActive: any) => async (dispatch: any) => {
+    try {
+        const response = await toggleBusinessActive(businessId, isActive);
+        dispatch(getAllBusinessAddressesRequest(response));
+    } catch (error: any) {
+        dispatch(createBusinessSuccess(error.message || 'Failed to toggle business Activity'));
     }
 };

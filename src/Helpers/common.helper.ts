@@ -17,6 +17,20 @@ export const validateFields = (fieldsToValidate: string[], showToast: boolean, f
             }
             return true;
         },
+        landmark: () => {
+            if (!formData.landmark || formData.landmark.trim() === "") {
+                showToast && toast.error("Landmark is required.");
+                return false;
+            }
+            return true;
+        }, 
+        businessType: () => {
+            if (!formData.businessType || !["SERVICE", "PRODUCT", "BOTH"].includes(formData.businessType)) {
+                showToast && toast.error("Invalid business Type.");
+                return false;
+            }
+            return true;
+        },
         shortBio: () => {
             if (!formData.shortBio || formData.shortBio.trim() === "") {
                 showToast && toast.error("Business Description is required.");
@@ -53,9 +67,16 @@ export const validateFields = (fieldsToValidate: string[], showToast: boolean, f
             }
             return true;
         },
-        address: () => {
-            if (!formData.address || formData.address.trim() === "") {
-                showToast && toast.error("Address is required.");
+        addressLine1: () => {
+            if (!formData.addressLine1 || formData.addressLine1.trim() === "") {
+                showToast && toast.error("Address 1 is required.");
+                return false;
+            }
+            return true;
+        },
+        addressLine2: () => {
+            if (!formData.addressLine2 || formData.addressLine2.trim() === "") {
+                showToast && toast.error("Address 2 is required.");
                 return false;
             }
             return true;
@@ -79,10 +100,6 @@ export const validateFields = (fieldsToValidate: string[], showToast: boolean, f
                 showToast && toast.error("State is required.");
                 return false;
             }
-            return true;
-        },
-        landmark: () => {
-            // Optional field: No validation required
             return true;
         },
         country: () => {
@@ -110,6 +127,13 @@ export const validateFields = (fieldsToValidate: string[], showToast: boolean, f
             }
             return true;
         },
+        mobileNumber: () => {
+            if (!formData.mobileNumber || formData.mobileNumber.trim() === "" || !/^\d{10}$/.test(formData.mobileNumber)) {
+                showToast && toast.error("Invalid mobile number format. Must be 10 digits.");
+                return false;
+            }
+            return true;
+        },
         countryCode: () => {
             if (!formData.countryCode || formData.countryCode.trim() === "" || !/^\+\d{1,3}$/.test(formData.countryCode)) {
                 showToast && toast.error("Invalid country code format.");
@@ -117,6 +141,7 @@ export const validateFields = (fieldsToValidate: string[], showToast: boolean, f
             }
             return true;
         }
+        
     };
 
     for (const key of fieldsToValidate) {
@@ -129,6 +154,7 @@ export const validateFields = (fieldsToValidate: string[], showToast: boolean, f
 };
 
 export const validateTimings = (workingHours: any) => {
+    console.log(workingHours)
     const timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/; // Regex pattern for HH:mm format
 
     for (const day in workingHours) {
@@ -156,3 +182,66 @@ export const validateTimings = (workingHours: any) => {
 
     return { valid: true, message: 'Working hours are valid.' };
 }
+
+export const getDefaultAppointmentConfigTimings = () => {
+    let timings: any = {};
+    ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].map(x => {
+        timings[x] = {
+            open: "09:00",
+            close: "22:00",
+            isClosed: false
+        }
+    });
+    timings["sunday"] = {
+        isClosed: true,
+        close: "",
+        open: ""
+    }
+
+    return timings;
+}
+
+
+export const getSubCategoryById = async (subCatId: any, categories: any, parentId: any) => {
+  
+    const findSubcategory = (subCategories: any) => {
+      for (let i = 0; i < subCategories?.length; i++) {
+        const subcategory = subCategories[i];
+        if (subcategory._id.toString() === subCatId) {
+          return subCategories[i];
+        }
+        
+        // Check nested subCategories recursively
+        if (subcategory.subCategories && subcategory.subCategories.length > 0) {
+          const found : any= findSubcategory(subcategory.subCategories);
+          if (found) {
+            return found; // Subcategory found and removed in nested levels
+          }
+        }
+      }
+      return false; // Subcategory not found
+    };
+
+    let catData = null;
+    for(let i of categories){
+        if(i._id === parentId){
+            catData = i;
+            break;
+        }
+        if(parentId === subCatId && i._id === parentId) {
+            catData = i;
+            break;
+        }
+    }
+    console.log(parentId, subCatId,"cat");
+
+    if(parentId === subCatId && catData._id === parentId) return catData;
+    else{
+        const removed = findSubcategory(catData.subCategories);
+        if (removed) {
+            return removed;
+          } else {
+            return null;
+          }
+    }
+  };

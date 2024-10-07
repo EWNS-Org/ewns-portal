@@ -6,10 +6,20 @@ import { styled } from '@mui/material/styles';
 import FormGroup from '@mui/material/FormGroup';
 import Stack from '@mui/material/Stack';
 import { useNavigate } from "react-router-dom";
+import { validateFields, validateTimings } from "../../Helpers/common.helper";
+import { ACTIVE_BUSINESS_ID } from "../../utils/constants";
+import { getBusinessDetailsAction, toggleBusinessActiveAction, updateBusinessProfileAction } from "../../Redux/Actions/BusinessActions/business.actions";
+import { useDispatch } from "react-redux";
+import { useLoader } from "../../contexts/LoaderContext";
 
-const ProfileTab = ({ setProfile, profile }: any) => {
+const ProfileTab = ({ setProfileDetails, profileDetails }: any) => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [profile, setProfile] = React.useState(profileDetails);
+    const [hideSubmit, setHideSubmit] = React.useState(true);
+
+    const {showLoader, hideLoader} = useLoader();
 
     const IOSSwitch = styled((props: SwitchProps) => (
         <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -71,15 +81,46 @@ const ProfileTab = ({ setProfile, profile }: any) => {
         },
     }));
 
+    React.useEffect(()=>{
+        setProfile(profileDetails);
+        console.log(profile)
+    }, [profileDetails])
+
+    React.useEffect(()=>{
+        if(JSON.stringify(profile) === JSON.stringify(profileDetails)){
+            setHideSubmit(true);
+        }else{
+            setHideSubmit(false);
+        }
+    }, [profile])
+    
+    const handleUpdateProfile = async () => {
+        let businessId = localStorage.getItem(ACTIVE_BUSINESS_ID);
+        let isFormChanged = JSON.stringify(profileDetails) !== JSON.stringify(profile);
+        if (isFormChanged && validateFields(["businessName", "email"], true, profile)) {
+            await dispatch(updateBusinessProfileAction(profile, businessId) as any);
+            await dispatch(getBusinessDetailsAction(businessId) as any)
+        }
+        setHideSubmit(true);
+    }
+
+    const toggleBusinessActive = async (val: boolean) => {
+        showLoader();
+        let businessId = localStorage.getItem(ACTIVE_BUSINESS_ID);
+        dispatch(toggleBusinessActiveAction(businessId, val) as any);
+        
+        hideLoader();
+    }
+
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className="h-[800px] bg-white p-6  shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
-                <Stack spacing={4} width={"100%"} style={{ marginTop: "2%" }}>
-                    <Card sx={{ margin: 'auto', mt: 4, padding: "2%" }}>
+            <div className=" p-4 h-[680px] bg-white shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+                <Stack  width={"100%"} style={{  }}>
+                    <Card sx={{  padding: "2%", height: "560px" }}>
                         <div className="h-full w-full">
-                            <h2 className="text-xl font-semibold mb-4">Business Profile Information</h2>
+                            <h2 className="text-xl font-semibold mb-6">Business Profile Information</h2>
 
-                            <div className="mb-[2%]">
+                            <div className="">
                                 <TextField
                                     required
                                     id="outlined-required"
@@ -89,8 +130,9 @@ const ProfileTab = ({ setProfile, profile }: any) => {
                                     sx={{ width: "100%", height: "100%", marginBottom: "2%" }}
                                 />
 
-                                <Box sx={{ minWidth: 120, cursor: "zoom-in", marginBottom: "2%" }}>
-                                    <FormControl sx={{ width: "100%" }} >
+                                <Box sx={{  cursor: "zoom-in", marginBottom: "2%", display:"flex", justifyContent:"space-between" }}>
+                                <Tooltip title="Not allowed to change" arrow>
+                                    <FormControl sx={{ width: "30%" }} >
                                         <InputLabel id="demo-simple-select-label">Business Category</InputLabel>
                                         <Select disabled
                                             labelId="demo-simple-select-label"
@@ -101,16 +143,30 @@ const ProfileTab = ({ setProfile, profile }: any) => {
                                             {categories.map(cat => <MenuItem key={cat} value={cat}>{cat}</MenuItem>)}
                                         </Select>
                                     </FormControl>
-                                </Box>
-
-                                <div className='flex'  >
+                                    </Tooltip>
+                                    <Tooltip title="Not allowed to change" arrow>
+                                    <FormControl sx={{ width: "30%" }} >
+                                        <InputLabel id="demo-simple-select-type">Business Type</InputLabel>
+                                        <Select disabled
+                                            labelId="demo-simple-select-type"
+                                            id="demo-simple-select-type"
+                                            value={profile.businessType && "BOTH"}
+                                            label="Business Type"
+                                        >
+                                            {<MenuItem  value={"BOTH"}>{"Both Products & Services"}</MenuItem>}
+                                            {<MenuItem  value={"PRODUCT"}>{"Products"}</MenuItem>}
+                                            {<MenuItem  value={"SERVICE"}>{"Services"}</MenuItem>}
+                                        </Select>
+                                    </FormControl>
+                                    </Tooltip>
+                                    <div className='flex' style={{width:"30%"}}  >
                                     <Tooltip title="Visit" arrow>
                                         <TextField
                                             id="outlined-required"
                                             label={"Business URL"}
                                             value={"https://" + profile.url}
                                             sx={{
-                                                width: "50%", height: "100%", marginRight: "2%", input: { cursor: 'pointer' }, color: "gray",
+                                                width: "100%", height: "100%", input: { cursor: 'pointer' }, color: "gray",
                                             }}
                                             onClick={() => window.open("https://" + profile.url, "_blank")}
                                         />
@@ -118,13 +174,16 @@ const ProfileTab = ({ setProfile, profile }: any) => {
 
 
                                 </div>
+                                </Box>
+
+
                             </div>
                             <div className="w-full">
                                 <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
 
                                 <div className="h-full w-full mb-[2%]">
                                     <div style={{ display: "flex", width: "100%" }}>
-                                        <Box sx={{ width: "10%" }}>
+                                        <Box sx={{ width: "15%" }}>
                                             <FormControl sx={{ width: "100%", height: "100%" }}>
                                                 <InputLabel id="demo-simple-select-label">Country Code</InputLabel>
                                                 <Select required
@@ -180,15 +239,40 @@ const ProfileTab = ({ setProfile, profile }: any) => {
                                     <FormControlLabel
                                         control={<IOSSwitch sx={{ m: 1 }} checked={profile.isActive} />}
                                         label={`Business is ${profile.isActive ? "Active" : "Disabled"}`}
-                                        onChange={(e: any) => setProfile({ ...profile, isActive: e.target.checked })}
+                                        onChange={(e: any) => setProfile({...profile, isActive: e.target.checked})}
+                                    />
+                                    <FormControlLabel
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={profile.enableUserLogin} />}
+                                        label={`Enable User Login`}
+                                        onChange={(e: any) => setProfile({...profile, enableUserLogin: e.target.checked})}
+                                    />
+                                    <FormControlLabel
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={profile.enableAppointments} />}
+                                        label={`Enable Appointments`}
+                                        onChange={(e: any) => setProfile({...profile, enableAppointments: e.target.checked})}
+                                    />
+                                    <FormControlLabel
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={profile.enableOrders} />}
+                                        label={`Enable Orders`}
+                                        onChange={(e: any) => setProfile({...profile, enableOrders: e.target.checked})}
                                     />
                                 </div>
                             </div>
 
 
                         </div>
+                        
                     </Card>
                 </Stack>
+
+                <div style={{display:"flex", justifyContent:"space-between", marginTop: "2%"}}>
+                    <Button variant='outlined' >
+                        Reset
+                    </Button>
+                    <Button variant='contained' onClick={handleUpdateProfile} disabled={hideSubmit} >
+                        Update Profile
+                    </Button>
+                </div>
             </div>
 
         </div >

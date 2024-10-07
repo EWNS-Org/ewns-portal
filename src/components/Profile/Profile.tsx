@@ -59,6 +59,8 @@ const PersonalProfile = () => {
         additionalInfo: [],
         isBannerFeaturedImage: true,
         isActive: true,
+        businessType: "BOTH",
+        enableUserLogin: true,
         timings: {
             monday: {
                 isClosed: false,
@@ -90,17 +92,13 @@ const PersonalProfile = () => {
                 open: "",
                 close: ""
             },
-        }
+        },
+        enableAppointments: true,
+        enableOrders: true,
     };
     const businessDetails = useSelector((state: any) => state.business.businessDetails);
 
     const [profile, setProfile] = useState(initialProfileDetails);
-    const [previewData, setPreviewData] = useState({
-        logoImage: null,
-        featuredImage: null,
-        bannerImage: null,
-        isBannerFeaturedImage: null
-    })
     const [showButtons, setShowButtons] = useState<boolean>(true);
 
     const dispatch = useDispatch();
@@ -108,12 +106,6 @@ const PersonalProfile = () => {
     useEffect(() => {
         if (businessDetails) {
             setProfile(businessDetails);
-            setPreviewData({
-                logoImage: profile?.logo?.logoUrl || null,
-                featuredImage: profile?.featuredImage?.featuredUrl || null,
-                bannerImage: profile.isBannerFeaturedImage ? null : profile.bannerImage?.bannerUrl,
-                isBannerFeaturedImage: profile.isBannerFeaturedImage
-            } as any);
         }
     }, [businessDetails, setProfile]);
 
@@ -135,38 +127,9 @@ const PersonalProfile = () => {
         }
     }, [dispatch]);
 
-    const handleUpdateProfile = async () => {
-        if (activeTab === "Images") {
-            let updates: any = {
-                logoContent: null,
-                featuredContent: null,
-                bannerContent: null,
-                isBannerFeaturedImage: previewData.isBannerFeaturedImage
-            }
-            console.log(previewData.logoImage, profile.logo?.logoUrl)
-            if (previewData.logoImage !== profile.logo?.logoUrl) {
-                updates.logoContent = previewData.logoImage;
-            }
-            if (previewData.featuredImage !== profile.featuredImage?.featuredUrl) {
-                updates.featuredContent = previewData.featuredImage;
-            }
-            if (!previewData.isBannerFeaturedImage && previewData.bannerImage !== profile.bannerImage?.bannerUrl) {
-                updates.bannerContent = previewData.bannerImage;
-            };
-
-            dispatch(uploadBusinessImagesAction(businessDetails.businessId, updates) as any);
-        }
-        else {
-            let isFormChanged = JSON.stringify(businessDetails) !== JSON.stringify(profile);
-            if (isFormChanged && validateFields(["businessName", "email"], false, profile) && validateTimings(profile.timings)) {
-                dispatch(updateBusinessProfileAction(profile, businessDetails.businessId) as any);
-            }
-        }
-    }
-
     return (
-        <div className="w-full p-10 h-[65vh] font-semibold font-sans" style={{ fontSize: "20px" }}>
-            <div className="w-full p-2" style={{ display: "flex", backgroundColor: "white" }}>
+        <div className="w-full  h-[65vh] font-semibold font-sans" style={{ fontSize: "20px" }}>
+            <div className="w-full py-1" style={{ display: "flex", backgroundColor: "white" }}>
                 <div className="w-full" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     {['Profile', 'About', 'Images', 'Timings', 'Address', 'External Links', 'FAQs'].map((tab) => (
                         <div
@@ -181,13 +144,9 @@ const PersonalProfile = () => {
                 </div>
             </div>
 
-            <div className="  mx-auto p-6 w-full flex justify-between items-center border-b pb-3">
-                <div>
-                    <h1 className="text-2xl font-semibold">Business {activeTab}</h1>
-                </div>
-            </div>
+           
 
-            <div className='container w-full p-6 ' style={{}}>
+            <div className='container w-full py-4 ' style={{}}>
                 <div className=' w-full h-20 p-4' style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px", backgroundColor: "rgba(89, 50, 234, 1)" }}>
                     <div className='flex ' style={{ justifyContent: "space-between", alignItems: "center" }}>
                         <div className='flex-col font-semibold' style={{ fontSize: "8px" }}>
@@ -203,25 +162,14 @@ const PersonalProfile = () => {
                         </div>
                     </div>
                 </div>
-                {activeTab === 'Profile' && <ProfileTab handleUpdateProfile={handleUpdateProfile} initialProfileDetails={initialProfileDetails} setProfile={setProfile} profile={profile} businessDetails={businessDetails} />}
-                {activeTab === 'About' && <AboutUsTab profile={profile} setProfile={setProfile} />}
-                {activeTab === 'Images' && <ImagesTab previewData={previewData} setPreviewData={setPreviewData} />}
-                {activeTab === 'Timings' && <BusinessHours profile={profile} setProfile={setProfile} />}
+                {activeTab === 'Profile' && <ProfileTab  initialProfileDetails={initialProfileDetails} setProfileDetails={setProfile} profileDetails={profile} businessDetails={businessDetails} />}
+                {activeTab === 'About' && <AboutUsTab profile={profile} setProfile={(data:any) => {setProfile((prev: any)=>({...prev, data}))}} />}
+                {activeTab === 'Images' && <ImagesTab profile={profile} setProfile={setProfile} />}
+                {activeTab === 'Timings' && <BusinessHours profileDetails={profile} setProfileDetails={setProfile} />}
                 {activeTab === 'Address' && <AddressTab />}
                 {activeTab === 'External Links' && <ExternalLinksTab profile={profile} setProfile={setProfile} />}
                 {activeTab === 'FAQs' && <FAQTab profile={profile} setProfile={setProfile} />}
             </div>
-
-            {
-                showButtons && <div className="flex  my-1 w-full" style={{ justifyContent: "space-between" }}>
-                    <Button variant='outlined' onClick={() => setProfile(businessDetails)}>
-                        Reset
-                    </Button>
-                    <Button variant='contained' onClick={() => handleUpdateProfile()} >
-                        Update Profile
-                    </Button>
-                </div>
-            }
 
 
         </div >

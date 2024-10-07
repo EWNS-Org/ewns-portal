@@ -102,7 +102,7 @@ const FAQTab = ({ profile, setProfile }: any) => {
     ];
 
     const editLinkActions = [
-        { label: 'Update Link', onClick: () => handleCreateOrUpdateLink("UPDATE", formValues._id), className: 'ml-2', variant: 'contained', display: 'block' },
+        { label: 'Update FAQ', onClick: () => handleCreateOrUpdateLink("UPDATE", formValues._id), className: 'ml-2', variant: 'contained', display: 'block' },
     ];
 
     const [createFAQActions, setCreateLinkActions] = useState(newLinkActions);
@@ -245,25 +245,25 @@ const FAQTab = ({ profile, setProfile }: any) => {
     }));
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
-                <Stack spacing={4} width={"100%"} style={{ marginTop: "1%" }}>
-                    <Card sx={{ margin: '1%', padding: "2%", }}>
-                        <Box sx={{ height: "680px" }}>
+            <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+                <Stack spacing={4} width={"100%"} style={{  }}>
+                    <Card sx={{ padding: "2%", height: "630px" }}>
+                        <Box sx={{  }}>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <Typography variant='h5'>All FAQs</Typography>
                                 <Button
                                     variant="contained"
                                     color="primary"
                                     onClick={() => { setFormValues(initialFormData); setIsPopupOpen({ ...isPopupOpen, createFAQPopup: true }); }}
-                                    sx={{ marginBottom: '20px', zIndex: 0, backgroundColor: "rgba(89, 50, 234, 1)" }}
+                                    sx={{  zIndex: 0, backgroundColor: "rgba(89, 50, 234, 1)" }}
                                 >
                                     Add New FAQ
                                 </Button>
                             </div>
 
-                            <Grid container sx={{ padding: "2%", overflow: "auto", height: "100%", justifyContent: "center", display: "flex" }}>
+                            <Grid container sx={{ padding: "2%", overflow: "auto", height: "500px", justifyContent: "center", display: "flex" }}>
                                 {allFaqs?.length > 0 ? allFaqs.map((faq: any, index: number) => (
-                                    <Grid item key={index} sx={{ width: "100%", height: "30%", }} >
+                                    <Grid item key={index} sx={{ width: "100%", height:"200px" }} >
                                         <Card sx={{ padding: "1% 2%", width: "100%", display: "flex", }}>
                                             <div style={{ cursor: "pointer", padding: "2% 0%", width: "90%" }} >
                                                 <Typography variant='h6'>{faq.question}</Typography>

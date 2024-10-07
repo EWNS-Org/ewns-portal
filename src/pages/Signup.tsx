@@ -22,93 +22,49 @@ function Signup() {
     const { showLoader, hideLoader } = useLoader();
     const breakpoint = useTailwindBreakpoint();
 
-    const validateStep2 = (showToast: boolean) => {
-
-        if (!formData.businessName.trim()) {
-            showToast ?? toast.error("Business Name is required.");
-            return false;
-        }
-
-        if (!categories.includes(formData.category)) {
-            showToast ?? toast.error("Invalid business category.");
-            return false;
-        }
-
-        if (!formData.shortBio.trim()) {
-            showToast ?? toast.error("Business Description is required.");
-            return false;
-        }
-        return true;
-    };
-
-    const validateStep1 = (showToast: boolean) => {
-        if (!formData.name.trim()) {
-            showToast ?? toast.error("Full Name is required.");
-            return false;
-        }
-
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(formData.email)) {
-            showToast ?? toast.error("Invalid email format.");
-            return false;
-        }
-
-        if (formData.password.length < 6) {
-            showToast ?? toast.error("Password must be at least 6 characters.");
-            return false;
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            showToast ?? toast.error("Passwords do not match.");
-            return false;
-        }
-
-        if (!formData.address.trim()) {
-            showToast ?? toast.error("Address is required.");
-            return false;
-        }
-
-        if (!/^\d{6}$/.test(formData.pincode)) {
-            showToast ?? toast.error("Invalid pincode format.");
-            return false;
-        }
-        return true;
-    }
-
-
-    const [showFirstStep, setShowFirstStep] = React.useState(true);
+    const [showStep, setShowStep] = React.useState<number>(1);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         password: "",
         confirmPassword: "",
-        address: "",
+        addressLine1: "",
+        addressLine2: "",
         pincode: "",
         state: "",
         city: "",
+        landmark: "",
         country: "",
         businessName: "",
         category: categories[0],
         shortBio: "",
         countryCode: countryList["IN"].dial_code,
-        mobileNumber: ""
+        mobileNumber: "",
+        businessType: ""
     });
 
     useEffect(() => {
-        if (showFirstStep) {
-            if (validateFields(["name", "email", "password", "confirmPassword", "address", "pincode"], false, formData)) {
+        console.log(formData, showStep, validateFields(["name", "email", "password", "confirmPassword", "countryCode", "mobileNumber"], false, formData))
+        if (showStep === 1) {
+            if (validateFields(["name", "email", "password", "confirmPassword", "countryCode", "mobileNumber"], true, formData)) {
                 setHideNext(false)
             } else {
                 setHideNext(true)
             }
-        } else {
-            if (validateFields(["businessName", "category", "shortBio"], false, formData)) {
+        } else if(showStep === 2){
+            if (validateFields(["addressLine1", "addressLine2", "pincode", "landmark", "city", "state", "country"], false, formData)) {
+                setHideNext(false)
+            } else {
+                setHideNext(true)
+            }
+        }else if(showStep === 3){
+            if (validateFields(["businessName", "category", "shortBio", "businessType"], false, formData)) {
                 setHideNext(false)
             } else {
                 setHideNext(true)
             }
         }
-    }, [formData, showFirstStep])
+    }, [formData, showStep])
 
 
     const handlePincodeChange = async (e: any) => {
@@ -157,8 +113,16 @@ function Signup() {
 
     }
 
+    const handleNext = async () => {
+        if(showStep === 3){
+            await handleSignup();
+        }else{
+            setShowStep(showStep + 1)
+        }
+    }
+
     return (
-        <div className='login-page' style={{ height: breakpoint === 'xs' ? "100%" : "1235px" }} >
+        <div className='login-page' style={{ height: "1000px", overflow:"hidden" }} >
             <Grid container spacing={0} sx={{ margin: "0px", display: "flex", flexWrap: "wrap", width: "100%", height: "100%" }} >
                 <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%" }} >
                     <div className='left-signup '>
@@ -170,37 +134,24 @@ function Signup() {
                                 <Typography variant='h4' color='rgba(1, 82, 168, 1)' fontSize={"40px"} >Take Your <span style={{ fontWeight: "bold" }}>Business Online </span>
                                     within minutes !!</Typography>
                             </div>
-                            {
-                                showFirstStep ?
-                                    <div style={{ display: "flex", justifyContent: "center", marginTop: "2%", height: "100%" }} className='signup-lef-img'>
-                                        <img src="assets/signup-left.svg" alt='signup-left' width={"600px"} height={"100%"} />
-                                    </div>
-                                    :
-                                    <div style={{ display: "flex", justifyContent: "center", marginTop: "2%", height: "100%" }} className='signup-lef-img'>
-                                        <img src="assets/signup-second.svg" alt='signup-left2' width={"600px"} height={"100%"} />
-                                    </div>
-                            }
-
+                            <div style={{ display: "flex", justifyContent: "center", marginTop: "2%", height: "100%" }} className='signup-lef-img'>
+                                <img src="assets/signup-left.svg" alt='signup-left' width={"600px"} height={"100%"} />
+                            </div>
                         </div>
 
                     </div>
                 </Grid>
-                <Grid size={6} sx={{ width: breakpoint === "xs" ? "100%" : "50%", height: "100%" }}>
+                <Grid size={6} sx={{ width: "50%", height: "1000px" }}>
                     <div className='right-signup'>
-                        <div className='right-logo'>
-                            <img src="assets/logo.png" alt='logo' width={"200px"} />
-                        </div>
                         <div className='signup-part'>
-                            <Typography onClick={() => setShowFirstStep(true)} variant='h2' sx={{ alignItems: "center", justifyContent: "center", display: !showFirstStep ? "flex" : "none", color: "blue", cursor: "pointer" }}> {"<"} </Typography>
-                            <Typography variant={breakpoint === "xs" ? 'h4' : 'h3'} margin="2%">Sign up </Typography>
-                            <Typography sx={{ alignItems: "end", justifyContent: "end", display: "flex" }} variant='h5' margin="2%">(Step&nbsp;<strong style={{ color: "blue" }}>{showFirstStep ? "1 " : " 2 "}</strong> &nbsp;of 2)
+                            <Typography onClick={() => setShowStep(showStep-1)} variant='h2' sx={{ alignItems: "center", justifyContent: "center", display: showStep > 1 ? "flex" : "none", color: "blue", cursor: "pointer" }}> {"<"} </Typography>
+                            <Typography variant="h4" margin="2%">Sign up </Typography>
+                            <Typography sx={{ alignItems: "end", justifyContent: "end", display: "flex" }} variant='h5' margin="2%">(Step&nbsp;<strong style={{ color: "blue" }}>{showStep}</strong> &nbsp;of 3)
                             </Typography>
                         </div>
                         <Typography variant='h5' marginY={"2%"} sx={{ color: "gray" }}>It’s time to get your business online</Typography>
                         <div className='signup-form'>
-                            {
-                                showFirstStep ?
-                                    <div className='step-one'>
+                            {showStep === 1 && <div className='step-one'>
                                         <TextField
                                             required
                                             id="outlined-required"
@@ -262,91 +213,124 @@ function Signup() {
                                                 sx={{ margin: " 1% 2%", width: "100%", height: "100%" }}
                                             />
                                         </div>
+
+                            </div>}
+                            {showStep === 2 && <div className='step-one'>                                        
                                         <TextField
+                                        required
+                                        value={formData.addressLine1}
+                                        id="outlined-required"
+                                        label="Flat/Road/Building/Floor Number."
+                                        sx={{ marginBottom: "2%", width: "100%", marginRight: "2%" }}
+                                        onChange={(e) => setFormData({ ...formData, addressLine1: e.target.value })}
+                                    />
+                                    <TextField
+                                        required
+                                        value={formData.addressLine2}
+                                        id="outlined-required"
+                                        label="Building Name/Street Name/"
+                                        sx={{ marginBottom: "2%", width: "100%", marginRight: "2%" }}
+                                        onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
+                                    />
+                                    <TextField
+                                        required
+                                        value={formData.addressLine2}
+                                        id="outlined-required"
+                                        label="Landmark"
+                                        sx={{ marginBottom: "2%", width: "100%", marginRight: "2%" }}
+                                        onChange={(e) => setFormData({ ...formData, landmark: e.target.value })}
+                                    />
+                                    <div style={{ display: "flex", justifyContent: "space-between   " }}>
+                                        <TextField
+                                            type='number'
                                             required
-                                            value={formData.address}
+                                            disabled={formData.pincode.length === 6}
                                             id="outlined-required"
-                                            label="Business Address"
-                                            sx={{ marginBottom: "2%", width: "100%", marginRight: "2%" }}
-                                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                            label="Zip Code"
+                                            sx={{ marginBottom: "2%", marginRight: "2%", width: "50%" }}
+                                            value={formData.pincode}
+                                            onChange={(e) => handlePincodeChange(e)}
                                         />
 
-                                        <div style={{ display: "flex", justifyContent: "space-between   " }}>
-                                            <TextField
-                                                type='number'
-                                                required
-                                                disabled={formData.pincode.length === 6}
-                                                id="outlined-required"
-                                                label="Zip Code"
-                                                sx={{ marginBottom: "2%", marginRight: "2%", width: "50%" }}
-                                                value={formData.pincode}
-                                                onChange={(e) => handlePincodeChange(e)}
-                                            />
-
-                                            <TextField
-                                                disabled
-                                                id="outlined-required"
-                                                label={formData.city || "City"}
-                                                value={formData.city}
-                                                sx={{ marginBottom: "2%", width: "60%" }}
-                                            />
-                                        </div>
-                                        <div style={{ display: "flex" }}>
-                                            <TextField
-                                                disabled
-                                                id="outlined-required"
-                                                value={formData.state}
-                                                label={formData.state || "State"}
-                                                sx={{ marginBottom: "2%", marginRight: "2%", width: "60%" }}
-                                            /><TextField
-                                                disabled
-                                                id="outlined-required"
-                                                label={formData.country || "Country"}
-                                                sx={{ marginBottom: "2%", width: "60%" }}
-                                                value={formData.country}
-                                            />
-                                        </div>
-                                        {formData.pincode.length === 6 && <Button onClick={() => setFormData({ ...formData, pincode: '', city: '', state: '', country: '' })} sx={{ border: "1px solid blue", width: "fit-content", padding: "0.5% 2%", marginBottom: "2%", cursor: "pointer" }}>change pincode</Button>}
-                                        <Button disabled={hideNext} onClick={() => setShowFirstStep(false)} variant='contained' sx={{ width: "100%", height: "15%" }}>Next</Button>
-                                    </div> :
-                                    <div>
                                         <TextField
-                                            required
+                                            disabled
                                             id="outlined-required"
-                                            label="Business Name"
-                                            sx={{ marginBottom: "2%", width: "100%" }}
-                                            onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                                            value={formData.businessName}
+                                            label={formData.city || "City"}
+                                            value={formData.city}
+                                            sx={{ marginBottom: "2%", width: "60%" }}
                                         />
-                                        <TextField
-                                            required
-                                            id="outlined-required"
-                                            label="Business Description"
-                                            multiline
-                                            rows={4}
-                                            sx={{ marginBottom: "2%", width: "100%" }}
-                                            onChange={(e) => setFormData({ ...formData, shortBio: e.target.value })}
-                                            value={formData.shortBio}
-                                        />
-                                        <Box sx={{ minWidth: 120, marginY: "2%" }}>
-                                            <FormControl sx={{ width: "100%" }}>
-                                                <InputLabel id="demo-simple-select-label">Business Category</InputLabel>
-                                                <Select required
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={formData.category}
-                                                    label="Business Category"
-                                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                                >
-                                                    {categories.map(cat => <MenuItem value={cat}>{cat}</MenuItem>)}
-                                                </Select>
-                                            </FormControl>
-                                        </Box>
-                                        <Button disabled={hideNext} onClick={() => handleSignup()} variant='contained' sx={{ width: "100%", height: "15%" }}>Sign up</Button>
-
                                     </div>
-                            }
+                                    <div style={{ display: "flex" }}>
+                                        <TextField
+                                            disabled
+                                            id="outlined-required"
+                                            value={formData.state}
+                                            label={formData.state || "State"}
+                                            sx={{ marginBottom: "2%", marginRight: "2%", width: "60%" }}
+                                        /><TextField
+                                            disabled
+                                            id="outlined-required"
+                                            label={formData.country || "Country"}
+                                            sx={{ marginBottom: "2%", width: "60%" }}
+                                            value={formData.country}
+                                        />
+                                    </div>
+                                    {formData.pincode.length === 6 && <Button onClick={() => setFormData({ ...formData, pincode: '', city: '', state: '', country: '' })} sx={{ border: "1px solid blue", width: "fit-content", padding: "0.5% 2%", marginBottom: "2%", cursor: "pointer" }}>change pincode</Button>}
+                            </div>}
+                            {showStep === 3 && <div className='step-one'>
+                                <TextField
+                                    required
+                                    id="outlined-required"
+                                    label="Business Name"
+                                    sx={{ marginBottom: "2%", width: "100%" }}
+                                    onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                                    value={formData.businessName}
+                                />
+                                <TextField
+                                    required
+                                    id="outlined-required"
+                                    label="Business Description"
+                                    multiline
+                                    rows={4}
+                                    sx={{ marginBottom: "2%", width: "100%" }}
+                                    onChange={(e) => setFormData({ ...formData, shortBio: e.target.value })}
+                                    value={formData.shortBio}
+                                />
+                                <Box sx={{ minWidth: 120, marginY: "2%" }}>
+                                    <FormControl sx={{ width: "100%" }}>
+                                        <InputLabel id="demo-simple-select-label">Business Category</InputLabel>
+                                        <Select required
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={formData.category}
+                                            label="Business Category"
+                                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        >
+                                            {categories.map(cat => <MenuItem value={cat}>{cat}</MenuItem>)}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+
+                                <Box sx={{ minWidth: 120, marginY: "2%" }}>
+                                    <FormControl sx={{ width: "100%" }}>
+                                        <InputLabel id="demo-simple-select-label-type">Business Type</InputLabel>
+                                        <Select required
+                                            labelId="demo-simple-select-label-type"
+                                            id="demo-simple-select-type"
+                                            value={formData.businessType}
+                                            label="Business Type"
+                                            onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
+                                        >
+                                            {<MenuItem value={"SERVICE"}>{"Services"}</MenuItem>}
+                                            {<MenuItem value={"PRODUCT"}>{"Products"}</MenuItem>}
+                                            {<MenuItem value={"BOTH"}>{"Both"}</MenuItem>}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            </div>}
                         </div>
+                        <Button disabled={hideNext} onClick={handleNext} variant='contained' sx={{ width: "100%", height: "5%" }}>Next</Button>
+
                         <div style={{ marginTop: "3%" }}>
                             <Typography variant={breakpoint === 'xs' ? 'caption' : 'h6'}>Already have an account ? &nbsp;<a href="/login" style={{ color: "blue" }}>Log In here</a></Typography>
                         </div>

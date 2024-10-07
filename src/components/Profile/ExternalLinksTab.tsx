@@ -186,10 +186,10 @@ const ExternalLinksTab = ({ profile, setProfile }: any) => {
 
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
-                <Stack spacing={4} width={"100%"} style={{ marginTop: "1%" }}>
-                    <Card sx={{ margin: '1%', padding: "2%" }}>
-                        <Box sx={{ height: "700px" }}>
+            <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+                <Stack spacing={4} width={"100%"} style={{ }}>
+                    <Card sx={{ padding: "2%", height: "630px" }}>
+                        <Box sx={{  }}>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <Typography variant='h5'>All links</Typography>
                                 <Button

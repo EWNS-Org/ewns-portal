@@ -8,7 +8,8 @@ import {
     Card,
     CardContent,
     FormControlLabel,
-    Checkbox
+    Checkbox,
+    Button
 } from '@mui/material';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
@@ -18,6 +19,10 @@ import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { profile } from 'console';
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { ACTIVE_BUSINESS_ID } from '../../utils/constants';
+import { validateFields, validateTimings } from '../../Helpers/common.helper';
+import { updateBusinessProfileAction } from '../../Redux/Actions/BusinessActions/business.actions';
+import { useDispatch } from 'react-redux';
 
 dayjs.extend(customParseFormat);
 
@@ -25,8 +30,23 @@ const locales = ['en', 'en-gb', 'de'];
 
 type LocaleKey = (typeof locales)[number];
 
-function BusinessHours({ profile, setProfile }: any) {
+function BusinessHours({ profileDetails, setProfileDetails }: any) {
 
+    const [profile, setProfile] = useState(profileDetails);
+
+    const dispatch = useDispatch();
+
+    const handleUpdateProfile = async () => {
+        let businessId = localStorage.getItem(ACTIVE_BUSINESS_ID);
+        let isFormChanged = JSON.stringify(profileDetails) !== JSON.stringify(profile);
+        if (isFormChanged && validateTimings(profile.timings)) {
+            dispatch(updateBusinessProfileAction(profile, businessId) as any);
+        }
+    }
+
+    useEffect(()=>{
+        setProfile(profileDetails);
+    }, [profileDetails])
 
     const handleTimeChange = (day: any, field: any, newValue: any) => {
         setProfile({ ...profile, timings: { ...profile.timings, [day]: { ...profile.timings[day], [field]: newValue } } })
@@ -39,14 +59,14 @@ function BusinessHours({ profile, setProfile }: any) {
 
     return (
         <div className="container  w-full" style={{ fontFamily: "source Sans pro", }}>
-            <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", }}>
+            <div className=" bg-white  p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Stack spacing={4} width={"100%"} style={{ marginTop: "2%" }}>
-                        <Card sx={{ margin: 'auto', mt: 4 }}>
-                            <CardContent sx={{ width: "100%" }}>
+                    <Stack  width={"100%"} style={{  }}>
+                        <Card sx={{  height:"560px" }}>
+                            <CardContent sx={{ width: "90%" }}>
 
                                 {Object.keys(profile.timings).map((day) => (
-                                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%", height: "100%", alignItems: "center", padding: "1% 2%", margin: "0% 2%" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%", height: "100%", alignItems: "center", padding:"0.5% 5%" }}>
                                         <div style={{ width: "20%", height: "60px", alignItems: "center", justifyContent: "start", display: "flex" }}>
                                             <Grid item >
                                                 <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>{day}</Typography>
@@ -82,7 +102,7 @@ function BusinessHours({ profile, setProfile }: any) {
                                             </Grid>
                                         </div>
                                         <div>
-                                            <Grid item xs={4} sx={{ width: "20%" }}>
+                                            <Grid item  sx={{ width: "20%" }}>
                                                 <FormControlLabel
                                                     control={
                                                         <Checkbox
@@ -101,6 +121,14 @@ function BusinessHours({ profile, setProfile }: any) {
                             </CardContent>
                         </Card>
                     </Stack>
+                    <div style={{display:"flex", justifyContent:"space-between", marginTop: "2%"}}>
+                    <Button variant='outlined' >
+                        Reset
+                    </Button>
+                    <Button variant='contained' onClick={handleUpdateProfile} >
+                        Update Profile
+                    </Button>
+                </div>
                 </LocalizationProvider>
             </div>
         </div >

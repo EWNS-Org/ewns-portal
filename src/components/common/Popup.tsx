@@ -14,7 +14,6 @@ const Popup = ({
     setFormValues,
     children
 }: any) => {
-    console.log(formValues)
 
     return (
         <div className="popup-overlay">
@@ -79,7 +78,7 @@ const Popup = ({
                 </div>
                 <div className="popup-actions">
                     {buttons.map((button: any, index: any) => (
-                        <Button key={button.label} className={button.className} onClick={() => button.onClick()} variant={button.variant} sx={{ width: "100%", height: "15%", display: button.display }}>{button.label}</Button>
+                        <Button key={button.label} className={button.className} onClick={() => button.onClick()} variant={button.variant} sx={{ width: "50%", height: "15%", display: button.display }}>{button.label}</Button>
 
                     ))}
                 </div>
