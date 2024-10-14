@@ -236,7 +236,7 @@ function AllCategories() {
 
   return (
     <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-        <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+        <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderRadius: "15px" }}>
             <Stack spacing={4} width={"100%"} style={{ }}>
                 <Card sx={{ padding: "2%", height: "630px" }}>
                   <div style={{display:"flex", justifyContent:"end"}}>

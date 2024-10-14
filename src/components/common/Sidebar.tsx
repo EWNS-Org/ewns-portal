@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getBusinessDetailsAction, getAllBusinessesAction } from '../../Redux/Actions/BusinessActions/business.actions';
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { getAvatar } from '../../Helpers/common.helper';
 
 
 
@@ -89,8 +90,7 @@ const Sidebar = ({ userRole, children }: any) => {
     const sidebarItems = [
         { name: "Dashboard", hasChild: false, icon: "📊", isOpen: false, goto: '/dashboard' },
         { name: "Profile", hasChild: false, icon: "👤", isOpen: false, goto: '/profile' },
-        { name: "Categories", hasChild: false, icon: "📦", isOpen: false, goto: '/categories' },
-        { name: "Testimonials", hasChild: false, icon: "📦", isOpen: false, goto: '/testimonials' },
+        { name: "Category & Testimonials", hasChild: false, icon: "📦", isOpen: false, goto: '/categories' },
         { name: "Products", hasChild: false, icon: "🛒", isOpen: false, goto: '/products' },
         { name: "Services", hasChild: false, icon: "💼", isOpen: false, goto: '/services' },
         { name: "Albums", hasChild: false, icon: "🎵", isOpen: false, goto: '/albums' },
@@ -158,7 +158,7 @@ const Sidebar = ({ userRole, children }: any) => {
             <div className=" h-[98vh] w-64 flex "  >
                 <nav className="flex-col h-full w-64 px-4 bg-white font-sans" style={{ justifySelf: "space-between", }}>
 
-                    <div className="flex h-[5%] w-full " style={{ alignItems: "center", justifyContent: "center", }}>
+                    <div className="flex h-[10%] w-full " style={{ alignItems: "center", justifyContent: "center", marginTop:"1%" }}>
                         <img src="/assets/ewns-logo.svg" alt="Logo" className="h-12 w-full justify-center" />
                     </div>
 
@@ -192,10 +192,7 @@ const Sidebar = ({ userRole, children }: any) => {
                                 {allBusinesses?.length > 0 && allBusinesses.map((business: any) => {
                                     return <MenuItem value={business?._id} key={business?._id} sx={{ marginBottom: "2%" }}>
                                         <ListItemAvatar>
-                                            <Avatar alt="Company Name">
-                                                <DevicesRoundedIcon sx={{ fontSize: '1rem' }} />
-
-                                            </Avatar>
+                                        <Avatar {...getAvatar(business?.businessName ? business?.businessName : "Prem Prakash")} />
                                         </ListItemAvatar>
                                         <ListItemText primary={business.businessName} secondary={business.businessUsername} />
                                     </MenuItem>

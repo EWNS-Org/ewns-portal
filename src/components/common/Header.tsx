@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
-import { Button, MenuItem } from '@mui/material';
+import { Avatar, Button, MenuItem } from '@mui/material';
 import "./Header.css"
 import Popup from './Popup';
 import { countryList } from '../../utils/constants/country-flag';
 import { categories } from '../../utils/constants/categories';
 import { fetchPincodeDetails } from '../../services/api/postalcode.service';
 import { useLoader } from '../../contexts/LoaderContext';
-import { useDispatch } from 'react-redux';
-import { createBusinessAction } from '../../Redux/Actions/BusinessActions/business.actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { createBusinessAction, getAllBusinessesAction, getBusinessDetailsAction, getUserDetailsAction } from '../../Redux/Actions/BusinessActions/business.actions';
 import toast from 'react-hot-toast';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../contexts/AuthContext';
+import { getAvatar } from '../../Helpers/common.helper';
+import { ACTIVE_BUSINESS_ID, AUTH_TOKEN } from '../../utils/constants';
 function Header({ isPopupOpen, handlePopupClose, handlePopupOpen }: any) {
 
     const { logout } = useAuth()
@@ -60,11 +62,23 @@ function Header({ isPopupOpen, handlePopupClose, handlePopupOpen }: any) {
     const { showLoader, hideLoader } = useLoader();
     const dispatch = useDispatch();
 
+    const userDetails = useSelector((state: any) => state.business.userDetails);
+
+    const [userData, setUserData] = useState<any>(null);
+
 
     const [formValues, setFormValues] = useState(initialFormData)
 
     useEffect(() => {
-    }, [formValues]);
+        async function fetchUserDetails(){
+            await dispatch(getUserDetailsAction() as any);
+        }
+        fetchUserDetails();
+    }, []);
+
+    useEffect(()=>{
+        setUserData(userDetails);
+    }, [userDetails]);
 
     const [createBusinessInputs, setBusinessInputs] = useState(newBusinessInputs);
 
@@ -208,8 +222,8 @@ function Header({ isPopupOpen, handlePopupClose, handlePopupOpen }: any) {
                     </div>
 
                     <div className="flex items-center justify-center space-x-2 cursor-pointer" onClick={() => navigate("/settings/your-account")}>
-                        <AccountCircleIcon sx={{ color: 'blue' }} />
-                        <span className="text-gray-700 font-medium">{"Your Account"}</span>
+                        <Avatar {...getAvatar(userData ? userData.name : "Prem Prakash")} />
+                        <span className="text-gray-700 font-medium">{userData ? userData.name : "Your Account"}</span>
 
                     </div>
                     <LogoutIcon sx={{ color: "blue", cursor: "pointer" }} onClick={() => logout()} />

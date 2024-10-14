@@ -16,7 +16,7 @@ import Logout from './pages/Logout';
 import Categories from './components/Categories/Categories';
 import Products from './components/Products/Products';
 import Services from './components/Services/Services';
-import { Album, Analytics, Message } from '@mui/icons-material';
+import { Album, Analytics, LocalCafe, Message } from '@mui/icons-material';
 import Appointment from './components/Appointments/Appointment';
 import Profile from './components/Profile/Profile';
 import Subscription from './components/Subscription/Subscription';
@@ -28,7 +28,6 @@ import Albums from './components/Albums/Album';
 import Messages from './components/Messages/Messages';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AnalyticsComponent from './components/Plugins/Analytics/Analytics';
-import Testimonials from './components/Testimonials/Testimonials';
 
 
 function App() {
@@ -151,18 +150,6 @@ function App() {
                 element={
                   <Sidebar>
                     <Profile />
-                  </Sidebar>
-                }
-              />
-            }
-          />
-          <Route
-            path="/testimonials"
-            element={
-              <PrivateRoute
-                element={
-                  <Sidebar>
-                    <Testimonials />
                   </Sidebar>
                 }
               />

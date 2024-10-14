@@ -14,6 +14,16 @@ export const addAlbumsData = async (businessId: string, payload: any) => {
     }
 }
 
+export const addSubAlbumsData = async (businessId: string, payload: any, albumId: any) => {
+    try {
+        const res: any = await post(`/album/sub/create?businessId=${businessId}&albumId=${albumId}`, payload);
+
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
 
 export const getAllAlbumsData = async (businessId: string) => {
     try {
@@ -59,9 +69,12 @@ export const deleteAlbumsData = async (businessId: string, albumId: any) => {
     }
 }
 
-export const AddImagesInAlbumsData = async (businessId: string, albumId: any, files: any) => {
+export const AddImagesInAlbumsData = async (businessId: string, albumId: any, body: any, title: any) => {
     try {
-        const res: any = await post(`/album/upload-images?businessId=${businessId}&albumId=${albumId}`, files);
+        const formData = new FormData();
+        formData.append('image', body.file);
+
+        const res: any = await post(`/album/upload-image?businessId=${businessId}&albumId=${albumId}&title=${title}`, formData);
 
         return res.data;
     } catch (error: any) {
@@ -70,9 +83,12 @@ export const AddImagesInAlbumsData = async (businessId: string, albumId: any, fi
     }
 }
 
-export const AddVideosInAlbumsData = async (businessId: string, albumId: any, files: any) => {
+export const AddVideosInAlbumsData = async (businessId: string, albumId: any, files: any, title: any) => {
     try {
-        const res: any = await post(`/album/upload-videos?businessId=${businessId}&albumId=${albumId}`, files);
+        const formData = new FormData();
+        formData.append('video', files.file);
+
+        const res: any = await post(`/album/upload-video?businessId=${businessId}&albumId=${albumId}&title=${title}`, formData);
 
         return res.data;
     } catch (error: any) {
