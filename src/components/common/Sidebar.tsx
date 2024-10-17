@@ -1,267 +1,343 @@
-import React, { useEffect, useState } from 'react';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Link, useNavigate } from 'react-router-dom';
-import Header from '../common/Header';
-import { Avatar, Box, Button, Drawer, Icon, ListItemAvatar, ListItemText, ListSubheader, MenuItem, Select, SelectChangeEvent, drawerClasses, selectClasses, styled } from '@mui/material';
-import MuiDrawer from '@mui/material/Drawer';
-import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
-import { useDispatch, useSelector } from 'react-redux';
-import { getBusinessDetailsAction, getAllBusinessesAction } from '../../Redux/Actions/BusinessActions/business.actions';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Header from "../common/Header";
+import { RiGalleryView2 } from "react-icons/ri";
+import { FaUsersLine } from "react-icons/fa6";
+import {
+  RiArrowDropDownLine,
+  RiArrowDropUpLine,
+  RiArrowDropRightLine,
+} from "react-icons/ri";
+import {
+  FiUser,
+  FiBox,
+  FiShoppingCart,
+  FiBriefcase,
+  FiMusic,
+  FiCalendar,
+  FiMail,
+  FiSettings,
+  FiUserCheck,
+  FiGlobe,
+  FiBarChart,
+  FiClipboard,
+  FiSearch,
+} from "react-icons/fi";
+import { FaPuzzlePiece } from "react-icons/fa";
 
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { getAvatar } from '../../Helpers/common.helper';
-
-
+import {
+  Box,
+  Button,
+  Avatar,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import { AiFillPlusCircle } from "react-icons/ai";
+import { MdDevices } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getBusinessDetailsAction,
+  getAllBusinessesAction,
+} from "../../Redux/Actions/BusinessActions/business.actions";
+import "./sidebar.css";
 
 const Sidebar = ({ userRole, children }: any) => {
-    const navigate = useNavigate();
-    const [selectedItem, setSelectedItem] = useState<string>('');
-    const [company, setCompany] = React.useState("");
-    const [allBusinesses, setAllBusinesses] = React.useState([]);
-    const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const [selectedItem, setSelectedItem] = useState<string>("");
+  const [company, setCompany] = useState("");
+  const [allBusinesses, setAllBusinesses] = useState([]);
+  const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
+  const [sidebarItemsState, setSidebarItemsState] = useState<any>([]);
 
-    const handlePopupOpen = () => {
-        setPopupOpen(true);
-    };
-    const dispatch = useDispatch();
-    const businesses = useSelector((state: any) => {
-        return state.business.businesses;
-    });
+  const dispatch = useDispatch();
+  const businesses = useSelector((state: any) => state.business.businesses);
 
-    useEffect(() => {
-        dispatch(getAllBusinessesAction() as any);
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (businesses?.length > 0) {
-            setAllBusinesses(businesses);
-            let bussId = localStorage.getItem("activeBusinessId") as string;
-            let isCurrent = businesses.filter((x: any) => x._id === bussId);
-
-            if (bussId && isCurrent?.length > 0) {
-                setCompany(bussId);
-            } else {
-                localStorage.setItem("activeBusinessId", businesses[0]?._id);
-                setCompany(businesses[0]?._id);
-            }
-        }
-    }, [businesses]);
-    const handlePopupClose = () => {
-        setPopupOpen(false);
-        setCompany(localStorage.getItem("activeBusinessId") as string);
-    };
-    useEffect(() => {
-        let businessId = localStorage.getItem("activeBusinessId");
-        if (businessId) {
-            setCompany(localStorage.getItem("activeBusinessId") as string);
-
-        }
-    }, [setCompany])
-
-    useEffect(() => {
-        if (userRole === "ADMIN") {
-            adminSidebarItems.map((item: any, index: number) => {
-                if (window.location.pathname.includes(item.goto)) {
-                    handleItemClick(item, index);
-                } else if (item.hasChild) {
-                    item.children.map((subItem: any, childIndex: number) => {
-                        if (window.location.pathname.includes(subItem.goto)) {
-                            handleItemClick(subItem, childIndex);
-                        }
-                    })
-                }
-            })
-        } else {
-            sidebarItems.map((item: any, index: number) => {
-                if (window.location.pathname.includes(item.goto)) {
-                    handleItemClick(item, index);
-                } else if (item.hasChild) {
-                    item.children.map((subItem: any, childIndex: number) => {
-                        if (window.location.pathname.includes(subItem.goto)) {
-                            handleItemClick(subItem, childIndex);
-                        }
-                    })
-                }
-            })
-        }
-    }, [navigate]);
-
-    const sidebarItems = [
-        { name: "Dashboard", hasChild: false, icon: "📊", isOpen: false, goto: '/dashboard' },
-        { name: "Profile", hasChild: false, icon: "👤", isOpen: false, goto: '/profile' },
-        { name: "Category & Testimonials", hasChild: false, icon: "📦", isOpen: false, goto: '/categories' },
-        { name: "Products", hasChild: false, icon: "🛒", isOpen: false, goto: '/products' },
-        { name: "Services", hasChild: false, icon: "💼", isOpen: false, goto: '/services' },
-        { name: "Albums", hasChild: false, icon: "🎵", isOpen: false, goto: '/albums' },
-        { name: "Appointments", hasChild: false, icon: "📅", isOpen: false, goto: '/appointments' },
-        { name: "Messages", hasChild: false, icon: "✉️", isOpen: false, goto: '/messages' },
-        { name: "Subscription", hasChild: false, icon: "📅", isOpen: false, goto: '/subscription' },
+  const sidebarItems = [
+    {
+      name: "Dashboard",
+      hasChild: false,
+      icon: <RiGalleryView2 />,
+      isOpen: false,
+      goto: "/dashboard",
+    },
+    {
+      name: "Profile",
+      hasChild: false,
+      icon: <FiUser />,
+      isOpen: false,
+      goto: "/profile",
+    },
+    {
+      name: "Categories",
+      hasChild: false,
+      icon: <FiBox />,
+      isOpen: false,
+      goto: "/categories",
+    },
+    {
+      name: "Testimonials",
+      hasChild: false,
+      icon: <FaUsersLine />,
+      isOpen: false,
+      goto: "/testimonials",
+    },
+    {
+      name: "Products",
+      hasChild: false,
+      icon: <FiShoppingCart />,
+      isOpen: false,
+      goto: "/products",
+    },
+    {
+      name: "Services",
+      hasChild: false,
+      icon: <FiBriefcase />,
+      isOpen: false,
+      goto: "/services",
+    },
+    {
+      name: "Albums",
+      hasChild: false,
+      icon: <FiMusic />,
+      isOpen: false,
+      goto: "/albums",
+    },
+    {
+      name: "Appointments",
+      hasChild: false,
+      icon: <FiCalendar />,
+      isOpen: false,
+      goto: "/appointments",
+    },
+    {
+      name: "Messages",
+      hasChild: false,
+      icon: <FiMail />,
+      isOpen: false,
+      goto: "/messages",
+    },
+    {
+      name: "Subscription",
+      hasChild: false,
+      icon: <FiCalendar />,
+      isOpen: false,
+      goto: "/subscription",
+    },
+    {
+      name: "Settings",
+      hasChild: true,
+      icon: <FiSettings />,
+      isOpen: false,
+      children: [
         {
-            name: "Settings",
-            hasChild: true,
-            icon: "⚙️",
-            isOpen: true,
-            children: [
-                { name: "Account", hasChild: false, icon: "🧑‍💻", isOpen: false, goto: '/settings/your-account' },
-            ]
+          name: "Account",
+          hasChild: false,
+          icon: <FiUserCheck />,
+          isOpen: false,
+          goto: "/settings/your-account",
         },
         {
-            name: "Plugins",
-            hasChild: true,
-            icon: "🧩",
-            isOpen: true,
-            children: [
-                { name: "Themes", hasChild: false, icon: "🎨", isOpen: false, goto: '/plugins/themes' },
-                { name: "Custom Domain", hasChild: false, icon: "🌐", isOpen: false, goto: '/plugins/custom-domain' },
-                { name: "Analytics", hasChild: false, icon: "📈", isOpen: false, goto: '/plugins/analytics' },
-                { name: "Marketing", hasChild: false, icon: "📋", isOpen: false, goto: '/plugins/marketing' },
-            ]
+          name: "SEO",
+          hasChild: false,
+          icon: <FiSearch />,
+          isOpen: false,
+          goto: "/settings/seo",
         },
+      ],
+    },
+    {
+      name: "Plugins",
+      hasChild: true,
+      icon: <FaPuzzlePiece />,
+      isOpen: false,
+      children: [
+        {
+          name: "Themes",
+          hasChild: false,
+          icon: <FaPuzzlePiece />,
+          isOpen: false,
+          goto: "/plugins/themes",
+        },
+        {
+          name: "Custom Domain",
+          hasChild: false,
+          icon: <FiGlobe />,
+          isOpen: false,
+          goto: "/plugins/custom-domain",
+        },
+        {
+          name: "Analytics",
+          hasChild: false,
+          icon: <FiBarChart />,
+          isOpen: false,
+          goto: "/plugins/analytics",
+        },
+        {
+          name: "Marketing",
+          hasChild: false,
+          icon: <FiClipboard />,
+          isOpen: false,
+          goto: "/plugins/marketing",
+        },
+      ],
+    },
+  ];
 
-    ];
+  useEffect(() => {
+    dispatch(getAllBusinessesAction() as any);
+    setSidebarItemsState(sidebarItems); // Initialize state for sidebar items
+  }, [dispatch]);
 
-    const adminSidebarItems = [
-        { name: "All Merchants List", hasChild: false, icon: "📊", isOpen: false, goto: '/admin/all-merchants' },
-        { name: "Analytics", hasChild: false, icon: "📦", isOpen: false, goto: '/analytics' },
-        { name: "Products", hasChild: false, icon: "🛒", isOpen: false, goto: '/products' }
-    ];
+  useEffect(() => {
+    if (businesses?.length > 0) {
+      setAllBusinesses(businesses);
+      const businessId =
+        localStorage.getItem("activeBusinessId") || businesses[0]?._id;
+      setCompany(businessId);
+      localStorage.setItem("activeBusinessId", businessId);
+    }
+  }, [businesses]);
 
-    const [items, setItems] = useState(userRole === "ADMIN" ? adminSidebarItems : sidebarItems);
+  const handlePopupOpen = () => setPopupOpen(true);
+  const handlePopupClose = () => {
+    setPopupOpen(false);
+    setCompany(localStorage.getItem("activeBusinessId") as string);
+  };
 
-    const handleItemClick = (item: any, index: number) => {
+  const handleChange = (event: SelectChangeEvent) => {
+    const businessId = event.target.value;
+    setCompany(businessId);
+    localStorage.setItem("activeBusinessId", businessId);
+    dispatch(getBusinessDetailsAction(businessId) as any);
+  };
 
-        if (item.hasChild) {
-            const newItems: any = [...items];
-            newItems[index].isOpen = !newItems[index].isOpen;
-            setItems(newItems);
-        } else {
-            setSelectedItem(item.goto);
-            navigate(item.goto);
+  // Toggle dropdown for items with children
+  const toggleDropdown = (index: number) => {
+    const updatedSidebarItems = sidebarItemsState.map(
+      (item: any, i: number) => {
+        if (i === index) {
+          return { ...item, isOpen: !item.isOpen };
         }
-    };
-
-    const handleChange = (event: SelectChangeEvent) => {
-        if (event.target.value) {
-            setCompany(event.target.value as string);
-            localStorage.setItem("activeBusinessId", event.target.value);
-            dispatch(getBusinessDetailsAction(event.target.value) as any);
-        }
-    };
-
-
-    return (
-        <div className='w-full h-full ' style={{ display: "flex", flexDirection: "row", justifyContent: "start" }}>
-
-
-
-            <div className=" h-[98vh] w-64 flex "  >
-                <nav className="flex-col h-full w-64 px-4 bg-white font-sans" style={{ justifySelf: "space-between", }}>
-
-                    <div className="flex h-[10%] w-full " style={{ alignItems: "center", justifyContent: "center", marginTop:"1%" }}>
-                        <img src="/assets/ewns-logo.svg" alt="Logo" className="h-12 w-full justify-center" />
-                    </div>
-
-                    <div className='h-[8%] flex w-full' style={{ justifyContent: "center", alignItems: "center" }} >
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                width: "100%"
-                            }}
-                        >
-                            <Select
-                                labelId="company-select"
-                                id="company-simple-select"
-                                value={company}
-                                onChange={handleChange}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Select company' }}
-                                fullWidth
-                                sx={{
-                                    maxHeight: 56,
-                                    width: 250,
-                                    '&.MuiList-root': {
-                                    },
-                                    [`& .${selectClasses.select}`]: {
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                    },
-                                }}
-                            >
-                                {allBusinesses?.length > 0 && allBusinesses.map((business: any) => {
-                                    return <MenuItem value={business?._id} key={business?._id} sx={{ marginBottom: "2%" }}>
-                                        <ListItemAvatar>
-                                        <Avatar {...getAvatar(business?.businessName ? business?.businessName : "Prem Prakash")} />
-                                        </ListItemAvatar>
-                                        <ListItemText primary={business.businessName} secondary={business.businessUsername} />
-                                    </MenuItem>
-                                })}
-
-                                <Button key="create-business" onClick={() => handlePopupOpen()} variant='contained' sx={{ height: "100%", width: "100%" }} >Create Business</Button>
-
-                            </Select>
-                        </Box>
-                    </div>
-
-                    <div>
-                        {items.map((item: any, index: any) => (
-                            <div key={index} style={{ marginBottom: "2%", borderRadius: "10px", padding: "5px", ...(selectedItem === item.goto ? { backgroundColor: "rgba(89, 50, 234, 1)" } : {}) }}>
-                                <div
-                                    className={`flex items-center justify-between cursor-pointer ${selectedItem === item.goto ? "text-white" : "text-gray-500"}  `}
-                                    style={{ marginBottom: "2%", }}
-                                    onClick={() => handleItemClick(item, index)}
-                                >
-                                    <div className="flex items-center space-x-3" style={{}}>
-                                        {item.icon && item.icon}
-                                        <span >{item.name}</span>
-                                    </div>
-                                    {item.hasChild && (
-                                        <div>
-                                            {item.isOpen ? (
-                                                <KeyboardArrowUpIcon className="h-5 w-5" />
-                                            ) : (
-                                                <KeyboardArrowDownIcon className="h-5 w-5" />
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Child links */}
-                                {item.isOpen && item.hasChild && (
-                                    <div className={`pl-4 flex flex-col space-y-1  `} >
-                                        {item.children.map((child: any, childIndex: any) => (
-                                            <span
-                                                key={child.name}
-                                                className={`pl-4 py-2 text-sm cursor-pointer  ${selectedItem === child.goto ? "text-white" : "text-gray-500"} `}
-                                                onClick={() => handleItemClick(child, childIndex)}
-                                                style={{ marginBottom: "4%", borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px", ...(selectedItem === child.goto ? { backgroundColor: "rgba(89, 50, 234, 1)", content: "white" } : {}) }}
-                                            >
-                                                {child.icon && <span>{child.icon}</span>}
-                                                {child.name}
-                                            </span>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        ))
-                        }
-                    </div>
-                </nav >
-            </div >
-            <div className='flex-col w-full h-full justify-center px-4'>
-                <Header isPopupOpen={isPopupOpen} handlePopupOpen={handlePopupOpen} handlePopupClose={handlePopupClose} />
-
-                <div className='w-full h-[98vh] p-[2%] justify-center align-center flex' style={{ backgroundColor: "lavender" }}>
-
-                    {children}
-                </div>
-            </div>
-
-        </div >
+        return item;
+      }
     );
+    setSidebarItemsState(updatedSidebarItems);
+  };
+
+  const handleItemClick = (item: any) => {
+    if (!item.hasChild) {
+      setSelectedItem(item.goto);
+      navigate(item.goto);
+    } else {
+      // Toggle the dropdown
+      toggleDropdown(sidebarItemsState.indexOf(item));
+    }
+  };
+
+  return (
+    <div className="sidebar-container">
+      <div className="sidebar">
+        <div className="sidebar-logo">
+          <img src="/assets/ewns-logo.svg" alt="Logo" />
+        </div>
+
+        <div className="business-selector">
+          <Box>
+            <Select
+              id="company-select"
+              value={company}
+              onChange={handleChange}
+              displayEmpty
+              fullWidth
+              className="company-select"
+              placeholder="Select a business"
+              sx={{ color: "black" }} // Set text color to black
+            >
+              <MenuItem value="" disabled>
+                <em>Select a business</em> {/* Placeholder text */}
+              </MenuItem>
+              {allBusinesses.map((business: any) => (
+                <MenuItem value={business?._id} key={business?._id}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MdDevices />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={business.businessName} />
+                </MenuItem>
+              ))}
+              <Button
+                onClick={handlePopupOpen}
+                variant="contained"
+                className="create-business-button"
+              >
+                <AiFillPlusCircle /> Create Business
+              </Button>
+            </Select>
+          </Box>
+        </div>
+
+        <div>
+          {sidebarItemsState.map((item: any, index: number) => (
+            <div key={index}>
+              <div
+                className={`sidebar-item ${
+                  selectedItem === item.goto ? "sidebar-item-selected" : ""
+                }`}
+                onClick={() => handleItemClick(item)}
+              >
+                <div className="flex-row gap-2">
+                  <div className="">{item.icon}</div>
+                  <div className="mt-1">{item.name}</div>
+                  {item.hasChild && (
+                    <div>
+                      {item.isOpen ? (
+                        <RiArrowDropUpLine />
+                      ) : (
+                        <RiArrowDropDownLine />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {item.isOpen && item.hasChild && (
+                <div className="sidebar-item-children">
+                  {item.children.map((childItem: any, childIndex: number) => (
+                    <div
+                      key={childIndex}
+                      className="sidebar-sub-item"
+                      onClick={() => handleItemClick(childItem)}
+                    >
+                      <div className="flex-row-vertically gap-2">
+                        <span>
+                          <RiArrowDropRightLine />
+                        </span>
+                        <span>{childItem.icon}</span>
+                        <span className="mt-1">{childItem.name}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="main-content">
+        <Header
+          isPopupOpen={isPopupOpen}
+          handlePopupOpen={handlePopupOpen}
+          handlePopupClose={handlePopupClose}
+        />
+        {children}
+      </div>
+    </div>
+  );
 };
-
-
 
 export default Sidebar;

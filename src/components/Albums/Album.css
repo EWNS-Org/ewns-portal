@@ -10,16 +10,26 @@
     display: flex;
     align-items: center;
     border: 1px solid #ccc;
-    padding: 1%;
+    padding: 10px;
     margin: 5px 0;
-    width: 100%;
   }
   
   .grid-view {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    width: fit-content;
+  }
+  
+  .grid-view .file-item {
+    width: 150px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .file-icon {
+    font-size: 24px;
+    margin-right: 10px;
   }
   
   .file-details {
@@ -28,26 +38,8 @@
   }
   
   .grid-view .folder-item {
-    display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column; /* Stack the icon and filename vertically */
-  border: 1px solid #ccc;
-  padding: 10px;
-  width: 150px;
-  height: 100px;
-  overflow: hidden; /* Prevent overflow */
-  text-align: center; /* Center text */
-  }
-
-  .folder-item:hover{
-    background-color: #f0f0f0;
-    cursor: pointer;
-    
-  }
-
-  .folder-details{
-    margin-left: 1%;
-    width: fit-content;
+    width: 150px;
+    border: 1px solid #ccc;
+    padding: 10px;
     text-align: center;
   }

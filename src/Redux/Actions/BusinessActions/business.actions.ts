@@ -15,10 +15,9 @@ import {
     GET_ALL_BUSINESS_ADDRESSES,
     GET_ALL_BUSINESS_LINKS,
     GET_ALL_BUSINESS_FAQS,
-    GET_USER_DETAILS,
 
 } from './business.action.types';
-import { createBusiness, createBusinessFAQ, createBusinessLink, deleteBusinessFAQ, deleteBusinessLink, getAllBusinessFAQs, getAllBusinessLinks, getAllBusinesses, getBusinessDetails, getUserDetailsData, toggleBusinessActive, toggleBusinessFAQ, updateBusiness, updateBusinessFAQ, updateBusinessLink, uploadBusinessImages } from '../../../services/api/business.service';
+import { createBusiness, createBusinessFAQ, createBusinessLink, deleteBusinessFAQ, deleteBusinessLink, getAllBusinessFAQs, getAllBusinessLinks, getAllBusinesses, getBusinessDetails, toggleBusinessActive, toggleBusinessFAQ, updateBusiness, updateBusinessFAQ, updateBusinessLink, uploadBusinessImages } from '../../../services/api/business.service';
 import toast from 'react-hot-toast';
 import { createBusinessAddress, defaultBusinessAddress, deleteBusinessAddress, getAllBusinessAddresses, updateBusinessAddress } from '../../../services/api/address.service';
 
@@ -35,11 +34,6 @@ export const getAllBusinessesSuccess = (businesses: any) => ({
 export const getAllBusinessesFailure = (error: any) => ({
     type: GET_ALL_BUSINESSES_FAILURE,
     payload: error,
-});
-
-export const getUserDetails = (userData: any) => ({
-    type: GET_USER_DETAILS,
-    payload: userData,
 });
 
 // Action creators for business details
@@ -276,14 +270,5 @@ export const toggleBusinessActiveAction = (businessId: any, isActive: any) => as
         dispatch(getAllBusinessAddressesRequest(response));
     } catch (error: any) {
         dispatch(createBusinessSuccess(error.message || 'Failed to toggle business Activity'));
-    }
-};
-
-export const getUserDetailsAction = () => async (dispatch: any) => {
-    try {
-        const response = await getUserDetailsData();
-        dispatch(getUserDetails(response));
-    } catch (error: any) {
-        dispatch(createBusinessSuccess(error.message || 'Failed to get user details'));
     }
 };

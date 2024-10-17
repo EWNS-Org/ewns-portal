@@ -4,14 +4,12 @@ import { businessReducer } from './Reducers/business.reducer';
 import { appointmentsReducer } from './Reducers/appointment.reducer';
 import { categoriesReducer } from './Reducers/categories.reducer';
 import { albumsReducer} from './Reducers/albums.reducer';
-import { testimonialsReducer } from './Reducers/testimonials.reducer';
 
 const rootReducer = combineReducers({
     business: businessReducer,
     appointments: appointmentsReducer,
     categories: categoriesReducer,
-    albums: albumsReducer,
-    testimonials: testimonialsReducer
+    albums: albumsReducer
 });
 
 export const store = createStore(

@@ -222,13 +222,3 @@ export const fetchBusinessFAQs = async (businessId: any, pageSize: any, pageNumb
         console.log(error)
     }
 }
-
-export const getUserDetailsData = async () => {
-    try {
-        const res: any = await get(`/user/get`);
-        return res.data;
-    } catch (error: any) {
-        toast.error(error.message || error);
-        console.log(error)
-    }
-}
