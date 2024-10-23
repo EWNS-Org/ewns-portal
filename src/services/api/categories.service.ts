@@ -104,3 +104,14 @@ export const deleteSubCategoryData = async (businessId: string, categoryId: any,
 }
 
 
+export const getParentCategories = async (businessId: string, subCategoryId: any) => {
+    try {
+        const res: any = await get(`/category/parent?businessId=${businessId}&subCategoryId=${subCategoryId}`);
+
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}
+

@@ -3,7 +3,7 @@ import AllCategories from './AllCategories';
 import Testimonials from './Testimonials';
 
 function Categories() {
-    const [activeTab, setActiveTab] = useState('Testimonials');
+    const [activeTab, setActiveTab] = useState('Categories');
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
     };

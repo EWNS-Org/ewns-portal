@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { CATEGORY_START_LOADING, CATEGORY_STOP_LOADING, GET_ALL_CATEGORIES, GET_CATEGORY_DETAILS } from "./category.action.type";
-import { addCategoriesData, addSubCategoryData, deleteCategoryData, deleteSubCategoryData, getAllCategoriesData, getCategoryDetailsData, getSubCategoryDetailsData, updateCategoryData, updateSubCategoryData } from "../../../services/api/categories.service";
+import { addCategoriesData, addSubCategoryData, deleteCategoryData, deleteSubCategoryData, getAllCategoriesData, getCategoryDetailsData, getParentCategories, getSubCategoryDetailsData, updateCategoryData, updateSubCategoryData } from "../../../services/api/categories.service";
 
 export const setCategoryStartLoading = () => ({
     type: CATEGORY_START_LOADING
@@ -122,6 +122,17 @@ export const deleteSubCategoryAction = (businessId: any, categoryId: any, subCat
         let catData = await deleteSubCategoryData(businessId, categoryId, subCategoryId);
         dispatch(getAllCategories(catData));
         dispatch(setCategoryStopLoading);
+    }
+    catch(err: any){
+        toast.error("Error deleting sub category details");
+    }
+}
+
+export const getParentCategoriesAction = (businessId: any, subCategoryId: any) => async (dispatch: any) => {
+    try{
+        dispatch(setCategoryStartLoading);
+        let catData = await getParentCategories(businessId, subCategoryId);
+        return catData;
     }
     catch(err: any){
         toast.error("Error deleting sub category details");
