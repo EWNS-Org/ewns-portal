@@ -12,13 +12,11 @@ import {
     GET_ALL_BUSINESS_ADDRESSES,
     GET_ALL_BUSINESS_LINKS,
     GET_ALL_BUSINESS_FAQS,
-    GET_USER_DETAILS,
 } from '../Actions/BusinessActions/business.action.types';
 
 const initialState = {
     businesses: [],
     businessDetails: null,
-    userDetails: null,
     businessAddresses: [],
     businessLinks: [],
     businessFAQs: [],
@@ -46,9 +44,8 @@ export const businessReducer = (state = initialState, action: any) => {
         case GET_ALL_BUSINESS_LINKS:
             return { ...state, businessLinks: action.payload };
         case GET_ALL_BUSINESS_FAQS:
+            console.log(action.payload)
             return { ...state, businessFAQs: action.payload };
-        case GET_USER_DETAILS:
-            return { ...state, userDetails: action.payload };
         default:
             return state;
     }
