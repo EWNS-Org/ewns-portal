@@ -245,3 +245,183 @@ export const getSubCategoryById = async (subCatId: any, categories: any, parentI
           }
     }
   };
+
+  export const getAvatar = (fullName: any) => {
+    function stringToColor(string: string) {
+        let hash = 0;
+        let i;
+      
+        /* eslint-disable no-bitwise */
+        for (i = 0; i < string.length; i += 1) {
+          hash = string.charCodeAt(i) + ((hash << 5) - hash);
+        }
+      
+        let color = '#';
+      
+        for (i = 0; i < 3; i += 1) {
+          const value = (hash >> (i * 8)) & 0xff;
+          color += `00${value.toString(16)}`.slice(-2);
+        }
+        /* eslint-enable no-bitwise */
+      
+        return color;
+      }
+      
+      function stringAvatar(name: string) {
+        return {
+          sx: {
+            bgcolor: stringToColor(name),
+          },
+          children: name.split(" ").length > 1  ? `${name.split(' ')[0][0]}${name.split(' ')[1][0]}` : `${name.split(" ")[0][0]}`,
+        };
+      }
+
+      return stringAvatar(fullName.trim());
+  }
+
+export const getDimensionUnits = ()=>{
+    return [{
+        label: "Inch",
+        symbol: "inch",
+    },
+    {
+        label: "Kilo-Meters",
+        symbol: "km",
+    },
+    {
+        label: "Meters",
+        symbol: "m",
+    },
+    {
+        label: "Centi-Meters",
+        symbol: "cm",
+    },
+    {
+        label: "Feet",
+        symbol: "ft",
+    },
+    {
+        label: "Sq-Feet",
+        symbol: "sqft",
+    }]
+}
+
+export const getWeightUnits = ()=>{
+    return [{
+        label: "Kilo-grams",
+        symbol: "kg",
+    },
+    {
+        label: "Grams",
+        symbol: "g",
+    },
+    {
+        label: "Ounce",
+        symbol: "o",
+    },
+    {
+        label: "Milli-grams",
+        symbol: "mg",
+    },
+    {
+        label: "Liters",
+        symbol: "l",
+    },
+    {
+        label: "Milli-liters",
+        symbol: "ml",
+    }]
+}
+
+export const validateAddProduct = (data: any) => {
+    // Validate name
+    if (!data.name || data.name.trim() === "") {
+        toast.error("Product name is required");
+        return false;
+    }
+
+    // Validate description
+    if (!data.description || data.description.trim() === "") {
+        toast.error("Product description is required");
+        return false;
+    }
+
+    // Validate stock
+    if (typeof data.stock !== "number" || data.stock < 0) {
+        toast.error("Product stock must be a non-negative number");
+        return false;
+    }
+
+    // Validate price (MRP and Selling Price)
+    if (typeof data.price.mrp !== "number" || data.price.mrp <= 0) {
+        toast.error("MRP must be a positive number");
+        return false;
+    }
+
+    if (typeof data.price.sellingPrice !== "number" || data.price.sellingPrice <= 0) {
+        toast.error("Selling price must be a positive number");
+        return false;
+    }
+
+    if (data.price.sellingPrice > data.price.mrp) {
+        toast.error("Selling price cannot be greater than MRP");
+        return false;
+    }
+
+    // Validate category
+    if (!data.category.categoryId || data.category.categoryId.trim() === "") {
+        toast.error("Category is required");
+        return false;
+    }
+
+    // Validate GST
+    if (typeof data.gst.gstRate !== "number" || data.gst.gstRate < 0 || data.gst.gstRate > 100) {
+        toast.error("GST rate must be between 0 and 100");
+        return false;
+    }
+
+    if (!data.gst.hsnCode || data.gst.hsnCode.trim() === "") {
+        toast.error("HSN Code is required");
+        return false;
+    }
+
+    // Validate Discount
+    if (data.discount.type === "percentage") {
+        if (typeof data.discount.percentage !== "number" || data.discount.percentage < 0 || data.discount.percentage > 100) {
+            toast.error("Discount percentage must be between 0 and 100");
+            return false;
+        }
+    } else if (data.discount.type === "amount") {
+        if (typeof data.discount.amount !== "number" || data.discount.amount < 0) {
+            toast.error("Discount amount must be a non-negative number");
+            return false;
+        }
+    } else {
+        toast.error("Invalid discount type");
+        return false;
+    }
+
+    return true; // Return true if all validations pass
+};
+
+export const convertNumbers = (data: any) => {
+    
+}
+
+export const generateProductSKU = (productName: string, categoryName: string) => {
+    // Remove spaces and special characters from product and category names
+    const formattedProductName = productName.replace(/\s+/g, '').substring(0, 3).toUpperCase();
+    const formattedCategoryName = categoryName.replace(/\s+/g, '').substring(0, 3).toUpperCase();
+
+    // Generate a random 4-digit number to ensure SKU uniqueness
+    const randomDigits = Math.floor(1000 + Math.random() * 9000);
+
+    // Generate final SKU
+    if(categoryName.trim() === "" && productName.trim() !== ""){
+        return `${formattedProductName}-${randomDigits}`;
+    }else if (productName.trim() === "" && categoryName.trim() !== ""){
+        return `${formattedCategoryName}-${randomDigits}`;
+    }else{
+        return `${formattedProductName}-${formattedCategoryName}-${randomDigits}`;
+    }
+};

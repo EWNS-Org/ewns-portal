@@ -134,6 +134,7 @@ function AllCategories() {
       }
 
       const handleCategoryCreate = async () => {
+        console.log(formValues);
         if(formValues.name && formValues.name !== ""){
           toast.error("Category name is required");
         }else if (formValues.description && formValues.description !== ""){
@@ -150,6 +151,14 @@ function AllCategories() {
           await dispatch(updateSubCategoryDetailsAction(businessID, formValues.categoryId, formValues.subCategoryId, {name: formValues.name, description: formValues.description, imageUrl: previewData}) as any);
         }
         await dispatch(getAllCategoriesAction(businessID) as any);
+        setIsPopupOpen({
+          update: false,
+          create: false,
+          createSub: false,
+          updateSub: false,
+          view: false,
+          viewSub: false
+        })
       }
 
       const getCreateCategoryChildren = (type: any) => {
@@ -190,15 +199,17 @@ function AllCategories() {
         )
       }
 
-    const renderTree = (node: any, parentId: any, categoryId: any) => (
+    const renderTree = (node: any, parentId: any, categoryId: any, level = 1) => (
         <TreeItem2 key={node._id} itemId={node._id} label={
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <div style={{display:"flex", alignItems:"center"}}>
                     <img src={node.imageUrl} width="24px" height="24px" alt="cat-image"/>
                     <Typography variant="body1">{node.name}</Typography>
+                    {level < 5 && (
                     <IconButton onClick={() => handleAdd(node._id, parentId, categoryId)} size='small'>
-                        <AddCircleIcon />
+                      <AddCircleIcon />
                     </IconButton>
+                    )}
                 </div>
               <Box>
                 <IconButton onClick={() => handleEdit(node._id, parentId, categoryId)} size="small">
@@ -214,8 +225,8 @@ function AllCategories() {
             </Box>
           } className='w-full'>
             <div style={{display:"flex", alignItems:"center", flexDirection:"column"}}>
-                {Array.isArray(node.subCategories) && node.subCategories.length > 0
-                ? node.subCategories.map((subCategory: any) => renderTree(subCategory, parentId, node._id))
+                {Array.isArray(node?.subcategories) && node?.subcategories.length > 0
+                ? node?.subcategories.map((subCategory: any) => renderTree(subCategory, parentId, node._id, level + 1))
                 : null}
             </div>
         </TreeItem2>
@@ -226,13 +237,6 @@ function AllCategories() {
         setFormValues({name: "", description: "", imageUrl: ""});
         setPreviewData(null);
       }
-
-      useEffect(() => {
-        if(categories){
-          const allNodeIds: any = collectNodeIds(categories);
-          setExpanded(allNodeIds);
-        }
-      }, [allCategories]);
 
   return (
     <div className="w-full " style={{ fontFamily: "source Sans pro" }}>

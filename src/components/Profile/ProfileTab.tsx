@@ -248,13 +248,28 @@ const ProfileTab = ({ setProfileDetails, profileDetails }: any) => {
                                     />
                                     <FormControlLabel
                                         control={<IOSSwitch sx={{ m: 1 }} checked={profile.enableAppointments} />}
-                                        label={`Enable Appointments`}
+                                        label={`Allow Appointments`}
                                         onChange={(e: any) => setProfile({...profile, enableAppointments: e.target.checked})}
                                     />
                                     <FormControlLabel
                                         control={<IOSSwitch sx={{ m: 1 }} checked={profile.enableOrders} />}
-                                        label={`Enable Orders`}
+                                        label={`Allow Orders`}
                                         onChange={(e: any) => setProfile({...profile, enableOrders: e.target.checked})}
+                                    />
+                                    <FormControlLabel
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={profile.showAlbums} />}
+                                        label={`Show Albums`}
+                                        onChange={(e: any) => setProfile({...profile, showAlbums: e.target.checked})}
+                                    />
+                                    <FormControlLabel
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={profile.showProducts} />}
+                                        label={`Show Products`}
+                                        onChange={(e: any) => setProfile({...profile, showProducts: e.target.checked})}
+                                    />
+                                    <FormControlLabel
+                                        control={<IOSSwitch sx={{ m: 1 }} checked={profile.showServices} />}
+                                        label={`Show Services`}
+                                        onChange={(e: any) => setProfile({...profile, showServices: e.target.checked})}
                                     />
                                 </div>
                             </div>

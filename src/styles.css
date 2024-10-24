@@ -5,37 +5,46 @@
 
 /* Custom Scrollbar for WebKit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-  width: 8px; /* Makes the scrollbar thinner */
+    width: 4px; /* Makes the scrollbar thinner */
+  }
+  
+  /* Removes the top and bottom arrows */
+  ::-webkit-scrollbar-button {
+    display: none; /* Hides the up/down buttons */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(89, 50, 234, 1);  /* Blue color for the scrollbar thumb */
+    border-radius: 50px;         /* Makes it oval-shaped */
+    border: 2px solid transparent; /* Provides space around the thumb */
+    background-clip: padding-box;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: #f1f1f1;   /* Background for the scrollbar track */
+    border-radius: 50px;         /* Oval shape for the track */
+  }
+  
+  /* Custom Scrollbar for Firefox */
+  html {
+    scrollbar-color: rgba(89, 50, 234, 1) #f1f1f1; /* Blue thumb, light background track */
+    scrollbar-width: thin;            /* Thinner scrollbar */
+  }
+
+ 
+
+img, video {
+  max-width: none !important;
 }
 
-/* Removes the top and bottom arrows */
-::-webkit-scrollbar-button {
-  display: none; /* Hides the up/down buttons */
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgba(
-    89,
-    50,
-    234,
-    1
-  ); /* Blue color for the scrollbar thumb */
-  border-radius: 50px; /* Makes it oval-shaped */
-  border: 2px solid transparent; /* Provides space around the thumb */
-  background-clip: padding-box;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* Background for the scrollbar track */
-  border-radius: 50px; /* Oval shape for the track */
-}
-
-/* Custom Scrollbar for Firefox */
-html {
-  scrollbar-color: rgba(89, 50, 234, 1) #f1f1f1; /* Blue thumb, light background track */
-  scrollbar-width: thin; /* Thinner scrollbar */
-}
-.number {
-  width: 72% !important;
-  margin: 0% !important;
+ @layer utilities {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+   /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+  }
 }
