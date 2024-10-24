@@ -1,7 +1,7 @@
 /* src/styles.css */
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 /* Custom Scrollbar for WebKit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
@@ -31,13 +31,7 @@
     scrollbar-width: thin;            /* Thinner scrollbar */
   }
 
- 
-
-img, video {
-  max-width: none !important;
-}
-
- @layer utilities {
+  @layer utilities {
     /* Hide scrollbar for Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
         display: none;
@@ -47,4 +41,8 @@ img, video {
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
   }
+}
+
+img, video {
+  max-width: none !important;
 }
