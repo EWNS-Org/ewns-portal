@@ -246,6 +246,7 @@ export const getSubCategoryById = async (subCatId: any, categories: any, parentI
     }
   };
 
+
   export const getAvatar = (fullName: any) => {
     function stringToColor(string: string) {
         let hash = 0;

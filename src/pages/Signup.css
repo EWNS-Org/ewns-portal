@@ -1,0 +1,49 @@
+html {
+    box-sizing: border-box;
+    height: 100%;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  
+  body{
+    font-family: "Source Sans Pro";
+    min-height: 100vh;
+  }
+  
+  .login-page{
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    border: 1px solid black
+  }
+  .left-signup{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    background-color: rgba(227, 247, 255, 1);
+    padding: 5%;
+  }
+  
+  .right-signup{
+    display: flex;
+    flex-direction: column;
+    padding: 5% ;
+    width: 100%;
+    height: 100%;
+
+  }
+  
+  .logo{display: flex; justify-content: center; align-items: center; margin-bottom: 5%;}
+  
+  .step-one{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .signup-part{
+    justify-content: start;
+    display: flex;
+  }
+  

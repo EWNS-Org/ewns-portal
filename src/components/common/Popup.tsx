@@ -76,16 +76,17 @@ const Popup = ({
                         </div>
                     ))}
                 </div>
+                {Array.isArray(children) && children?.length > 0 && children.map((x: any) => {
+                    return x;
+                })}
+                {!Array.isArray(children) && children}
                 <div className="popup-actions">
                     {buttons.map((button: any, index: any) => (
                         <Button key={button.label} className={button.className} onClick={() => button.onClick()} variant={button.variant} sx={{ width: "50%", height: "15%", display: button.display }}>{button.label}</Button>
 
                     ))}
                 </div>
-                {Array.isArray(children) && children?.length > 0 && children.map((x: any) => {
-                    return x;
-                })}
-                {!Array.isArray(children) && children}
+
             </div>
         </div >
     );
