@@ -233,7 +233,7 @@ function AllProducts({handleTabChange}: any) {
         </FormControl>
   
         {selectedCategoryObj?.subcategories?.length > 0 && (
-          <RecursiveCategorySelect options={selectedCategoryObj.subcategories} level={level + 1} getCatDetails={getCatDetails} parentCategories={parentCategories} index={index + 1} />
+          <RecursiveCategorySelect level={level + 1} getCatDetails={getCatDetails} parentCategories={parentCategories} index={index + 1} />
         )}
       </Box>
     );

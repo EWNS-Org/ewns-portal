@@ -1,118 +1,163 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid2';
-import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
-import { fetchPincodeDetails } from '../services/api/postalcode.service';
-import { useLoader } from '../contexts/LoaderContext';
-import toast from 'react-hot-toast';
-import { countryList } from '../utils/constants/country-flag';
-import useTailwindBreakpoint from '../hooks/useBreakpoint';
-import { loginUser } from '../services/api/auth.api.service';
-import { useAuth } from '../contexts/AuthContext';
+import {
+  Typography,
+  TextField,
+  Button,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import { useLoader } from "../contexts/LoaderContext";
+import toast from "react-hot-toast";
+import { checkTokenIsValid, loginUser } from "../services/api/auth.api.service";
+import { useAuth } from "../contexts/AuthContext";
+import { FiEye, FiEyeOff } from "react-icons/fi"; // Added password visibility icons
+import { ACTIVE_BUSINESS_ID, AUTH_TOKEN } from "../utils/constants";
 
 function Login() {
-    const navigate = useNavigate();
+  const { showLoader, hideLoader } = useLoader();
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-    const { showLoader, hideLoader } = useLoader();
-    const breakpoint = useTailwindBreakpoint();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-    const { login } = useAuth();
-    const validate = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(formData.email)) {
-            toast.error("Invalid email format.");
-            return false;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    showLoader();
+    setErrorMessage(null);
+
+    try {
+      const response = await loginUser(formData);
+
+      if (response?.isSuccess) {
+        login(response.data.token, response.data.userType); // Assuming login sets user info
+        toast.success("Login successful!");
+        if (response.data.userType === 'ADMIN') {
+            navigate('/admin/dashboard');
+        } else if (response.data.userType === 'MERCHANT') {
+            navigate('/dashboard');
         }
-
-        return true;
-    };
-
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
-    });
-
-    const handleLogin = async () => {
-        if (validate()) {
-            showLoader();
-            let res: any = await loginUser(formData);
-
-            if (res && res.isSuccess) {
-                login(res.data.token, res.data.userType);
-
-                if (res.data.userType === 'ADMIN') {
-                    navigate('/admin/dashboard');
-                } else if (res.data.userType === 'MERCHANT') {
-                    navigate('/dashboard');
-                }
-            }
-            hideLoader();
-        }
+      }
+    } catch (error) {
+      setErrorMessage("Invalid email or password");
+      toast.error("Login failed. Please check your credentials.");
+    } finally {
+      hideLoader();
     }
+  };
 
+  useEffect(()=>{
+    showLoader();
+    async function checkToken(token: any, businessId: any){
+      if(token && businessId){
+        let res = await checkTokenIsValid(token, businessId);
+        if(res?.isSuccess){
+          navigate("/dashboard");
+        }else{
+          localStorage.clear();
+        }
+      }
+      hideLoader();
+    }
+    let businessId = localStorage.getItem(ACTIVE_BUSINESS_ID);
+    let token = localStorage.getItem(AUTH_TOKEN);
 
+    if(!businessId || !token || businessId === "" || token === ""){
+      localStorage.clear();
+      hideLoader();
+      return;
+    } 
 
-    return (
-        <div><div style={{ height: "1000px", overflow:"hidden" }} >
-            <Grid container spacing={0} sx={{ display: "flex",  flexWrap: "wrap", width: "100%", height: "100%" }} className='login-page'>
-                <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%",  }} >
-                    <div className='left-signup'>
-                        <div className='left-theme' style={{padding:"5%",}}>
-                            <div className='left-content'>
-                                <Typography variant='h4' color='rgba(1, 82, 168, 1)' fontSize={"40px"} >Take Your <span style={{ fontWeight: "bold" }}>Business Online </span>
-                                    within minutes !!</Typography>
-                            </div>
-                            <div style={{ display: "flex", justifyContent: "center", marginTop: "5%", height: "100%" }} className='signup-lef-img'>
-                                <img src="assets/signup-left.svg" width={"600px"} height={"660px"} />
-                            </div>
-                        </div>
-                    </div>
-                </Grid>
-                <Grid size={6} sx={{ width:"50%" }}>
-                    <div className='right-signup'>
-                        <div className='right-logo'>
-                            <img src="assets/logo.png" width={"200px"} />
-                        </div>
-                        <div className='signup-part'>
-                            <Typography variant={breakpoint === "xs" ? 'h4' : 'h3'} margin="2%">Log In to your account</Typography>
+    checkToken(token, businessId);
+    hideLoader();
+  }, [])
 
-                        </div>
-                        <Typography variant='h5' marginY={"2%"} sx={{ color: "gray" }}>It’s time to get your business online</Typography>
-                        <div className='login-form'>
-                            <div className='step-one'>
-                                <TextField
-                                    type="email"
-                                    id="outlined-required-email"
-                                    value={formData.email}
-                                    label="Email"
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    sx={{ marginBottom: "2%", marginRight: "2%", width: "100%" }}
-                                /><TextField
-                                    type="password"
-                                    id="outlined-required-password"
-                                    label="Password"
-                                    sx={{ marginBottom: "2%", width: "100%%" }}
-                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    value={formData.password}
-                                />
-                                {<Button onClick={() => navigate("/forgot-password")} sx={{ border: "1px solid blue", width: "fit-content", padding: "0.5% 2%", marginBottom: "2%", cursor: "pointer" }}>Forgot Password</Button>}
-                                <Button onClick={() => handleLogin()} variant='contained' sx={{ width: "100%", height: "15%" }}>Log In</Button>
-                            </div>
-                        </div>
-                        <div style={{ border: "0.5px  gray", width: "80%", margin: "2% 5%" }}></div>
-                        <div style={{}}>
-                            <Button onClick={() => navigate("/")} variant='contained' sx={{ width: "100%", height: "100%" }}>Create New Account</Button>
-                        </div>
-                    </div>
-                </Grid>
-            </Grid>
-        </div ></div>
-    )
+  return (
+    <div className="login-page">
+      <div className="left-signup-container login-theme">
+        <div className="login-signup ">
+          <div className="">
+            <img src="assets/login.svg" alt="Logo" />
+          </div>
+        </div>
+      </div>
+
+      <div className="right-signup-container">
+        <form onSubmit={handleSubmit} className="signup-form">
+          <div>
+            <Typography variant="h4" className="let-content">
+              Welcome Back!
+            </Typography>
+            <Typography variant="body1" className="step-one">
+              Please log in to your account
+            </Typography>
+          </div>
+          <TextField
+            required
+            fullWidth
+            name="email"
+            label="Email"
+            variant="outlined"
+            value={formData.email}
+            onChange={handleChange}
+            margin="normal"
+          />
+          <TextField
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            variant="outlined"
+            value={formData.password}
+            onChange={handleChange}
+            margin="normal"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          {errorMessage && (
+            <Typography color="error">{errorMessage}</Typography>
+          )}
+          <h6 className="sign-in-link text-sm underline mt-1 mb-4 text-right">
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </h6>
+          <Button
+            type="submit"
+            variant="contained"
+            className="login-button"
+            id="button"
+          >
+            Log In
+          </Button>
+          <h1 className="login-link mt-6 justify-center text-center">
+            Don't have an account? <Link to="/signup">Sign Up</Link>
+          </h1>
+        </form>
+      </div>
+    </div>
+  );
 }
 
-export default Login
+export default Login;

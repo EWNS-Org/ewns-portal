@@ -1,0 +1,17 @@
+.subscribe-container {
+    perspective: 1000px; /* Enables smoother zoom effect */
+  }
+  
+  .subscribe-container:hover .MuiCard-root {
+    transform: scale(1.05);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .subscribe-container:hover .subscribe-btn {
+    display: block;
+  }
+  
+  .subscribe-btn {
+    display: none;
+  }
+  

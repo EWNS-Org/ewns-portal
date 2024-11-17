@@ -7,6 +7,8 @@ import { albumsReducer} from './Reducers/albums.reducer';
 import { testimonialsReducer } from './Reducers/testimonials.reducer';
 import { productsReducer } from './Reducers/products.reducer';
 import { themesReducer } from './Reducers/themes.reducer';
+import { userReducer } from './Reducers/user.reducer';
+import { blogsAndServicesReducer } from './Reducers/blogs&services.reducer';
 
 const rootReducer = combineReducers({
     business: businessReducer,
@@ -15,7 +17,9 @@ const rootReducer = combineReducers({
     albums: albumsReducer,
     testimonials: testimonialsReducer,
     products: productsReducer,
-    themes: themesReducer
+    themes: themesReducer,
+    user: userReducer,
+    blogsAndServices: blogsAndServicesReducer
 });
 
 export const store = createStore(

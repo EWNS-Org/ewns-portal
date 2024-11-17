@@ -30,3 +30,13 @@ export const verifyEmail = async (token: any) => {
         console.error(error);
     }
 };
+
+export const checkTokenIsValid = async (token: any, businessId: any) => {
+    try {
+        const res: any = await get(`/auth/check-token?token=${token}&businessId=${businessId}`);
+        return res;
+    } catch (error: any) {
+        toast.error("Error Checking Token");
+        console.error(error);
+    }
+};

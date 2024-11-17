@@ -146,7 +146,7 @@ const PersonalProfile = () => {
 
            
 
-            <div className='container w-full py-4 ' style={{}}>
+            <div className='container w-full px-[1%] pb-[2%] ' style={{}}>
                 <div className=' w-full h-20 p-4' style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px", backgroundColor: "rgba(89, 50, 234, 1)" }}>
                     <div className='flex ' style={{ justifyContent: "space-between", alignItems: "center" }}>
                         <div className='flex-col font-semibold' style={{ fontSize: "8px" }}>

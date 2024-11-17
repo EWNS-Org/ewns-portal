@@ -130,10 +130,10 @@ const AboutUsTab = ({ profile, setProfile }: any) => {
         <div className="container  w-full" style={{ fontFamily: "source Sans pro" }}>
             <div className=" bg-white p-4 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
                 <Stack width={"100%"} style={{  }}>
-                    <Card sx={{ padding: "2%", height:"560px" }}>
+                    <Card sx={{ padding: "2%", height:"580px" }}>
                         <div className="h-full w-full ">
                             <div className="mb-2" style={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
-                                <h2 className="text-xl font-semibold mb-4">Short Description</h2>
+                                <h2 className="text-xl font-semibold mb-2">Short Description</h2>
                                 <Button variant="contained" onClick={()=>handleGenerateDescription()} sx={{backgroundColor: "rgba(89, 50, 234, 1)"}}>Generate With AI</Button>
                             </div>
 

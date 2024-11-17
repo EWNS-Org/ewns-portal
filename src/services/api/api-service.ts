@@ -32,6 +32,9 @@ apiClient.interceptors.response.use(
     (response: AxiosResponse) => {
         toast.dismiss();
 
+        if(response.status === 401){
+            window.open(window.location.hostname + "/login");
+        }
         if (response.data.isSuccess) {
             toast.success(response.data.message);
         } else {

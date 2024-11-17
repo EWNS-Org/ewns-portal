@@ -40,7 +40,7 @@ function Header({ isPopupOpen, handlePopupClose, handlePopupOpen }: any) {
         { label: 'State', name: 'state', type: 'text', disabled: true, width: "100%" },
         { label: 'City', name: 'city', type: 'number', disabled: true, width: "100%" },
         { label: 'Country', name: 'country', type: 'number', disabled: true, width: "100%" },
-        { label: 'Short Bio', name: 'shortBio', type: 'text', width: "204%" },
+        { label: 'Short Bio', name: 'shortBio', type: 'text', width: "100%" },
     ];
     const initialFormData = {
         businessName: "",
@@ -193,6 +193,11 @@ function Header({ isPopupOpen, handlePopupClose, handlePopupOpen }: any) {
 
     }
 
+    const logoutUser = () => {
+        logout();
+        navigate("/login");
+    }
+
 
 
     return (
@@ -226,7 +231,7 @@ function Header({ isPopupOpen, handlePopupClose, handlePopupOpen }: any) {
                         <span className="text-gray-700 font-medium">{userData ? userData.name : "Your Account"}</span>
 
                     </div>
-                    <LogoutIcon sx={{ color: "blue", cursor: "pointer" }} onClick={() => logout()} />
+                    <LogoutIcon sx={{ color: "blue", cursor: "pointer" }} onClick={() => logoutUser()} />
 
                 </div>
 

@@ -164,11 +164,11 @@ const ProfileTab = ({ setProfileDetails, profileDetails }: any) => {
                                         <TextField
                                             id="outlined-required"
                                             label={"Business URL"}
-                                            value={"https://" + profile.url}
+                                            value={"https://" + profile.url + ".ewns.in"}
                                             sx={{
                                                 width: "100%", height: "100%", input: { cursor: 'pointer' }, color: "gray",
                                             }}
-                                            onClick={() => window.open("https://" + profile.url, "_blank")}
+                                            onClick={() => window.open("https://" + profile.url + ".ewns.in", "_blank")}
                                         />
                                     </Tooltip>
 

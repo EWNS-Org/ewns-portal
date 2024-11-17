@@ -232,3 +232,13 @@ export const getUserDetailsData = async () => {
         console.log(error)
     }
 }
+
+export const updateUserDetailsData = async (payload: any) => {
+    try {
+        const res: any = await put(`/user/update`, payload);
+        return res.data;
+    } catch (error: any) {
+        toast.error(error.message || error);
+        console.log(error)
+    }
+}

@@ -449,7 +449,7 @@ function Testimonials() {
                                 </Button>
                             </div>
 
-                            <Grid container sx={{ padding: "2%", overflow: "auto", height: "500px", justifyContent: "center", display: "flex" }}>
+                            <Grid container sx={{ padding: "2%", overflow: "auto", height: "500px", gap:"5%", justifyContent: "center", display: "flex" }}>
                                 {testimonials?.length > 0 ? testimonials.map((testimonial: any, index: number) => (
                                     <Grid item key={index} sx={{ width: "100%", height:"200px" }} >
                                         <Card sx={{ padding: "1% 2%", width: "100%", display: "flex"}}>

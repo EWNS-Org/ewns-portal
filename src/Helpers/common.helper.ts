@@ -426,3 +426,15 @@ export const generateProductSKU = (productName: string, categoryName: string) =>
         return `${formattedProductName}-${formattedCategoryName}-${randomDigits}`;
     }
 };
+
+export const  convertRupeesToPaise = (rupees: number) => {
+    if (isNaN(rupees) || rupees < 0) {
+        throw new Error("Please enter a valid amount in rupees.");
+    }
+    return rupees * 100;
+}
+
+export function removeHtmlTags(htmlString: string) {
+    return htmlString.replace(/<[^>]*>/g, '').trim();
+  }
+  

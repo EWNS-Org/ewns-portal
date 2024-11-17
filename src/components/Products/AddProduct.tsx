@@ -13,6 +13,7 @@ import { ACTIVE_BUSINESS_ID } from '../../utils/constants';
 import { generateProductSKU, getDimensionUnits, getWeightUnits, validateAddProduct } from '../../Helpers/common.helper';
 import { addProductAction, getProductDetailsAction, getProductsBySearchAction } from '../../Redux/Actions/Products/product.actions';
 import Tooltipp from '../common/Tooltip';
+import RecursiveCategorySelect from '../common/RecursiveCategory';
 
 const initProductData = {
     name: "",
@@ -336,7 +337,7 @@ function AddProduct() {
                         <Card sx={{height: "240px", width: "260px", padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
                             <Typography variant='h6' color='gray' sx={{marginBottom:"5%"}}>Select Category</Typography>
                             <div style={{display:"flex", justifyContent:"space-between"}}>
-                                <RecursiveCategorySelect options={categories} getCatDetails={(id: any) => setProductData({...productData, category: {categoryId: id.split("_mk_")[0], categoryName: id.split("_mk_")[1]}})}/>
+                                <RecursiveCategorySelect  getCatDetails={(id: any) => setProductData({...productData, category: {categoryId: id.split("_mk_")[0], categoryName: id.split("_mk_")[1]}})}/>
                             </div>
                         </Card>
                     </div>
@@ -501,43 +502,6 @@ function AddProduct() {
   )
 }
 
-const RecursiveCategorySelect = ({ options, level = 0, getCatDetails }: any) => {
-    const [selectedCategory, setSelectedCategory] = useState('');
-  
-    const handleCategoryChange = (event: any) => {
-      setSelectedCategory(event.target.value as string);
-      getCatDetails(event.target.value)
-    };
-  
-    const selectedCategoryObj = options && options.find((cat: any) => cat._id+"_mk_"+cat.name === selectedCategory);
-  
-    return (
-      <Box sx={{  minWidth: 200 }}>
-        <FormControl fullWidth sx={{marginBottom: "8%"}}>
-          <InputLabel id={`category-label-${level}`}>Category Level {level + 1}</InputLabel>
-          <Select
-            labelId={`category-label-${level}`}
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            label={`Category Level ${level + 1}`}
-          >
-            <MenuItem value="">
-              <em>Select a category</em>
-            </MenuItem>
-            {options && options.map((category: any) => (
-              <MenuItem key={category._id} value={category._id + "_mk_" + category.name} >
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-  
-        {/* Render the next level recursively if there are subcategories */}
-        {selectedCategoryObj?.subcategories?.length > 0 && (
-          <RecursiveCategorySelect options={selectedCategoryObj.subcategories} level={level + 1} getCatDetails={getCatDetails} />
-        )}
-      </Box>
-    );
-  };
+
 
 export default AddProduct

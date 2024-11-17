@@ -1,0 +1,12 @@
+export const CREATE_BLOG = "CREATE_BLOG";
+export const GET_BLOGS = "GET_BLOGS";
+export const GET_BLOG_DETAILS= "GET_BLOG_DETAILS";
+export const UPDATE_BLOG= "UPDATE_BLOG";
+export const DELETE_BLOG= "DELETE_BLOG";
+export const TOGGLE_BLOG= "TOGGLE_BLOG";
+
+export const GET_SERVICES= "GET_SERVICES";
+export const GET_SERVICE_DETAILS= "GET_SERVICE_DETAILS";
+export const CREATE_SERVICE= "CREATE_SERVICE";
+export const UPDATE_SERVICE= "UPDATE_SERVICE";
+
