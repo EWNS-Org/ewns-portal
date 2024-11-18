@@ -168,12 +168,13 @@ function AllCategories() {
             <TextField  sx={{width:"48%"}} value={formValues.description} onChange={(e)=>setFormValues({...formValues, description: e.target.value})} label='Description' fullWidth></TextField>
             <div style={{ width: "800px", height: "450px" }}>
                 <Typography variant='h6'>Category Image</Typography>
-                <div className="containerr" style={{  width:"100%", height:"100%"}}>
-                    <img src={formValues.imageUrl && formValues.imageUrl !== "" ? formValues.imageUrl : (previewData || "https://placehold.co/1200.png?text=No+Image")} alt="Avatar" className="image" style={{ width: "100%" }} />
+                <div className="containe" style={{  width:"100%", height:"90%"}}>
+                    <img src={formValues.imageUrl && formValues.imageUrl !== "" ? formValues.imageUrl : (previewData || "https://placehold.co/1200.png?text=No+Image")}
+                     alt="Avatar" className="image" style={{ width: "100%", height:"100%" }} />
                     <div className="middle">
                         <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <IconButton component="label" sx={{ color: "rgba(89, 50, 234, 1)" }}>
-                                <EditIcon fontSize="large" sx={{ color: "rgba(89, 50, 234, 1)" }} />
+                            <IconButton disabled={type === "View"} component="label" sx={{ color: "rgba(89, 50, 234, 1)" }}>
+                                <EditIcon fontSize="large" />
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -184,7 +185,7 @@ function AllCategories() {
                             <IconButton
                                 sx={{ color: "rgba(89, 50, 234, 1)" }}
                                 onClick={() => handleDeleteImage()}
-                                disabled={!previewData}
+                                disabled={!previewData || type === "View"}
                             >
                                 <DeleteIcon fontSize="large" />
                             </IconButton>
@@ -192,7 +193,10 @@ function AllCategories() {
                     </div>
                 </div>
             </div>
-            <Button onClick={()=>handleCategoryCreate()} variant='contained' sx={{marginTop:"2%", width:"100%"}}>{type}</Button>
+            <div style={{display: "flex", justifyContent: "space-between", width: "100%",marginTop:"5%",}}>
+              <Button onClick={()=>handleClosePopup(type)} variant='contained' sx={{ width:"48%"}}>Cancel</Button>
+              <Button disabled={type === "View"} onClick={()=>handleCategoryCreate()} variant='contained' sx={{ width:"48%"}}>Submit</Button>
+              </div>
 
           </div>
           
@@ -203,7 +207,7 @@ function AllCategories() {
         <TreeItem2 key={node._id} itemId={node._id} label={
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <div style={{display:"flex", alignItems:"center"}}>
-                    <img src={node.imageUrl} width="24px" height="24px" alt="cat-image"/>
+                    <img src={node?.imageUrl ? node.imageUrl : "https://placehold.co/600.png?text=No+Image"} width="24px" height="24px" alt="cat-image"/>
                     <Typography variant="body1">{node.name}</Typography>
                     {level < 5 && (
                     <IconButton onClick={() => handleAdd(node._id, parentId, categoryId)} size='small'>
@@ -233,7 +237,7 @@ function AllCategories() {
       );
 
       const handleClosePopup = (field: any) => {
-        setIsPopupOpen({...isPopupOpen, [field]: false});
+        setIsPopupOpen({...isPopupOpen, update: false, updateSub: false, create: false, createSub: false, view: false, viewSub: false});
         setFormValues({name: "", description: "", imageUrl: ""});
         setPreviewData(null);
       }

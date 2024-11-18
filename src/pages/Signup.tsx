@@ -66,7 +66,7 @@ function Signup() {
             "countryCode",
             "mobileNumber",
           ],
-          true,
+          false,
           formData
         );
       } else if (showStep === 2) {
