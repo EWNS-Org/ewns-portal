@@ -9,8 +9,8 @@ export function middleware(request: NextRequest) {
 
   const isAuthenticated = !!(token && userRole && token !== "" && userRole !== "");
 
-  // Allow access to login/signup when not authenticated
-  if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
+  // Allow access to auth pages when not authenticated
+  if (pathname.startsWith('/login') || pathname.startsWith('/signup') || pathname.startsWith('/forgot-password') || pathname.startsWith('/reset-password') || pathname.startsWith('/verify-email')) {
     if (isAuthenticated) {
       const destination = userRole === 'ADMIN' ? '/admin/dashboard' : '/dashboard';
       return NextResponse.redirect(new URL(destination, request.url));

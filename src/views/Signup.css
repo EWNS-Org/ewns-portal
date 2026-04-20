@@ -47,10 +47,12 @@ body {
 .right-signup {
   display: flex;
   flex-direction: column;
-  padding: 5%;
+  padding: 5% 8%;
   width: 100%;
   min-height: 100vh;
   justify-content: center;
+  max-width: 560px;
+  margin: 0 auto;
 }
 
 .right-logo {
@@ -90,14 +92,74 @@ body {
   object-fit: contain;
 }
 
-@media (max-width: 600px) {
+.mobile-auth-hero {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+@media (max-width: 900px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-auth-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: lightcyan;
+    border-radius: 20px;
+    padding: 1.5rem 1rem 1.25rem;
+    margin: -2rem -0.25rem 1.25rem;
+  }
+
+  .mobile-auth-hero-logo {
+    height: 32px;
+    width: auto;
+    margin-bottom: 0.75rem;
+  }
+
+  .mobile-auth-hero-img {
+    max-width: 160px;
+    width: 100%;
+    height: auto;
+  }
+
   .right-signup {
-    padding: 8% 5%;
+    padding: 2rem 1.25rem;
+    min-height: 100vh;
+    justify-content: flex-start;
+    padding-top: 3rem;
+  }
+
+  .right-logo {
+    margin-bottom: 1rem;
+  }
+
+  .right-logo img {
+    height: 48px;
+    width: auto;
   }
 
   .signup-part {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .signup-part .MuiTypography-root {
+    margin: 0 0 0.25rem 0 !important;
+    font-size: 1.5rem !important;
+  }
+
+  .login-form,
+  .signup-form {
+    margin-bottom: 1rem;
+  }
+
+  .step-one .MuiTextField-root {
+    margin-bottom: 0.75rem !important;
   }
 }
   

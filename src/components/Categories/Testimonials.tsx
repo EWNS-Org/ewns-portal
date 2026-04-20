@@ -362,52 +362,47 @@ function Testimonials() {
                                 </Button>
                             </div>
 
-                            <Grid container sx={{ padding: "2%", overflow: "auto", maxHeight: "500px", justifyContent: "center", display: "flex" }}>
+                            <Grid container spacing={2} sx={{ padding: "2%", overflow: "auto", maxHeight: "500px" }}>
                                 {testimonials?.length > 0 ? testimonials.map((testimonial: any, index: number) => (
-                                    <Grid item key={index} sx={{ width: "100%" }} >
-                                        <Card sx={{ padding: "1% 2%", width: "100%", display: "flex", flexDirection: { xs: "column", md: "row" } }}>
-                                            <div style={{display:"flex", flexDirection: "inherit", width: "100%"}}>
-                                                <div style={{ marginRight: "2%", display: "flex", alignItems:"center", justifyContent: "center"}}>
-                                                    <Avatar sx={{ width: { xs: 64, md: 128 }, height: { xs: 64, md: 128 }, fontSize: { xs: 32, md: 64 } }}  src={testimonial?.userLogo || null} {...(!testimonial?.userLogo && getAvatar(testimonial?.userName ? testimonial?.userName : "Prem Prakash"))}/>
+                                    <Grid item key={index} xs={12}>
+                                        <Card sx={{ padding: "16px 20px", width: "100%", display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { md: "center" }, gap: 2 }}>
+                                            <div style={{display:"flex", flexDirection: "inherit", alignItems: "center", width: "100%", gap: "16px"}}>
+                                                <div style={{ display: "flex", alignItems:"center", justifyContent: "center", flexShrink: 0}}>
+                                                    <Avatar sx={{ width: { xs: 56, md: 80 }, height: { xs: 56, md: 80 }, fontSize: { xs: 28, md: 40 } }}  src={testimonial?.userLogo || null} {...(!testimonial?.userLogo && getAvatar(testimonial?.userName ? testimonial?.userName : "Prem Prakash"))}/>
                                                 </div>
-                                                <div>
-                                                    <div style={{display:"flex", alignItems: "center", justifyContent:"space-between", flexWrap: "wrap", gap: "8px"}}>
-                                                        <Typography variant='h5' sx={{ fontSize: { xs: '1rem', md: '1.5rem' } }}>{testimonial.userName}</Typography>
-                                                        <div style={{display :"flex", justifyContent: "space-between", marginBottom: "2%"}}>
-                                                            <Typography variant='h5' color="gray">Rating:</Typography>
-                                                            <div style={{display: "flex", justifyContent:"space-between", alignItems: "center", width: "50%"}}>
-                                                                {Array.from({ length: 5 }, (_, index) => {
-                                                                    const starValue = index + 1;
-                                                                    return (
-                                                                    <div
-                                                                        key={index}
-                                                                        style={{ color: '#FFD700' }}
-                                                                    >
-                                                                        {starValue <= testimonial.rating ? (
-                                                                        <StarIcon fontSize="large" />
-                                                                        ) : (
-                                                                        <StarBorderIcon fontSize="large" />
-                                                                        )}
-                                                                    </div>
-                                                                    );
-                                                                })}
-                                                            </div>
+                                                <div style={{flex: 1, minWidth: 0}}>
+                                                    <div style={{display:"flex", alignItems: "center", gap: "12px", flexWrap: "wrap", marginBottom: "4px"}}>
+                                                        <Typography variant='subtitle1' sx={{ fontWeight: 600, fontSize: { xs: '0.95rem', md: '1.1rem' } }}>{testimonial.userName}</Typography>
+                                                        <div style={{display: "flex", alignItems: "center", gap: "4px"}}>
+                                                            {Array.from({ length: 5 }, (_, index) => {
+                                                                const starValue = index + 1;
+                                                                return (
+                                                                <div key={index} style={{ color: '#FFD700', display: "flex" }}>
+                                                                    {starValue <= testimonial.rating ? (
+                                                                    <StarIcon fontSize="small" />
+                                                                    ) : (
+                                                                    <StarBorderIcon fontSize="small" />
+                                                                    )}
+                                                                </div>
+                                                                );
+                                                            })}
                                                         </div>
                                                     </div>
-                                                    <Typography variant='h6' sx={{fontWeight:"bold"}} >{testimonial.title}</Typography>
-                                                    <Typography variant='h6' color="gray" >{testimonial.feedback}</Typography>
+                                                    <Typography variant='body1' sx={{fontWeight: 600, mb: 0.5}} >{testimonial.title}</Typography>
+                                                    <Typography variant='body2' color="text.secondary" sx={{overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical"}}>{testimonial.feedback}</Typography>
                                                 </div>
                                             </div>
-                                            <CardActions sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                                                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", marginBottom: "30%" }}>
-                                                    <EditIcon onClick={() => editLink(testimonial._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
-                                                    <DeleteIcon onClick={() => deleteLink(testimonial._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
-                                                </div>
-
+                                            <CardActions sx={{ display: "flex", flexDirection: { xs: "row", md: "column" }, alignItems: "center", gap: 0.5, p: 0, flexShrink: 0 }}>
+                                                <IconButton onClick={() => editLink(testimonial._id)} size="small" sx={{ color: "rgba(89, 50, 234, 1)" }}>
+                                                    <EditIcon fontSize="small" />
+                                                </IconButton>
+                                                <IconButton onClick={() => deleteLink(testimonial._id)} size="small" sx={{ color: "rgba(89, 50, 234, 1)" }}>
+                                                    <DeleteIcon fontSize="small" />
+                                                </IconButton>
                                                 <FormControlLabel
-                                                    sx={{ height: "20%" }}
-                                                    control={<IOSSwitch sx={{}} checked={testimonial.isActive} />}
-                                                    label={``}
+                                                    sx={{ m: 0 }}
+                                                    control={<IOSSwitch checked={testimonial.isActive} />}
+                                                    label=""
                                                     onChange={(e: any) =>
                                                         toggleFAQ(testimonial._id, e.target.checked)
                                                     }
