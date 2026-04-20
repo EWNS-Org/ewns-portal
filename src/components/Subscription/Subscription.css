@@ -1,0 +1,257 @@
+/* Plan cards grid */
+.sub-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .sub-plans-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual plan card */
+.sub-plan-card {
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.sub-plan-card:hover {
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.12);
+}
+
+.sub-plan-card--active {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+/* Current plan badge */
+.sub-plan-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #7c3aed, #5932ea);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+.sub-plan-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e1b4b;
+}
+
+/* Price */
+.sub-plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.sub-plan-price__currency {
+  font-size: 16px;
+  font-weight: 600;
+  color: #7c3aed;
+}
+.sub-plan-price__amount {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1e1b4b;
+  line-height: 1;
+}
+.sub-plan-price__period {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-left: 2px;
+}
+
+/* Credits row */
+.sub-plan-credits {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7c3aed;
+  background: #f5f3ff;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.sub-plan-credits__icon {
+  font-size: 14px;
+}
+
+/* Features list */
+.sub-plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sub-plan-features li {
+  font-size: 13px;
+  color: #374151;
+}
+
+.sub-plan-details {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.sub-plan-cta {
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+}
+
+.sub-plan-current-label {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #22c55e;
+  margin-top: auto;
+}
+
+/* ─── AI Credits tab ─── */
+.sub-credits-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sub-credits-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #7c3aed, #5932ea);
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px 24px;
+  min-width: 100px;
+}
+.sub-credits-total__number {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+}
+.sub-credits-total__label {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.sub-credits-breakdown {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sub-credits-item {
+  flex: 1;
+  min-width: 140px;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sub-credits-item__label {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+.sub-credits-item__value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e1b4b;
+}
+.sub-credits-item__value--plan { color: #7c3aed; }
+.sub-credits-item__value--addon { color: #059669; }
+
+.sub-credits-empty-warn {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #fff7ed;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #92400e;
+  font-weight: 500;
+}
+
+/* Addon packs */
+.sub-addon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 480px) {
+  .sub-addon-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sub-addon-card {
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.sub-addon-card:hover {
+  border-color: #7c3aed;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1);
+}
+
+.sub-addon-credits {
+  font-size: 28px;
+  font-weight: 800;
+  color: #7c3aed;
+  line-height: 1;
+}
+.sub-addon-credits-label {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+.sub-addon-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e1b4b;
+  margin-top: 4px;
+}
+.sub-addon-btn {
+  margin-top: 4px;
+  width: 100%;
+  justify-content: center;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+}

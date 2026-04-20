@@ -1,7 +1,9 @@
+/* ===== Image Hover Overlay (kept for other tabs) ===== */
 .containerr {
   position: relative;
   display: flex;
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   height: 300px;
   justify-content: space-between;
 }
@@ -11,20 +13,18 @@
   display: block;
   width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
-  transition: .5s ease;
+  object-fit: cover;
+  transition: 0.5s ease;
   backface-visibility: hidden;
 }
 
 .middle {
-  transition: .5s ease;
+  transition: 0.5s ease;
   opacity: 0;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
   text-align: center;
 }
 
@@ -37,8 +37,473 @@
 }
 
 .text {
-  background-color: #04AA6D;
+  background-color: #04aa6d;
   color: white;
   font-size: 16px;
   padding: 16px 32px;
+}
+
+/* ===== Profile Page Layout ===== */
+.profile-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f4ff;
+  padding: 24px 20px;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Source Sans Pro', sans-serif;
+}
+
+/* ===== Page Header ===== */
+.profile-page-header {
+  margin-bottom: 24px;
+}
+.profile-page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e1b4b;
+  margin: 0 0 4px;
+  letter-spacing: -0.5px;
+}
+.profile-page-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ===== Tab Navigation ===== */
+.profile-tabs {
+  display: flex;
+  gap: 4px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.profile-tabs::-webkit-scrollbar { display: none; }
+
+.profile-tab {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.2s, color 0.2s;
+  font-family: 'Inter', 'Source Sans Pro', sans-serif;
+}
+.profile-tab:hover { background: #f5f3ff; color: #7c3aed; }
+.profile-tab--active {
+  background: linear-gradient(135deg, #7c3aed, #5932ea);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.35);
+}
+
+/* ===== Content Area ===== */
+.profile-content {
+  padding: 0;
+}
+
+/* ===== Subscription Banner ===== */
+.subscription-banner {
+  background: rgba(89, 50, 234, 1);
+  border-radius: 15px 15px 0 0;
+  padding: 16px 20px;
+}
+
+.subscription-banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.subscription-banner-details {
+  display: flex;
+  justify-content: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.subscription-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.subscription-more-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.subscription-more-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== ProfileTab (form) ===== */
+.profile-tab-root {
+  background: #fff;
+  border-radius: 0 0 15px 15px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.profile-tab-card {
+  padding: 24px !important;
+  box-shadow: none !important;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px !important;
+}
+
+.profile-tab-card-inner {
+  width: 100%;
+}
+
+.profile-section-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  color: #1f2937;
+}
+
+/* Row: 3 equal columns on desktop */
+.profile-row--thirds {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Row: contact info (country code narrow, phone mid, email wider) */
+.profile-row--contact {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.profile-country-code {
+  width: 100%;
+}
+
+.profile-phone {
+  width: 100%;
+}
+
+.profile-email {
+  width: 100%;
+}
+
+/* Toggle switches - wrap grid */
+.profile-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 8px;
+}
+
+/* Action buttons */
+.profile-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+/* ===== Mobile Responsive (<768px) ===== */
+@media (max-width: 768px) {
+  .profile-tab {
+    min-width: 80px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .subscription-banner {
+    padding: 14px 16px;
+  }
+
+  .subscription-banner-details {
+    gap: 16px;
+  }
+
+  .subscription-detail-item {
+    min-width: calc(50% - 16px);
+  }
+
+  .profile-tab-root {
+    padding: 12px;
+  }
+
+  .profile-tab-card {
+    padding: 16px !important;
+  }
+
+  .profile-row--thirds {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-row--contact {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-toggles {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .profile-section-title {
+    font-size: 1rem;
+  }
+}
+
+/* ===== Tablet (768px - 1024px) ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .profile-row--thirds {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .profile-row--contact {
+    grid-template-columns: 150px 1fr;
+  }
+
+  .profile-toggles {
+    gap: 8px 16px;
+  }
+}
+
+/* ===== Images Tab Grid ===== */
+.images-tab-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.image-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.image-card-label {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
+.image-card-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f9fafb;
+  border: 2px dashed #e5e7eb;
+}
+
+.image-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.image-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-card-preview:hover .image-card-overlay {
+  opacity: 1;
+}
+
+/* Touch devices: always show overlay */
+@media (hover: none) {
+  .image-card-overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* ===== Business Hours Mobile ===== */
+.hours-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  gap: 8px;
+}
+
+.hours-day {
+  width: 100px;
+  min-width: 100px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.hours-picker {
+  flex: 1;
+  min-width: 0;
+}
+
+.hours-closed-label {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.hours-check {
+  min-width: 90px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ===== Responsive: Images ===== */
+@media (max-width: 768px) {
+  .images-tab-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .images-tab-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* ===== Responsive: Business Hours ===== */
+@media (max-width: 768px) {
+  .hours-row {
+    flex-wrap: wrap;
+    padding: 8px 8px;
+    gap: 4px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .hours-day {
+    width: 100%;
+    min-width: unset;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .hours-picker {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hours-check {
+    min-width: unset;
+  }
+}
+
+/* ===== Responsive: Address Cards ===== */
+@media (max-width: 768px) {
+  .address-grid .MuiGrid-item {
+    width: 100% !important;
+  }
+}
+
+/* ===== Responsive: External Links ===== */
+@media (max-width: 768px) {
+  .links-grid .MuiGrid-item {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+}
+
+/* ===== Responsive: FAQ Cards ===== */
+@media (max-width: 768px) {
+  .faq-card-content {
+    flex-direction: column !important;
+  }
+
+  .faq-card-actions {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 12px;
+    padding: 8px 0 0 !important;
+    border-top: 1px solid #f3f4f6;
+  }
+
+  .faq-card-actions .MuiFormControlLabel-root {
+    margin: 0 !important;
+  }
+}
+
+/* ===== Common: Remove fixed heights on mobile ===== */
+@media (max-width: 768px) {
+  .tab-wrapper-responsive {
+    height: auto !important;
+    min-height: unset;
+    padding: 12px !important;
+  }
+
+  .tab-card-responsive {
+    height: auto !important;
+    min-height: unset;
+  }
+
+  .tab-scroll-area {
+    height: auto !important;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  /* Fix profile content padding on mobile */
+  .profile-content {
+    padding: 8px 0;
+  }
+
+  /* Address card actions stacking */
+  .address-grid .MuiCardActions-root {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  /* About tab editor */
+  .editordiv {
+    max-height: 250px;
+    overflow-y: auto;
+  }
+}
+
+/* ===== Profile Mobile Responsive ===== */
+@media (max-width: 600px) {
+  .profile-page { padding: 14px 10px; }
+  .profile-page-title { font-size: 1.25rem; }
+  .profile-tabs { padding: 4px; gap: 2px; }
+  .profile-tab { padding: 8px 6px; font-size: 0.78rem; }
+}
+@media (max-width: 420px) {
+  .profile-tab { font-size: 0.72rem; padding: 8px 4px; }
 }

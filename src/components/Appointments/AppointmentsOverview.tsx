@@ -1,64 +1,86 @@
-import { Box, Card, Stack, Typography } from '@mui/material'
+'use client';
+
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ACTIVE_BUSINESS_ID } from '../../utils/constants';
 import { getAllAppointmentCountsAction } from '../../Redux/Actions/AppointmentActions/appointment.actions';
 
-function AppointmentsOverview({setFilter, setActiveTab}: any) {
+const statCards = [
+    {
+        key: 'all',
+        filter: 'ALL',
+        label: 'Total Appointments',
+        icon: '📅',
+        gradient: 'appt-card-gradient--purple',
+    },
+    {
+        key: 'day',
+        filter: 'TODAY',
+        label: "Today's Appointments",
+        icon: '☀️',
+        gradient: 'appt-card-gradient--blue',
+    },
+    {
+        key: 'week',
+        filter: 'WEEK',
+        label: "This Week",
+        icon: '📆',
+        gradient: 'appt-card-gradient--teal',
+    },
+    {
+        key: 'month',
+        filter: 'MONTH',
+        label: "This Month",
+        icon: '🗓️',
+        gradient: 'appt-card-gradient--orange',
+    },
+];
 
-    const allCounts = useSelector((state: any)=> {
-    return state.appointments.allCounts
-});
-
+function AppointmentsOverview({ setFilter, setActiveTab }: any) {
+    const allCounts = useSelector((state: any) => state.appointments.allCounts);
     const [counts, setCounts] = useState<any>(null);
-
     const dispatch = useDispatch();
 
-    useEffect(()=>{
-        async function fetchCounts(){
+    useEffect(() => {
+        async function fetchCounts() {
             let businessID = localStorage.getItem(ACTIVE_BUSINESS_ID);
-
             await dispatch(getAllAppointmentCountsAction(businessID) as any);
         }
-
         fetchCounts();
     }, [dispatch]);
 
-    useEffect(()=>{
-        console.log(allCounts)
+    useEffect(() => {
         setCounts(allCounts);
     }, [allCounts]);
 
-  return (
-    <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
-                <Stack spacing={4} width={"100%"} style={{ }}>
-                    <Card sx={{ padding: "2%", height: "630px" }}>
-                        <div style={{display:"flex", width: "100%", justifyContent:"space-between", marginBottom: "5%"}}>
-                            <Card sx={{ padding: "2%",width:"40%",  display: "flex", justifyContent:"space-between", cursor:"pointer" }} onClick={()=>{setFilter("ALL"); setActiveTab("All Appointments");}}>
-                                <Typography variant='h5'>All Appointments:</Typography>
-                                <Typography variant='h5' color='gray'>{counts && counts.all}</Typography>
-                            </Card>
-                            <Card sx={{ padding: "2%",width:"40%", display: "flex", justifyContent: "space-between", cursor:"pointer" }} onClick={()=>{setFilter("TODAY"); setActiveTab("All Appointments");}}>
-                                <Typography variant='h5'>Today's Appointments:</Typography>
-                                <Typography variant='h6' color='gray'>{counts && counts.day}</Typography>
-                            </Card>
+    const handleCardClick = (filter: string) => {
+        setFilter(filter);
+        setActiveTab('All Appointments');
+    };
+
+    return (
+        <div className="appt-overview">
+            <h2 className="appt-section-title">Overview</h2>
+            <div className="appt-stats-grid">
+                {statCards.map((card) => (
+                    <button
+                        key={card.key}
+                        className={`appt-stat-card ${card.gradient}`}
+                        onClick={() => handleCardClick(card.filter)}
+                    >
+                        <div className="appt-stat-icon">{card.icon}</div>
+                        <div className="appt-stat-body">
+                            <span className="appt-stat-count">
+                                {counts ? (counts[card.key] ?? '—') : '—'}
+                            </span>
+                            <span className="appt-stat-label">{card.label}</span>
                         </div>
-                        <div style={{display:"flex", width: "100%", justifyContent:"space-between", marginBottom: "5%"}}>
-                            <Card sx={{ padding: "2%",width:"40%",  display: "flex", justifyContent:"space-between", cursor:"pointer" }} onClick={()=>{setFilter("WEEK"); setActiveTab("All Appointments");}}>
-                                <Typography variant='h5'>This weeks Appointments:</Typography>
-                                <Typography variant='h5' color='gray'>{counts && counts.week}</Typography>
-                            </Card>
-                            <Card sx={{ padding: "2%",width:"40%", display: "flex", justifyContent: "space-between", cursor:"pointer" }} onClick={()=>{setFilter("MONTH"); setActiveTab("All Appointments");}}>
-                                <Typography variant='h5'>This Month's Appointments:</Typography>
-                                <Typography variant='h6' color='gray'>{counts && counts.month}</Typography>
-                            </Card>
-                        </div>
-                    </Card>
-                </Stack>
+                        <div className="appt-stat-arrow">→</div>
+                    </button>
+                ))}
             </div>
         </div>
-  )
+    );
 }
 
 export default AppointmentsOverview

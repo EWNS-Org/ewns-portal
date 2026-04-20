@@ -1,34 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+'use client';
+
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import "./Login.css";
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
+import "./Signup.css";
 import Grid from '@mui/material/Grid2';
-import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
-import { fetchPincodeDetails } from '../services/api/postalcode.service';
+import { Button, TextField, Typography } from '@mui/material';
 import { useLoader } from '../contexts/LoaderContext';
 import toast from 'react-hot-toast';
-import { countryList } from '../utils/constants/country-flag';
 import useTailwindBreakpoint from '../hooks/useBreakpoint';
 import { loginUser } from '../services/api/auth.api.service';
 import { useAuth } from '../contexts/AuthContext';
 
 function Login() {
-    const navigate = useNavigate();
+    const router = useRouter();
+    const navigate = (path: string) => router.push(path);
 
     const { showLoader, hideLoader } = useLoader();
     const breakpoint = useTailwindBreakpoint();
 
     const { login } = useAuth();
     const validate = () => {
-
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(formData.email)) {
             toast.error("Invalid email format.");
             return false;
         }
-
         return true;
     };
 
@@ -55,34 +52,31 @@ function Login() {
         }
     }
 
-
-
     return (
-        <div><div style={{ height: "1000px", overflow:"hidden" }} >
-            <Grid container spacing={0} sx={{ display: "flex",  flexWrap: "wrap", width: "100%", height: "100%" }} className='login-page'>
-                <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%",  }} >
+        <div>
+            <Grid container spacing={0} sx={{ display: "flex", flexWrap: "wrap", width: "100%", minHeight: "100vh" }} className='login-page'>
+                <Grid size={{ xs: 12, md: 6 }} sx={{ display: { xs: "none", md: "flex" }, minHeight: "100vh" }}>
                     <div className='left-signup'>
-                        <div className='left-theme' style={{padding:"5%",}}>
+                        <div className='left-theme' style={{ padding: "5%" }}>
                             <div className='left-content'>
-                                <Typography variant='h4' color='rgba(1, 82, 168, 1)' fontSize={"40px"} >Take Your <span style={{ fontWeight: "bold" }}>Business Online </span>
+                                <Typography variant='h4' color='rgba(1, 82, 168, 1)' fontSize={"40px"}>Take Your <span style={{ fontWeight: "bold" }}>Business Online </span>
                                     within minutes !!</Typography>
                             </div>
-                            <div style={{ display: "flex", justifyContent: "center", marginTop: "5%", height: "100%" }} className='signup-lef-img'>
-                                <img src="assets/signup-left.svg" width={"600px"} height={"660px"} />
+                            <div style={{ display: "flex", justifyContent: "center", marginTop: "5%" }} className='signup-lef-img'>
+                                <img src="assets/signup-left.svg" style={{ maxWidth: "100%", height: "auto" }} alt="signup" />
                             </div>
                         </div>
                     </div>
                 </Grid>
-                <Grid size={6} sx={{ width:"50%" }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <div className='right-signup'>
                         <div className='right-logo'>
-                            <img src="assets/logo.png" width={"200px"} />
+                            <img src="/assets/ewns-logo.svg" style={{ width: '100%', maxWidth: '200px' }} alt="logo" />
                         </div>
                         <div className='signup-part'>
                             <Typography variant={breakpoint === "xs" ? 'h4' : 'h3'} margin="2%">Log In to your account</Typography>
-
                         </div>
-                        <Typography variant='h5' marginY={"2%"} sx={{ color: "gray" }}>It’s time to get your business online</Typography>
+                        <Typography variant='h5' marginY={"2%"} sx={{ color: "gray" }}>It's time to get your business online</Typography>
                         <div className='login-form'>
                             <div className='step-one'>
                                 <TextField
@@ -91,27 +85,28 @@ function Login() {
                                     value={formData.email}
                                     label="Email"
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    sx={{ marginBottom: "2%", marginRight: "2%", width: "100%" }}
-                                /><TextField
+                                    sx={{ marginBottom: "2%", width: "100%" }}
+                                />
+                                <TextField
                                     type="password"
                                     id="outlined-required-password"
                                     label="Password"
-                                    sx={{ marginBottom: "2%", width: "100%%" }}
+                                    sx={{ marginBottom: "2%", width: "100%" }}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     value={formData.password}
                                 />
-                                {<Button onClick={() => navigate("/forgot-password")} sx={{ border: "1px solid blue", width: "fit-content", padding: "0.5% 2%", marginBottom: "2%", cursor: "pointer" }}>Forgot Password</Button>}
-                                <Button onClick={() => handleLogin()} variant='contained' sx={{ width: "100%", height: "15%" }}>Log In</Button>
+                                <Button onClick={() => navigate("/forgot-password")} sx={{ border: "1px solid blue", width: "fit-content", padding: "0.5% 2%", marginBottom: "2%", cursor: "pointer" }}>Forgot Password</Button>
+                                <Button onClick={() => handleLogin()} variant='contained' sx={{ width: "100%", height: "50px" }}>Log In</Button>
                             </div>
                         </div>
-                        <div style={{ border: "0.5px  gray", width: "80%", margin: "2% 5%" }}></div>
-                        <div style={{}}>
-                            <Button onClick={() => navigate("/")} variant='contained' sx={{ width: "100%", height: "100%" }}>Create New Account</Button>
+                        <div style={{ borderTop: "1px solid #ccc", width: "100%", margin: "2% 0" }}></div>
+                        <div>
+                            <Button onClick={() => navigate("/")} variant='contained' sx={{ width: "100%", height: "50px" }}>Create New Account</Button>
                         </div>
                     </div>
                 </Grid>
             </Grid>
-        </div ></div>
+        </div>
     )
 }
 

@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 // Create an instance of axios with default settings
 const apiClient: AxiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_BASE_URL, // Base URL of your API, stored in environment variables
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Base URL of your API, stored in environment variables
     timeout: 30000, // Request timeout in milliseconds
 });
 
@@ -14,11 +14,13 @@ apiClient.interceptors.request.use(
     (config: any) => {
         toast.loading('Loading...');
 
-        const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
+        const token = typeof window !== 'undefined'
+            ? document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1] ?? null
+            : null;
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
-        }
+        } 
         return config;
     },
     (error: any) => {
@@ -50,7 +52,12 @@ apiClient.interceptors.response.use(
         console.log(error)
         if (error.response && error.response.status === 401) {
             console.error('Unauthorized, redirecting to login...');
-            localStorage.clear();
+            if (typeof window !== 'undefined') {
+                localStorage.clear();
+                document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                document.cookie = 'userRole=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }

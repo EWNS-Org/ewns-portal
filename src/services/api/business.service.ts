@@ -59,9 +59,13 @@ export const updateBusiness = async (businessDetails: any, businessId: any) => {
     }
 }
 
-export const uploadBusinessImages = async (businessId: any, bodyData: any, type: any) => {
+export const uploadBusinessImages = async (businessId: any, file: File, type: any) => {
     try {
-        const res: any = await post(`/business/upload?businessId=${businessId}&type=${type}`, bodyData);
+        const formData = new FormData();
+        formData.append('image', file);
+        const res: any = await post(`/business/upload?businessId=${businessId}&type=${type}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
         return res.data;
     }
     catch (error: any) {

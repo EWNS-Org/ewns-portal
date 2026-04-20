@@ -1,18 +1,10 @@
-import { Box, CardContent, CardHeader, FormControl, InputLabel, MenuItem, Select, TextField, Typography, Card, Button, IconButton } from '@mui/material';
-import React, { Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { countryList } from '../../utils/constants/country-flag';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getBusinessDetailsAction, updateBusinessProfileAction, uploadBusinessImagesAction } from '../../Redux/Actions/BusinessActions/business.actions';
-import { Checkbox, FormControlLabel } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import DeleteIcon from "@mui/icons-material/Delete";
+'use client';
 
-import { categories } from '../../utils/constants/categories';
-import { validateFields, validateTimings } from '../../Helpers/common.helper';
-import { Editor } from '@tinymce/tinymce-react';
-import RichEditor from '../common/BundledRichEditor/RichEditor';
+import { Typography, useMediaQuery, useTheme } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { getBusinessDetailsAction } from '../../Redux/Actions/BusinessActions/business.actions';
 import "./Profile.css";
 import ProfileTab from './ProfileTab';
 import AboutUsTab from './AboutTab';
@@ -22,11 +14,15 @@ import AddressTab from './AddressTab';
 import ExternalLinksTab from './ExternalLinksTab';
 import FAQTab from './FAQTab';
 
-
+const tabs = ['Profile', 'About', 'Images', 'Timings', 'Address', 'External Links', 'FAQs'];
 
 const PersonalProfile = () => {
 
-    const navigate = useNavigate();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+    const router = useRouter();
+    const navigate = (path: string) => router.push(path);
     const [activeTab, setActiveTab] = useState('Profile');
     const initialProfileDetails = {
         businessName: '',
@@ -128,51 +124,76 @@ const PersonalProfile = () => {
     }, [dispatch]);
 
     return (
-        <div className="w-full  h-[65vh] font-semibold font-sans" style={{ fontSize: "20px" }}>
-            <div className="w-full py-1" style={{ display: "flex", backgroundColor: "white" }}>
-                <div className="w-full" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    {['Profile', 'About', 'Images', 'Timings', 'Address', 'External Links', 'FAQs'].map((tab) => (
-                        <div
+        <div className="profile-page">
+            {/* Page Header */}
+            <div className="profile-page-header">
+                <h1 className="profile-page-title">Profile</h1>
+                <p className="profile-page-subtitle">Manage your business details, hours, address and more</p>
+            </div>
+
+            {/* Tab Navigation */}
+            <div className="profile-tabs">
+                    {tabs.map((tab) => (
+                        <button
                             key={tab}
-                            className={` w-full cursor-pointer py-2 ${activeTab === tab ? 'border-t-2 text-violet-500' : 'text-black-500'}`}
-                            style={{ alignItems: "center", justifyContent: "center", display: "flex", borderColor: "rgba(89, 50, 234, 1)", color: "" }}
+                            className={`profile-tab ${activeTab === tab ? 'profile-tab--active' : ''}`}
                             onClick={() => handleTabChange(tab)}
                         >
                             {tab}
-                        </div>
+                        </button>
                     ))}
-                </div>
             </div>
 
-           
-
-            <div className='container w-full py-4 ' style={{}}>
-                <div className=' w-full h-20 p-4' style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px", backgroundColor: "rgba(89, 50, 234, 1)" }}>
-                    <div className='flex ' style={{ justifyContent: "space-between", alignItems: "center" }}>
-                        <div className='flex-col font-semibold' style={{ fontSize: "8px" }}>
-                            <Typography sx={{ fontSize: "18px", color: "white" }}>Subscription Details  </Typography>
-                            <Typography sx={{ fontSize: "18px", color: "white" }}> Basic</Typography>
+            {/* Content Area */}
+            <div className="profile-content">
+                {/* Subscription Banner */}
+                <div className="subscription-banner">
+                    <div className="subscription-banner-header">
+                        <Typography sx={{ fontSize: { xs: '16px', sm: '18px' }, color: "white", fontWeight: 600 }}>
+                            Subscription Details
+                        </Typography>
+                        <button className="subscription-more-btn" onClick={() => navigate("/subscription")}>
+                            More Details {">>"}
+                        </button>
+                    </div>
+                    <div className="subscription-banner-details">
+                        <div className="subscription-detail-item">
+                            <Typography sx={{ fontSize: { xs: '12px', sm: '14px' }, color: "rgba(255,255,255,0.7)" }}>
+                                Plan
+                            </Typography>
+                            <Typography sx={{ fontSize: { xs: '14px', sm: '16px' }, color: "white", fontWeight: 600 }}>
+                                Basic
+                            </Typography>
                         </div>
-                        <div className='flex-col  font-semibold' style={{ fontSize: "8px" }}>
-                            <Typography sx={{ fontSize: "18px", color: "white" }}>Start : {"12 September, 2023"}  </Typography>
-                            <Typography sx={{ fontSize: "18px", color: "white" }}> Days left : {"Unlimited"}</Typography>
+                        <div className="subscription-detail-item">
+                            <Typography sx={{ fontSize: { xs: '12px', sm: '14px' }, color: "rgba(255,255,255,0.7)" }}>
+                                Start Date
+                            </Typography>
+                            <Typography sx={{ fontSize: { xs: '14px', sm: '16px' }, color: "white", fontWeight: 600 }}>
+                                {"12 September, 2023"}
+                            </Typography>
                         </div>
-                        <div style={{ cursor: "pointer" }} onClick={() => navigate("/subscription")}>
-                            <div style={{ backgroundColor: "rgba(89, 50, 234, 1)", color: "white" }}>More Details {">>"}</div>
+                        <div className="subscription-detail-item">
+                            {!isMobile && <Typography sx={{ fontSize: { xs: '12px', sm: '14px' }, color: "rgba(255,255,255,0.7)" }}>
+                                Days Left
+                            </Typography>}
+                            <Typography sx={{ fontSize: { xs: '14px', sm: '16px' }, color: "white", fontWeight: 600 }}>
+                                {"Unlimited"}
+                            </Typography>
                         </div>
                     </div>
                 </div>
-                {activeTab === 'Profile' && <ProfileTab  initialProfileDetails={initialProfileDetails} setProfileDetails={setProfile} profileDetails={profile} businessDetails={businessDetails} />}
-                {activeTab === 'About' && <AboutUsTab profile={profile} setProfile={(data:any) => {setProfile((prev: any)=>({...prev, data}))}} />}
+
+                {/* Tab Content */}
+                {activeTab === 'Profile' && <ProfileTab initialProfileDetails={initialProfileDetails} setProfileDetails={setProfile} profileDetails={profile} businessDetails={businessDetails} />}
+                {activeTab === 'About' && <AboutUsTab profile={profile} setProfile={(data: any) => { setProfile((prev: any) => ({ ...prev, data })) }} />}
                 {activeTab === 'Images' && <ImagesTab profile={profile} setProfile={setProfile} />}
                 {activeTab === 'Timings' && <BusinessHours profileDetails={profile} setProfileDetails={setProfile} />}
                 {activeTab === 'Address' && <AddressTab />}
                 {activeTab === 'External Links' && <ExternalLinksTab profile={profile} setProfile={setProfile} />}
                 {activeTab === 'FAQs' && <FAQTab profile={profile} setProfile={setProfile} />}
             </div>
-
-
-        </div >
+        </div>
     );
 };
 

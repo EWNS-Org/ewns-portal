@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar, Box, Button, Card, CardActions, FormControlLabel, Grid, IconButton, Stack, styled, Switch, SwitchProps, TextField, Tooltip, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import Popup from '../common/Popup';
@@ -193,181 +195,92 @@ function Testimonials() {
 
     const getTestimonialInputs = () => {
         return (
-            <div>
-                <div style={{display: "flex", justifyContent:"space-between", marginBottom: "2%"}}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: { xs: 0, md: 1 } }}>
+                {/* Avatar + Name */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <div
-                        style={{ position: 'relative', display: 'inline-block' }}
+                        style={{ position: 'relative', display: 'inline-block', flexShrink: 0 }}
                         onMouseEnter={() => setHovered(true)}
                         onMouseLeave={() => setHovered(false)}
-                        >
-                        <Avatar style={{ width: 56, height: 56 }}  src={testimonialData?.userLogo || null} {...(!testimonialData?.userLogo && getAvatar(testimonialData?.userName ? testimonialData?.userName : "Prem Prakash"))}/>
+                    >
+                        <Avatar sx={{ width: 48, height: 48 }} src={testimonialData?.userLogo || null} {...(!testimonialData?.userLogo && getAvatar(testimonialData?.userName ? testimonialData?.userName : "Prem Prakash"))}/>
                         {hovered && (
-                            <Tooltip title="Edit">{
-                                !testimonialData.userLogo ?
-                                <EditIcon
-                                onClick={()=>handleIconClick(true)}
-                                style={{
-                                position: 'absolute',
-                                top: 0,
-                                right: 0,
-                                fontSize: 20,
-                                cursor: 'pointer',
-                                backgroundColor: 'white',
-                                borderRadius: '50%',
-                                padding: 2,
-                                }}
-                            /> : <CloseIcon
-                            onClick={handleCloseIconClick}
-                            style={{
-                            position: 'absolute',
-                            top: 0,
-                            right: 0,
-                            fontSize: 20,
-                            cursor: 'pointer',
-                            backgroundColor: 'white',
-                            borderRadius: '50%',
-                            padding: 2,
-                            }}
-                        />
-                            }
-                            
+                            <Tooltip title={testimonialData.userLogo ? "Remove" : "Edit"}>
+                                {!testimonialData.userLogo ?
+                                    <EditIcon onClick={()=>handleIconClick(true)} style={{ position: 'absolute', top: -4, right: -4, fontSize: 18, cursor: 'pointer', backgroundColor: 'white', borderRadius: '50%', padding: 2, boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }} />
+                                    : <CloseIcon onClick={handleCloseIconClick} style={{ position: 'absolute', top: -4, right: -4, fontSize: 18, cursor: 'pointer', backgroundColor: 'white', borderRadius: '50%', padding: 2, boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }} />
+                                }
                             </Tooltip>
                         )}
-
-                        <input
-                            type="file"
-                            accept=".jpg,.png,.gif"
-                            ref={logoInputRef}
-                            style={{ display: 'none' }}
-                            onChange={(e)=>handleFileChange(e, true)}
-                        />
+                        <input type="file" accept=".jpg,.png,.gif" ref={logoInputRef} style={{ display: 'none' }} onChange={(e)=>handleFileChange(e, true)} />
                     </div>
-                    <TextField
-                        sx={{width: "90%"}}
-                        label="Full Name"
-                        value={testimonialData.userName}
-                        onChange={(e: any)=>handleInputChange("userName", e.target.value)}
-                    />
-                </div>
-                <TextField 
-                    label="Title"
-                    fullWidth
-                    sx={{marginBottom: "2%"}}
-                    value={testimonialData.title}
-                    onChange={(e: any)=>handleInputChange("title", e.target.value)}
-                />
-                <TextField 
-                    multiline
-                    rows={4}
-                    label="Feedback"
-                    fullWidth
-                    sx={{marginBottom: "2%"}}
-                    value={testimonialData.feedback}
-                    onChange={(e: any)=>handleInputChange("feedback", e.target.value)}
-                />
+                    <TextField size="small" fullWidth label="Full Name" value={testimonialData.userName} onChange={(e: any)=>handleInputChange("userName", e.target.value)} />
+                </Box>
 
-                <div style={{display:"flex", justifyContent:"center", marginBottom: "2%",}}>
-                    <Card
-                        className="hover-card"
-                        sx={{ 
-                            height: "40%", 
-                            width: "60%", 
-                            position: "relative", 
-                            overflow: "hidden"
-                        }}>
-                            <div>
-                                {testimonialData.image && testimonialData.image.length > 0 && <img className='img-testimonial'  src={testimonialData.image[0].url} />}
-                                {!(testimonialData.image && testimonialData.image.length > 0) && <img  className='img-testimonial' src={"https://placehold.co/600.png?text=No+Image"} />}
-                            </div>
+                {/* Title */}
+                <TextField size="small" label="Title" fullWidth value={testimonialData.title} onChange={(e: any)=>handleInputChange("title", e.target.value)} />
 
-                            <Box className="icon-buttons">    
-                                <label htmlFor="file-input">
-                                    <IconButton className="icon-button" onClick={()=>handleIconClick(false)}>
-                                        <EditIcon />
-                                    </IconButton>
-                                </label>
-                                <input
-                                    type="file"
-                                    accept=".jpg,.png,.gif"
-                                    ref={fileInputRef}
-                                    style={{ display: 'none' }}
-                                    onChange={(e) => handleFileChange(e, false)}
-                                />
-                                <IconButton className="icon-button">
-                                    <DeleteIcon />
+                {/* Feedback */}
+                <TextField size="small" multiline rows={3} label="Feedback" fullWidth value={testimonialData.feedback} onChange={(e: any)=>handleInputChange("feedback", e.target.value)} />
+
+                {/* Media */}
+                <Box>
+                    <Typography variant='subtitle2' sx={{ fontWeight: 600, color: '#475569', mb: 1, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Media</Typography>
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                        {/* Image preview */}
+                        {testimonialData.image && testimonialData.image.length > 0 && (
+                            <Box sx={{ position: 'relative', width: 120, height: 120, borderRadius: '10px', overflow: 'hidden', border: '1px solid #e2e8f0', flexShrink: 0 }}>
+                                <img src={testimonialData.image[0].url} alt="Testimonial" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <IconButton size="small" onClick={() => setTestimonialData({...testimonialData, image: []})}
+                                    sx={{ position: 'absolute', top: 4, right: 4, backgroundColor: 'rgba(0,0,0,0.5)', color: '#fff', width: 24, height: 24, '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' } }}>
+                                    <DeleteIcon sx={{ fontSize: 16 }} />
                                 </IconButton>
                             </Box>
-                    </Card>
-                    <Card
-                        className="hover-card"
-                        sx={{ 
-                            height: "40%", 
-                            width: "60%", 
-                            position: "relative", 
-                            overflow: "hidden",
-                            marginLeft: "2%"
-                        }}
-                        >
-                            <div >
-                                {testimonialData.video && testimonialData.video.length > 0 && 
-                                <video width="100%" height="400"  controls={true}>
-                                    <source type="video/mp4" src={testimonialData.video[0].url} />
-                                    <source type="video/3pg" src={testimonialData.video[0].url} />
-                                    <source type="video/mkv" src={testimonialData.video[0].url} />
-                                    <source type="video/avi" src={testimonialData.video[0].url} />
-                                </video>}
-                                {!(testimonialData.video && testimonialData.video.length > 0) && <img  className='img-testimonial' src={"https://placehold.co/600.png?text=No+Video"} />}
-                            </div>
-
-                            <Box className="icon-buttons">    
-                                <label htmlFor="file-input">
-                                    <IconButton className="icon-button" onClick={()=>handleIconClick(false)}>
-                                        <EditIcon />
-                                    </IconButton>
-                                </label>
-                                <input
-                                    type="file"
-                                    accept=".mkv,.jpg,.mp4,.3gp,.avi,.png,.gif"
-                                    ref={fileInputRef}
-                                    style={{ display: 'none' }}
-                                    onChange={(e) => handleFileChange(e, false)}
-                                />
-                                <IconButton className="icon-button">
-                                    <DeleteIcon />
+                        )}
+                        {/* Video preview */}
+                        {testimonialData.video && testimonialData.video.length > 0 && (
+                            <Box sx={{ position: 'relative', width: 120, height: 120, borderRadius: '10px', overflow: 'hidden', border: '1px solid #e2e8f0', flexShrink: 0 }}>
+                                <video src={testimonialData.video[0].url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <IconButton size="small" onClick={() => setTestimonialData({...testimonialData, video: []})}
+                                    sx={{ position: 'absolute', top: 4, right: 4, backgroundColor: 'rgba(0,0,0,0.5)', color: '#fff', width: 24, height: 24, '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' } }}>
+                                    <DeleteIcon sx={{ fontSize: 16 }} />
                                 </IconButton>
-                            </Box>        
-                    </Card>
-                </div>
-                <div style={{display :"flex", justifyContent: "space-between", marginBottom: "2%"}}>
-                    <div style={{display: "flex", justifyContent:"space-between", alignItems: "center", width: "50%"}}>
-                        <Typography color='gray' variant='h5'>Rating</Typography>
+                            </Box>
+                        )}
+                        {/* Upload box */}
+                        <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: 120, height: 120, border: '2px dashed #cbd5e1', borderRadius: '10px', cursor: 'pointer', color: '#94a3b8', transition: 'border-color 0.2s' }}>
+                            <EditIcon sx={{ fontSize: 28, mb: 0.5 }} />
+                            <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Add Media</span>
+                            <input type="file" accept=".jpg,.png,.gif,.mp4,.mkv,.3gp,.avi" ref={fileInputRef} style={{ display: 'none' }} onChange={(e) => handleFileChange(e, false)} />
+                        </label>
+                    </Box>
+                </Box>
+
+                {/* Rating */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                    <Typography variant='subtitle2' sx={{ color: '#475569', fontWeight: 600 }}>Rating</Typography>
+                    <Box sx={{ display: 'flex' }}>
                         {Array.from({ length: 5 }, (_, index) => {
                             const starValue = index + 1;
                             return (
-                            <IconButton
-                                key={index}
-                                onClick={() => setTestimonialData({...testimonialData, rating: starValue})}
-                                style={{ color: '#FFD700' }}
-                            >
-                                {starValue <= testimonialData.rating ? (
-                                <StarIcon fontSize="large" />
-                                ) : (
-                                <StarBorderIcon fontSize="large" />
-                                )}
-                            </IconButton>
+                                <IconButton key={index} size="small" onClick={() => setTestimonialData({...testimonialData, rating: starValue})} style={{ color: '#FFD700' }}>
+                                    {starValue <= testimonialData.rating ? <StarIcon /> : <StarBorderIcon />}
+                                </IconButton>
                             );
                         })}
-                    </div>
-                </div>
-                <div>
-                    <Button variant='outlined' className='' onClick={() => setIsPopupOpen({ ...isPopupOpen, popularTestimonialPopup: true })}>
+                    </Box>
+                </Box>
+
+                {/* Action Buttons */}
+                <Box sx={{ display: 'flex', gap: 1.5, flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'flex-end' }}>
+                    <Button variant='outlined' onClick={() => setIsPopupOpen({ ...isPopupOpen, popularTestimonialPopup: true })} sx={{ textTransform: 'none', fontWeight: 600, borderRadius: '8px', borderColor: '#e2e8f0', color: '#64748b', '&:hover': { borderColor: '#cbd5e1', backgroundColor: '#f8fafc' } }}>
                         Popular Testimonials
                     </Button>
-                    <Button variant='contained' className='ml-2' onClick={() => handleCreateOrUpdateTestimonial("CREATE")}>
+                    <Button variant='contained' onClick={() => handleCreateOrUpdateTestimonial("CREATE")} sx={{ textTransform: 'none', fontWeight: 600, borderRadius: '8px', backgroundColor: '#5932EA', '&:hover': { backgroundColor: '#4a28d4' } }}>
                         Create Testimonial
                     </Button>
-                </div>
-            </div>
+                </Box>
+            </Box>
         )
     }
 
@@ -433,12 +346,12 @@ function Testimonials() {
 
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+            <div className=" bg-white p-4 md:p-6 shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
                 <Stack spacing={4} width={"100%"} style={{  }}>
-                    <Card sx={{ padding: "2%", height: "630px" }}>
+                    <Card sx={{ padding: "2%" }}>
                         <Box sx={{  }}>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <Typography variant='h5'>Testimonials</Typography>
+                            <div className="page-header-responsive">
+                                <Typography variant='h5' sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }}>Testimonials</Typography>
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -449,17 +362,17 @@ function Testimonials() {
                                 </Button>
                             </div>
 
-                            <Grid container sx={{ padding: "2%", overflow: "auto", height: "500px", justifyContent: "center", display: "flex" }}>
+                            <Grid container sx={{ padding: "2%", overflow: "auto", maxHeight: "500px", justifyContent: "center", display: "flex" }}>
                                 {testimonials?.length > 0 ? testimonials.map((testimonial: any, index: number) => (
-                                    <Grid item key={index} sx={{ width: "100%", height:"200px" }} >
-                                        <Card sx={{ padding: "1% 2%", width: "100%", display: "flex"}}>
-                                            <div style={{display:"flex", width: "100%", height: "100%"}}>
-                                                <div style={{ marginRight: "2%", display: "flex", alignItems:"center"}}>
-                                                    <Avatar style={{ width: 128, height: 128, fontSize: 64 }}  src={testimonial?.userLogo || null} {...(!testimonial?.userLogo && getAvatar(testimonial?.userName ? testimonial?.userName : "Prem Prakash"))}/>
+                                    <Grid item key={index} sx={{ width: "100%" }} >
+                                        <Card sx={{ padding: "1% 2%", width: "100%", display: "flex", flexDirection: { xs: "column", md: "row" } }}>
+                                            <div style={{display:"flex", flexDirection: "inherit", width: "100%"}}>
+                                                <div style={{ marginRight: "2%", display: "flex", alignItems:"center", justifyContent: "center"}}>
+                                                    <Avatar sx={{ width: { xs: 64, md: 128 }, height: { xs: 64, md: 128 }, fontSize: { xs: 32, md: 64 } }}  src={testimonial?.userLogo || null} {...(!testimonial?.userLogo && getAvatar(testimonial?.userName ? testimonial?.userName : "Prem Prakash"))}/>
                                                 </div>
                                                 <div>
-                                                    <div style={{display:"flex", alignItems: "center", justifyContent:"space-between", width:"90%"}}>
-                                                        <Typography variant='h5'>{testimonial.userName}</Typography>
+                                                    <div style={{display:"flex", alignItems: "center", justifyContent:"space-between", flexWrap: "wrap", gap: "8px"}}>
+                                                        <Typography variant='h5' sx={{ fontSize: { xs: '1rem', md: '1.5rem' } }}>{testimonial.userName}</Typography>
                                                         <div style={{display :"flex", justifyContent: "space-between", marginBottom: "2%"}}>
                                                             <Typography variant='h5' color="gray">Rating:</Typography>
                                                             <div style={{display: "flex", justifyContent:"space-between", alignItems: "center", width: "50%"}}>

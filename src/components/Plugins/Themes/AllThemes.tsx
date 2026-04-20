@@ -1,3 +1,5 @@
+'use client';
+
 import { Card, Stack, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,22 +26,22 @@ function AllThemes() {
 
   return (
     <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-      <div className=" p-4 h-[680px] bg-white shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+      <div className=" p-4 md:p-6 bg-white shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
         <Stack  width={"100%"} style={{  }}>
-          <Card sx={{  padding: "2% 1%", height: "650px", display:"flex", flexWrap: "wrap", justifyContent:"start", gap:"2%" }}> 
+            <div className="themes-grid">
             {themes && themes.length > 0 && themes.map((theme: any) => {
               return (
-                <Card sx={{width:"18%", height: "50%", cursor:"pointer", padding: "2%", display:"flex", flexDirection:"column", justifyContent:"space-between", alignItems: "center"}}>
-                  <div>
-                    <img width="95%" height="40%" src={theme.previewUrls?.[0]} />
+                <Card sx={{ cursor:"pointer", padding: "12px", display:"flex", flexDirection:"column", justifyContent:"space-between", alignItems: "center"}}>
+                  <div style={{width: "100%"}}>
+                    <img style={{width: "100%", height: "auto", objectFit: "cover"}} src={theme.previewUrls?.[0]} />
                   </div>
                   <div>
-                    <Typography variant='h4'>{theme.name}</Typography>
+                    <Typography variant='h5' sx={{ fontSize: { xs: '1rem', md: '1.5rem' }, textAlign: 'center', mt: 1 }}>{theme.name}</Typography>
                   </div>
                 </Card>
               )
             })}
-          </Card>
+            </div>
         </Stack>
       </div>
     </div>

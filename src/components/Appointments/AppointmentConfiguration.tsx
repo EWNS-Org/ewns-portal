@@ -1,44 +1,51 @@
-import { Button, Card, Checkbox, FormControlLabel, Stack } from '@mui/material'
-import React from 'react'
+'use client';
+
+import React, { useState } from 'react'
 
 function AppointmentConfiguration() {
+    const [enabled, setEnabled] = useState(false);
 
-    const handleUpdateSlotConfig = async ()=>{
+    const handleUpdateSlotConfig = async () => {
+        // TODO: dispatch update config action
+    };
 
-    }
-  return (
-    <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-        <div className=" h-[760px] bg-white shadow-md w-full" style={{ borderRadius: "15px" }}>
-            <Stack  width={"100%"} style={{height: "90%", padding: "1% 2%"  }}>
-                <Card sx={{ padding: "2%"  }}>
-                    <div>
-                    <FormControlLabel
-                            control={
-                                <Checkbox
-                                    // checked={appointmentConfig.isSameAsBizHours || false}
-                                    // onChange={(e) =>
-                                    //     handleCheckBizHours(e.target.checked)
-                                    // }
-                                />
-                            }
-                            label="Enable Appointments"
-                            sx={{}}
-                        />
+    const handleReset = () => {
+        setEnabled(false);
+    };
+
+    return (
+        <div className="appt-config-section">
+            <h2 className="appt-section-title">Configuration</h2>
+            <div className="appt-config-card">
+                <div className="appt-config-row">
+                    <div className="appt-config-info">
+                        <span className="appt-config-label">Enable Appointments</span>
+                        <span className="appt-config-desc">
+                            Allow customers to book appointments through your website.
+                        </span>
                     </div>
-                </Card>
-            </Stack>
-            
-        <div style={{display:"flex", justifyContent:"space-between", marginTop: "1%", padding : "0% 2%"}}>
-            <Button variant='outlined' >
-                Reset
-            </Button>
-            <Button variant='contained' onClick={handleUpdateSlotConfig} >
-                Update Configuration
-            </Button>
+                    <label className="appt-toggle">
+                        <input
+                            type="checkbox"
+                            className="appt-toggle-input"
+                            checked={enabled}
+                            onChange={(e) => setEnabled(e.target.checked)}
+                        />
+                        <span className="appt-toggle-slider" />
+                    </label>
+                </div>
+
+                <div className="appt-config-actions">
+                    <button className="appt-btn appt-btn--outline" onClick={handleReset}>
+                        Reset
+                    </button>
+                    <button className="appt-btn appt-btn--primary" onClick={handleUpdateSlotConfig}>
+                        Update Configuration
+                    </button>
+                </div>
+            </div>
         </div>
-        </div>
-    </div>
-  )
+    );
 }
 
 export default AppointmentConfiguration

@@ -1,6 +1,8 @@
+'use client';
+
 import { Button, Card, Stack, TextField, Typography } from "@mui/material";
 import RichEditor from "../common/BundledRichEditor/RichEditor";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Popup from "../common/Popup";
 import { fetchLongDescriptions, fetchShortDescriptions } from "../../services/api/business.service";
 import { ACTIVE_BUSINESS_ID } from "../../utils/constants";
@@ -9,8 +11,6 @@ import { updateBusinessProfileAction } from "../../Redux/Actions/BusinessActions
 
 const AboutUsTab = ({ profile, setProfile }: any) => {
 
-    const editorRef = useRef(null);
-    const generateRef =useRef(undefined);
     const [profileDetails, setProfileDetails] = useState(profile);
     const [hideSubmit, setHideSubmit] = useState(true);
 
@@ -47,7 +47,7 @@ const AboutUsTab = ({ profile, setProfile }: any) => {
     }
 
     const popupContent = () =>{
-        return (<div style={{display: "flex", flexDirection:"column", justifyContent:"space-between", height: "750px"}}>
+        return (<div style={{display: "flex", flexDirection:"column", justifyContent:"space-between", gap: "16px"}}>
             <div style={{display:"flex", justifyContent:"space-between", padding:"2%"}}>
                 <Button onClick={()=>handlePagination("PREVIOUS")} variant="contained" disabled={pagination.page === 1}>Previous</Button>
                 <Button onClick={()=>handlePagination("NEXT")} variant="contained">Next</Button>
@@ -64,17 +64,11 @@ const AboutUsTab = ({ profile, setProfile }: any) => {
             <div>
                 <Card sx={{ padding: "2% 2%", width: "100%", display: "flex", flexDirection:"column"}}>
                 <Typography variant="h6">Long Description</Typography>
-                <div style={{cursor:"pointer", padding: "2% 2%",}}>
+                <div style={{cursor:"pointer", padding: "2% 2%", maxHeight: "50vh", overflowY: "auto"}}>
                 <RichEditor
-                disabled={true}
-                    onInit={(_evt: any, editor: any) => generateRef.current = editor}
-                    initialValue={"<html>" + descriptions.long + "</html>"}
-                    init={{
-                        height: 450,
-                        width: "100%",
-                        menubar: false,
-                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                    }}
+                    readOnly={true}
+                    value={descriptions.long || ''}
+                    height={300}
                 />
                 </div>
                 <Button onClick={()=>{setProfileDetails({ ...profileDetails, description: ("<html>"+ descriptions.long+"</html>")}); setSelectedDescription({...selectedDescription, isLongSelected: true});}} variant="outlined">Select Long Description </Button>
@@ -127,14 +121,13 @@ const AboutUsTab = ({ profile, setProfile }: any) => {
     }
 
     return (
-        <div className="container  w-full" style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-4 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+        <div className="container w-full" style={{ fontFamily: "source Sans pro" }}>
+            <div className="bg-white p-4 shadow-md w-full tab-wrapper-responsive" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
                 <Stack width={"100%"} style={{  }}>
-                    <Card sx={{ padding: "2%", height:"560px" }}>
-                        <div className="h-full w-full ">
-                            <div className="mb-2" style={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
-                                <h2 className="text-xl font-semibold mb-4">Short Description</h2>
-                                <Button variant="contained" onClick={()=>handleGenerateDescription()} sx={{backgroundColor: "rgba(89, 50, 234, 1)"}}>Generate With AI</Button>
+                        <div className="w-full ">
+                            <div className="mb-2" style={{display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap: "wrap", gap: "8px"}}>
+                                <h2 className="text-xl font-semibold mb-4" style={{fontSize: "clamp(1rem, 2.5vw, 1.25rem)"}}>Short Description</h2>
+                                <Button variant="contained" size="small" onClick={()=>handleGenerateDescription()} sx={{backgroundColor: "rgba(89, 50, 234, 1)"}}>Generate With AI</Button>
                             </div>
 
                             <div className="">
@@ -154,34 +147,17 @@ const AboutUsTab = ({ profile, setProfile }: any) => {
 
                                 <div className='editordiv w-full'>
                                     <RichEditor
-                                        onInit={(_evt: any, editor: any) => editorRef.current = editor}
-                                        initialValue={profileDetails.description}
-                                        init={{
-                                            height: 340,
-                                            width: "100%",
-                                            menubar: false,
-                                            plugins: [
-                                                'advlist', 'anchor', 'autolink', 'link', 'lists',
-                                                'searchreplace', 'table', 'wordcount', 'code', 'directionality', 'media', 'preview', 'image', 'emoticons'
-                                            ],
-                                            toolbar: 'undo redo | blocks | ' +
-                                                'bold italic underline forecolor | alignleft aligncenter ' +
-                                                'alignright alignjustify | bullist numlist outdent indent | ' +
-                                                'code directionality media table preview image emoticons',
-                                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-
-                                        }}
-
-                                        onChange={() => {setProfileDetails({ ...profileDetails, description: (editorRef.current as any).getContent()}); setHideSubmit(true); }}
+                                        value={profileDetails.description || ''}
+                                        height={340}
+                                        onChange={(content: string) => setProfileDetails({ ...profileDetails, description: content })}
                                     />
                                 </div>
 
                             </div>
                         </div>
-                    </Card>
                 </Stack>
 
-                <div style={{display:"flex", justifyContent:"space-between", marginTop: "2%"}}>
+                <div style={{display:"flex", justifyContent:"space-between", marginTop: "16px"}}>
                     <Button variant='outlined' >
                         Reset
                     </Button>

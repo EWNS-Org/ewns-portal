@@ -30,3 +30,23 @@ export const verifyEmail = async (token: any) => {
         console.error(error);
     }
 };
+
+export const forgotPassword = async (email: string) => {
+    try {
+        const res: any = await post('/auth/forgot-password', { email });
+        return res;
+    } catch (error: any) {
+        toast.error("Error sending reset email");
+        console.error(error);
+    }
+};
+
+export const resetPassword = async (token: string, newPassword: string) => {
+    try {
+        const res: any = await post('/auth/reset-password', { token, newPassword });
+        return res;
+    } catch (error: any) {
+        toast.error("Error resetting password");
+        console.error(error);
+    }
+};

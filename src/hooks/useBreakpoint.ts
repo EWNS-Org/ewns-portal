@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
 
 // Tailwind breakpoints (based on Tailwind's default values)
@@ -11,6 +13,7 @@ const breakpoints = {
 
 // Function to get the current breakpoint
 const getBreakpoint = () => {
+    if (typeof window === 'undefined') return 'md';
     if (window.matchMedia(breakpoints['2xl']).matches) {
         return '2xl';
     } else if (window.matchMedia(breakpoints.xl).matches) {

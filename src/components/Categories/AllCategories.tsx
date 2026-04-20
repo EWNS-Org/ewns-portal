@@ -1,4 +1,6 @@
-import { Box, Button, Card, IconButton, Stack, TextField, Typography } from '@mui/material'
+'use client';
+
+import { Box, Button, Card, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addCategoryAction, addSubCategoryAction, deleteCategoryAction, deleteSubCategoryAction, getAllCategoriesAction, getCategoryDetailsAction, getSubCategoryDetailsAction, updateCategoryAction, updateSubCategoryDetailsAction } from '../../Redux/Actions/Categories/category.actions';
@@ -45,6 +47,7 @@ function AllCategories() {
       name: "",
       description: "",
       imageUrl: "",
+      type: "COMMON",
       categoryId: "",
       subCategoryId: "",
       parentCategoryId: ""
@@ -142,13 +145,13 @@ function AllCategories() {
         }
         let businessID = localStorage.getItem(ACTIVE_BUSINESS_ID);
         if(isPopupOpen.create){
-          await dispatch(addCategoryAction(businessID, {...formValues, imageUrl: previewData}) as any);
+          await dispatch(addCategoryAction(businessID, {...formValues, imageUrl: previewData, type: formValues.type}) as any);
         }else if (isPopupOpen.createSub){
-          await dispatch(addSubCategoryAction(businessID, formValues.categoryId, formValues.parentCategoryId, {name: formValues.name, description: formValues.description, imageUrl: previewData}) as any);
+          await dispatch(addSubCategoryAction(businessID, formValues.categoryId, formValues.parentCategoryId, {name: formValues.name, description: formValues.description, imageUrl: previewData, type: formValues.type}) as any);
         } else if (isPopupOpen.update){
-          await dispatch(updateCategoryAction(businessID, formValues.categoryId, {name: formValues.name, description: formValues.description, imageUrl: previewData}) as any);
+          await dispatch(updateCategoryAction(businessID, formValues.categoryId, {name: formValues.name, description: formValues.description, imageUrl: previewData, type: formValues.type}) as any);
         }else if (isPopupOpen.updateSub){
-          await dispatch(updateSubCategoryDetailsAction(businessID, formValues.categoryId, formValues.subCategoryId, {name: formValues.name, description: formValues.description, imageUrl: previewData}) as any);
+          await dispatch(updateSubCategoryDetailsAction(businessID, formValues.categoryId, formValues.subCategoryId, {name: formValues.name, description: formValues.description, imageUrl: previewData, type: formValues.type}) as any);
         }
         await dispatch(getAllCategoriesAction(businessID) as any);
         setIsPopupOpen({
@@ -162,40 +165,46 @@ function AllCategories() {
       }
 
       const getCreateCategoryChildren = (type: any) => {
+        const imageUrl = previewData || formValues.imageUrl;
         return(
-          <div style={{display:"flex", justifyContent:'space-between', width:"100%", height:"600px", flexWrap:"wrap"}}>
-            <TextField sx={{width:"48%"}} value={formValues.name} onChange={(e)=>setFormValues({...formValues, name: e.target.value})}  label='Name' fullWidth></TextField>
-            <TextField  sx={{width:"48%"}} value={formValues.description} onChange={(e)=>setFormValues({...formValues, description: e.target.value})} label='Description' fullWidth></TextField>
-            <div style={{ width: "800px", height: "450px" }}>
-                <Typography variant='h6'>Category Image</Typography>
-                <div className="containerr" style={{  width:"100%", height:"100%"}}>
-                    <img src={formValues.imageUrl && formValues.imageUrl !== "" ? formValues.imageUrl : (previewData || "https://placehold.co/1200.png?text=No+Image")} alt="Avatar" className="image" style={{ width: "100%" }} />
-                    <div className="middle">
-                        <div style={{ flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <IconButton component="label" sx={{ color: "rgba(89, 50, 234, 1)" }}>
-                                <EditIcon fontSize="large" sx={{ color: "rgba(89, 50, 234, 1)" }} />
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    hidden
-                                    onChange={(e) => handleImageChange(e)}
-                                />
-                            </IconButton>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: { xs: 0, md: 1 } }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+              <TextField size="small" value={formValues.name} onChange={(e)=>setFormValues({...formValues, name: e.target.value})} label='Name' fullWidth />
+              <TextField size="small" value={formValues.description} onChange={(e)=>setFormValues({...formValues, description: e.target.value})} label='Description' fullWidth />
+            </Box>
+            <FormControl size="small" fullWidth>
+              <InputLabel id="category-type-label">Type</InputLabel>
+              <Select labelId="category-type-label" value={formValues.type} label="Type" onChange={(e) => setFormValues({...formValues, type: e.target.value})}>
+                <MenuItem value="COMMON">Common</MenuItem>
+                <MenuItem value="PRODUCT">Product</MenuItem>
+                <MenuItem value="SERVICE">Service</MenuItem>
+                <MenuItem value="BLOG">Blog</MenuItem>
+              </Select>
+            </FormControl>
+            <Box>
+                <Typography variant='subtitle2' sx={{ fontWeight: 600, color: '#475569', mb: 1, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Category Image</Typography>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                    {imageUrl && imageUrl !== "" && (
+                        <Box sx={{ position: 'relative', width: 120, height: 120, borderRadius: '10px', overflow: 'hidden', border: '1px solid #e2e8f0', flexShrink: 0 }}>
+                            <img src={imageUrl} alt="Category" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             <IconButton
-                                sx={{ color: "rgba(89, 50, 234, 1)" }}
-                                onClick={() => handleDeleteImage()}
-                                disabled={!previewData}
+                                size="small"
+                                onClick={() => { handleDeleteImage(); setFormValues({...formValues, imageUrl: ""}); }}
+                                sx={{ position: 'absolute', top: 4, right: 4, backgroundColor: 'rgba(0,0,0,0.5)', color: '#fff', width: 24, height: 24, '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' } }}
                             >
-                                <DeleteIcon fontSize="large" />
+                                <DeleteIcon sx={{ fontSize: 16 }} />
                             </IconButton>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <Button onClick={()=>handleCategoryCreate()} variant='contained' sx={{marginTop:"2%", width:"100%"}}>{type}</Button>
-
-          </div>
-          
+                        </Box>
+                    )}
+                    <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: 120, height: 120, border: '2px dashed #cbd5e1', borderRadius: '10px', cursor: 'pointer', color: '#94a3b8', transition: 'border-color 0.2s' }}>
+                        <EditIcon sx={{ fontSize: 28, mb: 0.5 }} />
+                        <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>{imageUrl ? 'Change' : 'Add Image'}</span>
+                        <input type="file" accept="image/*" hidden onChange={(e) => handleImageChange(e)} />
+                    </label>
+                </Box>
+            </Box>
+            <Button onClick={()=>handleCategoryCreate()} variant='contained' fullWidth sx={{ textTransform: 'none', fontWeight: 600, borderRadius: '8px', backgroundColor: '#5932EA', '&:hover': { backgroundColor: '#4a28d4' }, py: 1.2 }}>{type}</Button>
+          </Box>
         )
       }
 
@@ -234,15 +243,15 @@ function AllCategories() {
 
       const handleClosePopup = (field: any) => {
         setIsPopupOpen({...isPopupOpen, [field]: false});
-        setFormValues({name: "", description: "", imageUrl: ""});
+        setFormValues({name: "", description: "", imageUrl: "", type: "COMMON"});
         setPreviewData(null);
       }
 
   return (
     <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-        <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderRadius: "15px" }}>
+        <div className=" bg-white p-4 md:p-6 shadow-md w-full" style={{ borderRadius: "15px" }}>
             <Stack spacing={4} width={"100%"} style={{ }}>
-                <Card sx={{ padding: "2%", height: "630px" }}>
+                <Card sx={{ padding: "2%", minHeight: {xs: "auto", md: "630px"} }}>
                   <div style={{display:"flex", justifyContent:"end"}}>
                     <Button onClick={()=>setIsPopupOpen({...isPopupOpen, create: true})} variant='contained' >Add New Category</Button>
                   </div>
