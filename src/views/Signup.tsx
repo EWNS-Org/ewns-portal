@@ -247,7 +247,7 @@ function Signup() {
                                                     label="Country Code"
                                                     onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
                                                     renderValue={(selected) => {
-                                                        const entry = Object.entries(countryList).find(([, v]) => v.dial_code === selected);
+                                                        const entry = Object.entries(countryList).find(([, v]: [string, any]) => v.dial_code === selected) as [string, any] | undefined;
                                                         if (!entry) return selected;
                                                         return (
                                                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
