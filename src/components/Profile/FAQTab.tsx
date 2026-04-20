@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import Popup from '../common/Popup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +11,7 @@ import { fetchPincodeDetails } from '../../services/api/postalcode.service';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { FormControl, InputLabel, Select, TextField, Theme, Tooltip, styled } from "@mui/material";
+import { FormControl, InputLabel, Select, TextField, Theme, Tooltip, styled, useMediaQuery, useTheme } from "@mui/material";
 import { Box, Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, Grid, MenuItem, Stack, Switch, SwitchProps, Typography } from '@mui/material'
 import { popularFAQs } from '../../utils/constants/faqs';
 
@@ -25,6 +27,8 @@ const initialFaqs = [
 
 const FAQTab = ({ profile, setProfile }: any) => {
     const [allFaqs, setAllFaqs] = useState(initialFaqs);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const faqs = useSelector((state: any) => {
         return state.business.businessFAQs
     });
@@ -245,40 +249,37 @@ const FAQTab = ({ profile, setProfile }: any) => {
     }));
     return (
         <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+            <div className="bg-white shadow-md w-full tab-wrapper-responsive" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", padding: isMobile ? '12px' : '24px' }}>
                 <Stack spacing={4} width={"100%"} style={{  }}>
-                    <Card sx={{ padding: "2%", height: "630px" }}>
                         <Box sx={{  }}>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <Typography variant='h5'>All FAQs</Typography>
+                            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                                <Typography variant='h5' sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }}>All FAQs</Typography>
                                 <Button
                                     variant="contained"
                                     color="primary"
+                                    size={isMobile ? 'small' : 'medium'}
                                     onClick={() => { setFormValues(initialFormData); setIsPopupOpen({ ...isPopupOpen, createFAQPopup: true }); }}
-                                    sx={{  zIndex: 0, backgroundColor: "rgba(89, 50, 234, 1)" }}
+                                    sx={{ zIndex: 0, backgroundColor: "rgba(89, 50, 234, 1)" }}
                                 >
                                     Add New FAQ
                                 </Button>
                             </div>
 
-                            <Grid container sx={{ padding: "2%", overflow: "auto", height: "500px", justifyContent: "center", display: "flex" }}>
+                            <Grid container className="tab-scroll-area" sx={{ padding: { xs: '8px', md: '2%' }, justifyContent: "center", display: "flex", marginTop: '8px' }}>
                                 {allFaqs?.length > 0 ? allFaqs.map((faq: any, index: number) => (
-                                    <Grid item key={index} sx={{ width: "100%", height:"200px" }} >
-                                        <Card sx={{ padding: "1% 2%", width: "100%", display: "flex", }}>
-                                            <div style={{ cursor: "pointer", padding: "2% 0%", width: "90%" }} >
-                                                <Typography variant='h6'>{faq.question}</Typography>
-                                                <Typography color='gray' sx={{ fontSize: "15px", marginTop: "2%" }}>{faq.answer}</Typography>
+                                    <Grid item key={index} sx={{ width: "100%" }} >
+                                        <Card sx={{ padding: { xs: '10px 12px', md: '1% 2%' }, width: "100%", display: "flex", flexDirection: { xs: 'column', md: 'row' }, marginBottom: '8px' }}>
+                                            <div style={{ cursor: "pointer", padding: "2% 0%", flex: 1, minWidth: 0, overflow: 'hidden' }} >
+                                                <Typography variant='h6' sx={{ fontSize: { xs: '0.9rem', md: '1.25rem' }, wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: { xs: 2, md: 3 }, WebkitBoxOrient: 'vertical' }}>{faq.question}</Typography>
+                                                <Typography color='gray' sx={{ fontSize: { xs: '12px', md: '15px' }, marginTop: '6px', wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: { xs: 3, md: 5 }, WebkitBoxOrient: 'vertical' }}>{faq.answer}</Typography>
                                             </div>
-                                            <CardActions sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                                                <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", marginBottom: "30%" }}>
-                                                    <EditIcon onClick={() => editLink(faq._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
-                                                    <DeleteIcon onClick={() => deleteLink(faq._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
-                                                </div>
-
+                                            <CardActions sx={{ display: "flex", flexDirection: { xs: 'row', md: 'column' }, justifyContent: { xs: 'flex-start', md: 'center' }, alignItems: 'center', gap: 1, padding: { xs: '8px 0 0', md: '0' }, borderTop: { xs: '1px solid #f3f4f6', md: 'none' }, minWidth: { md: '60px' } }}>
+                                                <EditIcon onClick={() => editLink(faq._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)", fontSize: { xs: '20px', md: '24px' } }} />
+                                                <DeleteIcon onClick={() => deleteLink(faq._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)", fontSize: { xs: '20px', md: '24px' } }} />
                                                 <FormControlLabel
-                                                    sx={{ height: "20%" }}
-                                                    control={<IOSSwitch sx={{}} checked={faq.isActive} />}
-                                                    label={``}
+                                                    sx={{ margin: 0 }}
+                                                    control={<IOSSwitch checked={faq.isActive} />}
+                                                    label=""
                                                     onChange={(e: any) =>
                                                         toggleFAQ(faq._id, e.target.checked)
                                                     }
@@ -286,10 +287,9 @@ const FAQTab = ({ profile, setProfile }: any) => {
                                             </CardActions>
                                         </Card>
                                     </Grid>)) :
-                                    <Typography > No Question and Answers found</Typography>}
+                                    <Typography>No Question and Answers found</Typography>}
                             </Grid>
                         </Box>
-                    </Card>
                 </Stack>
             </div>
             <div style={{ height: "50%" }}>

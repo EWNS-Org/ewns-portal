@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react'
 import "./Signup.css";
 import Box from '@mui/material/Box';
@@ -9,14 +11,15 @@ import toast from 'react-hot-toast';
 import { countryList } from '../utils/constants/country-flag';
 import useTailwindBreakpoint from '../hooks/useBreakpoint';
 import { register } from '../services/api/auth.api.service';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { categories } from '../utils/constants/categories';
 import { validateFields } from '../Helpers/common.helper';
 
 
 
 function Signup() {
-    const navigate = useNavigate()
+    const router = useRouter()
+    const navigate = (path: string) => router.push(path)
     const [hideNext, setHideNext] = useState(true)
 
     const { showLoader, hideLoader } = useLoader();
@@ -122,26 +125,26 @@ function Signup() {
     }
 
     return (
-        <div className='login-page' style={{ height: "1000px", overflow:"hidden" }} >
-            <Grid container spacing={0} sx={{ margin: "0px", display: "flex", flexWrap: "wrap", width: "100%", height: "100%" }} >
-                <Grid size={6} sx={{ display: breakpoint === "xs" ? "none" : "flex", height: "100%" }} >
-                    <div className='left-signup '>
+        <div className='login-page'>
+            <Grid container spacing={0} sx={{ margin: "0px", display: "flex", flexWrap: "wrap", width: "100%", minHeight: "100vh" }} >
+                <Grid size={{ xs: 12, md: 6 }} sx={{ display: { xs: "none", md: "flex" }, minHeight: "100vh" }} >
+                    <div className='left-signup'>
                         <div className='left-theme'>
                             <div className='logo'>
-                                <img src="assets/logo.png" width={"200px"} />
+                                <img src="/assets/ewns-logo.svg" style={{ width: '100%', maxWidth: '200px' }} alt="logo" />
                             </div>
                             <div className='left-content'>
-                                <Typography variant='h4' color='rgba(1, 82, 168, 1)' fontSize={"40px"} >Take Your <span style={{ fontWeight: "bold" }}>Business Online </span>
+                                <Typography variant='h4' color='rgba(1, 82, 168, 1)' sx={{ fontSize: { xs: '28px', md: '40px' } }} >Take Your <span style={{ fontWeight: "bold" }}>Business Online </span>
                                     within minutes !!</Typography>
                             </div>
-                            <div style={{ display: "flex", justifyContent: "center", marginTop: "2%", height: "100%" }} className='signup-lef-img'>
-                                <img src="assets/signup-left.svg" alt='signup-left' width={"600px"} height={"100%"} />
+                            <div style={{ display: "flex", justifyContent: "center", marginTop: "2%" }} className='signup-lef-img'>
+                                <img src="assets/signup-left.svg" alt='signup-left' style={{ maxWidth: "100%", height: "auto" }} />
                             </div>
                         </div>
 
                     </div>
                 </Grid>
-                <Grid size={6} sx={{ width: "50%", height: "1000px" }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <div className='right-signup'>
                         <div className='signup-part'>
                             <Typography onClick={() => setShowStep(showStep-1)} variant='h2' sx={{ alignItems: "center", justifyContent: "center", display: showStep > 1 ? "flex" : "none", color: "blue", cursor: "pointer" }}> {"<"} </Typography>
@@ -149,7 +152,7 @@ function Signup() {
                             <Typography sx={{ alignItems: "end", justifyContent: "end", display: "flex" }} variant='h5' margin="2%">(Step&nbsp;<strong style={{ color: "blue" }}>{showStep}</strong> &nbsp;of 3)
                             </Typography>
                         </div>
-                        <Typography variant='h5' marginY={"2%"} sx={{ color: "gray" }}>It’s time to get your business online</Typography>
+                        <Typography variant='h5' marginY={"2%"} sx={{ color: "gray" }}>It's time to get your business online</Typography>
                         <div className='signup-form'>
                             {showStep === 1 && <div className='step-one'>
                                         <TextField
@@ -167,26 +170,26 @@ function Signup() {
                                             value={formData.email}
                                             sx={{ marginBottom: "3%", width: "100%" }}
                                         />
-                                        <div style={{ display: "flex" }}>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                                             <TextField
                                                 required
                                                 id="outlined-required"
                                                 label="Password"
                                                 value={formData.password}
                                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                                sx={{ marginBottom: "2%", marginRight: "2%", width: "60%" }}
+                                                sx={{ marginBottom: "2%", flex: 1, minWidth: { xs: "100%", sm: "200px" } }}
                                             /><TextField
                                                 required
                                                 id="outlined-required"
                                                 label="Confirm Password"
                                                 value={formData.confirmPassword}
                                                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                                sx={{ marginBottom: "2%", width: "60%" }}
+                                                sx={{ marginBottom: "2%", flex: 1, minWidth: { xs: "100%", sm: "200px" } }}
                                             />
                                         </div>
 
-                                        <div style={{ display: "flex", width: "100%", marginBottom: "2%", }}>
-                                            <Box sx={{ width: "30%" }}>
+                                        <div style={{ display: "flex", flexWrap: "wrap", width: "100%", marginBottom: "2%", gap: "8px" }}>
+                                            <Box sx={{ width: { xs: "100%", sm: "30%" } }}>
                                                 <FormControl sx={{ width: "100%", height: "100%" }}>
                                                     <InputLabel id="demo-simple-select-label">Country Code</InputLabel>
                                                     <Select required
@@ -215,7 +218,7 @@ function Signup() {
                                         </div>
 
                             </div>}
-                            {showStep === 2 && <div className='step-one'>                                        
+                            {showStep === 2 && <div className='step-one'>
                                         <TextField
                                         required
                                         value={formData.addressLine1}
@@ -240,14 +243,14 @@ function Signup() {
                                         sx={{ marginBottom: "2%", width: "100%", marginRight: "2%" }}
                                         onChange={(e) => setFormData({ ...formData, landmark: e.target.value })}
                                     />
-                                    <div style={{ display: "flex", justifyContent: "space-between   " }}>
+                                    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "8px" }}>
                                         <TextField
                                             type='number'
                                             required
                                             disabled={formData.pincode.length === 6}
                                             id="outlined-required"
                                             label="Zip Code"
-                                            sx={{ marginBottom: "2%", marginRight: "2%", width: "50%" }}
+                                            sx={{ marginBottom: "2%", flex: 1, minWidth: { xs: "100%", sm: "150px" } }}
                                             value={formData.pincode}
                                             onChange={(e) => handlePincodeChange(e)}
                                         />
@@ -257,21 +260,21 @@ function Signup() {
                                             id="outlined-required"
                                             label={formData.city || "City"}
                                             value={formData.city}
-                                            sx={{ marginBottom: "2%", width: "60%" }}
+                                            sx={{ marginBottom: "2%", flex: 1, minWidth: { xs: "100%", sm: "150px" } }}
                                         />
                                     </div>
-                                    <div style={{ display: "flex" }}>
+                                    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                                         <TextField
                                             disabled
                                             id="outlined-required"
                                             value={formData.state}
                                             label={formData.state || "State"}
-                                            sx={{ marginBottom: "2%", marginRight: "2%", width: "60%" }}
+                                            sx={{ marginBottom: "2%", flex: 1, minWidth: { xs: "100%", sm: "150px" } }}
                                         /><TextField
                                             disabled
                                             id="outlined-required"
                                             label={formData.country || "Country"}
-                                            sx={{ marginBottom: "2%", width: "60%" }}
+                                            sx={{ marginBottom: "2%", flex: 1, minWidth: { xs: "100%", sm: "150px" } }}
                                             value={formData.country}
                                         />
                                     </div>
@@ -329,7 +332,7 @@ function Signup() {
                                 </Box>
                             </div>}
                         </div>
-                        <Button disabled={hideNext} onClick={handleNext} variant='contained' sx={{ width: "100%", height: "5%" }}>Next</Button>
+                        <Button disabled={hideNext} onClick={handleNext} variant='contained' sx={{ width: "100%", minHeight: "50px" }}>Next</Button>
 
                         <div style={{ marginTop: "3%" }}>
                             <Typography variant={breakpoint === 'xs' ? 'caption' : 'h6'}>Already have an account ? &nbsp;<a href="/login" style={{ color: "blue" }}>Log In here</a></Typography>
@@ -337,7 +340,7 @@ function Signup() {
                     </div>
                 </Grid>
             </Grid>
-        </div >
+        </div>
     )
 }
 

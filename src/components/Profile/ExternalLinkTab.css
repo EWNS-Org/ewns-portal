@@ -65,3 +65,23 @@
 
   }
 
+  @media (max-width: 768px) {
+    .business-links {
+      padding: 12px;
+    }
+
+    .link-form {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .link-form input {
+      width: 100%;
+    }
+
+    .popular-sites {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+

@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Button, Card, Checkbox, DialogContent, FormControl, FormControlLabel, FormLabel, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import HelpIcon from '@mui/icons-material/Help';
 import React, { useEffect, useState }from 'react'
@@ -224,44 +226,44 @@ function AddProduct() {
 
   return (
     <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-      <div className=" bg-white p-6 h-[720px] shadow-md w-full" style={{ borderRadius: "15px" }}>
+      <div className=" bg-white p-4 md:p-6 shadow-md w-full" style={{ borderRadius: "15px" }}>
         <Stack spacing={2} width={"100%"} style={{ padding: "1%" }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
-                    <Typography variant='h5'>Add Product</Typography>
+              <div className="page-header-responsive">
+                <div style={{display:"flex", justifyContent:"space-between", width:"100%", flexWrap: "wrap", gap: "8px"}}>
+                    <Typography variant='h5' sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }}>Add Product</Typography>
                     <Button variant='outlined' onClick={()=>setPrefillPopup(true)}>Prefill Product Data</Button>
                 </div>
               </div>
-                <div style={{}}>
+                <div>
 
                     <Card className='no-scrollbar' sx={{ overflow:"auto", width:"100%", height: "200px", marginBottom: "2%", display:"flex", alignItems: "center", padding: "0% 1%"}}>
                         {getProductFiles()}
                     </Card>
-                    <div style={{display:"flex", justifyContent:"space-between", marginBottom: "2%"}}>
+                    <div className="form-row-responsive">
                         <TextField
                             label="Product Name"
-                            sx={{width: "20%"}}
+                            sx={{width: {xs: "100%", md: "20%"}}}
                             value={productData.name}
                             onChange={(e)=>handleProductNAmeAndSKU(e)}
                         />
-                        <div style={{width: "50%", display:"flex", justifyContent: "space-between"}}>
+                        <div className="flex-responsive" style={{flex: 1}}>
                             <TextField
                                 label="Product MRP Price"
-                                sx={{}}
+                                fullWidth
                                 type='number'
                                 onChange={(e)=>setProductData({...productData, price: {...productData.price, mrp: parseInt(e.target.value)}})}
                                 value={productData.price.mrp} 
                             />
                             <TextField
                                 label="Product Selling Price"
-                                sx={{}}
+                                fullWidth
                                 type='number'
                                 value={productData.price.sellingPrice} 
                                 onChange={(e)=>setProductData({...productData, price: {...productData.price, sellingPrice: parseInt(e.target.value)}})}
                             />
                             <TextField
                                 label="Stock"
-                                sx={{}}
+                                fullWidth
                                 type='number' 
                                 value={productData.stock}
                                 onChange={(e)=>setProductData({...productData, stock: parseInt(e.target.value)})}
@@ -270,20 +272,20 @@ function AddProduct() {
                         <TextField
                             label="Product SKU"
                             disabled
-                            sx={{width: "20%"}}
+                            sx={{width: {xs: "100%", md: "20%"}}}
                             value={productData.sku}
                         />
                     </div>
-                    <div style={{display:"flex", justifyContent:"space-between"}}>
+                    <div className="flex-responsive" style={{flexWrap: "wrap"}}>
                         <TextField
                             label="Product Description"
                             multiline
                             rows={9}
-                            sx={{width: "30%"}}
+                            sx={{width: {xs: "100%", md: "30%"}, minWidth: {xs: "100%", md: "250px"}}}
                             value={productData.description} 
                             onChange={(e)=>setProductData({...productData, description: e.target.value})}
                         />
-                        <Card sx={{height: "240px", width: "280px", padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
+                        <Card sx={{minHeight: "240px", flex: 1, minWidth: {xs: "100%", md: "250px"}, padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
                             <Typography variant='h6' color='gray' sx={{marginBottom:"5%"}}>GST Details</Typography>
                             <div style={{display:"flex", justifyContent:"space-between", flexDirection:"column"}}>
                                 <TextField 
@@ -311,7 +313,7 @@ function AddProduct() {
                             />
                             </div>
                         </Card>
-                        <Card sx={{height: "240px", width: "260px", padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
+                        <Card sx={{minHeight: "240px", flex: 1, minWidth: {xs: "100%", md: "250px"}, padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
                             <Typography variant='h6' color='gray' sx={{marginBottom:"5%"}}>Discount Details</Typography>
                             <div style={{display:"flex", justifyContent:"space-between", flexDirection:"column"}}>
                                 <FormControl sx={{marginBottom: "15%"}}>
@@ -333,16 +335,16 @@ function AddProduct() {
                                 {productData.discount.type === "amount" && <TextField label="Discount in Amount" value={productData.discount.amount || 0} onChange={(e)=>setProductData({...productData, discount: {...productData.discount, amount: parseInt(e.target.value)}})}/>}
                             </div>
                         </Card>
-                        <Card sx={{height: "240px", width: "260px", padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
+                        <Card sx={{minHeight: "240px", flex: 1, minWidth: {xs: "100%", md: "250px"}, padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
                             <Typography variant='h6' color='gray' sx={{marginBottom:"5%"}}>Select Category</Typography>
                             <div style={{display:"flex", justifyContent:"space-between"}}>
                                 <RecursiveCategorySelect options={categories} getCatDetails={(id: any) => setProductData({...productData, category: {categoryId: id.split("_mk_")[0], categoryName: id.split("_mk_")[1]}})}/>
                             </div>
                         </Card>
                     </div>
-                    <div style={{display: "flex", justifyContent: "space-between", marginTop: "1%"}}>
+                    <div className="form-row-responsive" style={{marginTop: "1%", alignItems: "center"}}>
                         <Button variant='outlined' onClick={()=>setShowAdditionalAttributePopup(true)}>Add Additional Attributes</Button>
-                        <div style={{width:"18%", display:"flex", justifyContent:"space-between"}}>
+                        <div style={{display:"flex", gap: "8px", justifyContent:"flex-end"}}>
                             <Button variant="outlined" color="primary" onClick={()=> {setProductData(initProductData)}}> Reset</Button>
                             <Button variant='contained' disabled={!showButton} onClick={() => handleAddProduct()}>Add Product</Button>
                         </div>
@@ -400,65 +402,50 @@ function AddProduct() {
                         label: "Cancel", onClick: () => handleCancel(), variant: "outlined"
                     }]}
                 >
-                    <div>
-                        <Card sx={{height: "320px", width: "100%", display: "flex", padding: "1%" }}>
-                            <div style={{padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
-                                <Typography variant='h6' color='gray' sx={{marginBottom:"3%"}}>Dimensions & Weight</Typography>
-                                <div style={{display:"flex", justifyContent:"space-between", flexDirection:"column"}}>
-                                    <TextField sx={{marginBottom: "3%"}} type="number" label="Product Width" value={productData.attributes.dimensions.width} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, dimensions: {...productData.attributes.dimensions, width: e.target.value}}})}/>
-                                    <TextField sx={{marginBottom: "3%"}} type="number" label="Product Length" value={productData.attributes.dimensions.length} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, dimensions: {...productData.attributes.dimensions, length: e.target.value}}})}/>
-                                    <TextField sx={{marginBottom: "3%"}} type="number" label="Product Height" value={productData.attributes.dimensions.height} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, dimensions: {...productData.attributes.dimensions, height: e.target.value}}})}/>
-                                    <TextField sx={{marginBottom: "3%"}} type="number" label="Product Weight" value={productData.attributes.weight.weight} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, weight: {...productData.attributes.weight, weight: e.target.value}}})}/>
-                                </div>
-                            </div>
-                            <div style={{padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
-                                <Typography variant='h6' color='gray' sx={{marginBottom:"3%"}}>Other Attributes</Typography>
-                                <div style={{display:"flex", justifyContent:"space-between", flexDirection:"column"}}>
-                                    <TextField sx={{marginBottom: "3%"}} label="Product Color" value={productData.attributes.color} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, color: e.target.value}})}/>
-                                    <TextField sx={{marginBottom: "3%"}} label="Product Size" value={productData.attributes.size } onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, size: e.target.value}})}/>
-                                    <TextField sx={{marginBottom: "3%"}} label="Product Brand" value={productData.attributes.brand} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, brand: e.target.value}})}/>
-                                    <TextField sx={{marginBottom: "3%"}} label="Product Material" value={productData.attributes.material} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, material: e.target.value}})}/>
-                                </div>
-                            </div>
-                            <div style={{padding:"1%", overflowY: "auto", display:"flex", flexDirection: "column", justifyContent:"top", alignItems:"center"}}>
-                                <Typography variant='h6' color='gray' sx={{marginBottom:"3%"}}>Units</Typography>
-                                <div style={{display:"flex", justifyContent:"space-between", flexDirection:"column"}}>
-                                <FormControl fullWidth sx={{marginBottom: "3%"}}>
-                                        <InputLabel id={`dimension-unit`}>Dimension Unit</InputLabel>
-                                        <Select
-                                            labelId={`dimension-unit`}
-                                            value={productData?.attributes?.dimensions?.unit || ""}
-                                            onChange={(e)=>setProductData({...productData, attributes: {...productData.attributes, dimensions: {...productData.attributes.dimensions, unit: e.target.value} }})}
-                                            label={`Dimension unit`}
-                                        >
-                                            {getDimensionUnits().map((unit: any) => (
-                                            <MenuItem key={unit.symbol} value={unit.symbol}>
-                                                {unit.label}
-                                            </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <FormControl fullWidth  sx={{marginBottom: "3%"}}>
-                                        <InputLabel id={`weight-unit`}>Weights Unit</InputLabel>
-                                        <Select
-                                            labelId={`weight-unit`}
-                                            value={productData?.attributes?.weight?.unit || ""}
-                                            onChange={(e)=>setProductData({...productData, attributes: {...productData.attributes, weight: {...productData.attributes.weight, unit: e.target.value} }})}
-                                            label={`Weight unit`}
-                                        >
-                                            {getWeightUnits().map((unit: any) => (
-                                            <MenuItem key={unit.symbol} value={unit.symbol}>
-                                                {unit.label}
-                                            </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <TextField sx={{marginBottom: "3%"}} type="number" label="Warranty in Years" value={productData.attributes.warrantyInYears} onChange={(e)=>setProductData({...productData, attributes:{...productData.attributes, warrantyInYears: e.target.value}})}/>
-                                    <TextField sx={{marginBottom: "3%"}} type="number" label="Avg Rating out of 5" value={productData.averageRating} onChange={(e)=>setProductData({...productData, averageRating: e.target.value})}/>
-                                </div>
-                            </div>
-                        </Card>
-                    </div>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, p: { xs: 1, md: 2 } }}>
+                        {/* Dimensions & Weight */}
+                        <Box>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#475569', mb: 1.5, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>Dimensions & Weight</Typography>
+                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                                <TextField size="small" type="number" label="Width" value={productData.attributes.dimensions.width} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, dimensions: {...productData.attributes.dimensions, width: e.target.value}}})}/>
+                                <TextField size="small" type="number" label="Length" value={productData.attributes.dimensions.length} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, dimensions: {...productData.attributes.dimensions, length: e.target.value}}})}/>
+                                <TextField size="small" type="number" label="Height" value={productData.attributes.dimensions.height} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, dimensions: {...productData.attributes.dimensions, height: e.target.value}}})}/>
+                                <TextField size="small" type="number" label="Weight" value={productData.attributes.weight.weight} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, weight: {...productData.attributes.weight, weight: e.target.value}}})}/>
+                            </Box>
+                        </Box>
+
+                        {/* Units */}
+                        <Box>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#475569', mb: 1.5, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>Units</Typography>
+                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                                <FormControl size="small" fullWidth>
+                                    <InputLabel id="dimension-unit">Dimension Unit</InputLabel>
+                                    <Select labelId="dimension-unit" value={productData?.attributes?.dimensions?.unit || ""} onChange={(e)=>setProductData({...productData, attributes: {...productData.attributes, dimensions: {...productData.attributes.dimensions, unit: e.target.value}}})} label="Dimension Unit">
+                                        {getDimensionUnits().map((unit: any) => (<MenuItem key={unit.symbol} value={unit.symbol}>{unit.label}</MenuItem>))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl size="small" fullWidth>
+                                    <InputLabel id="weight-unit">Weight Unit</InputLabel>
+                                    <Select labelId="weight-unit" value={productData?.attributes?.weight?.unit || ""} onChange={(e)=>setProductData({...productData, attributes: {...productData.attributes, weight: {...productData.attributes.weight, unit: e.target.value}}})} label="Weight Unit">
+                                        {getWeightUnits().map((unit: any) => (<MenuItem key={unit.symbol} value={unit.symbol}>{unit.label}</MenuItem>))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </Box>
+
+                        {/* Other Attributes */}
+                        <Box>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#475569', mb: 1.5, textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>Other Attributes</Typography>
+                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                                <TextField size="small" label="Color" value={productData.attributes.color} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, color: e.target.value}})}/>
+                                <TextField size="small" label="Size" value={productData.attributes.size} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, size: e.target.value}})}/>
+                                <TextField size="small" label="Brand" value={productData.attributes.brand} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, brand: e.target.value}})}/>
+                                <TextField size="small" label="Material" value={productData.attributes.material} onChange={(e)=> setProductData({...productData, attributes: {...productData.attributes, material: e.target.value}})}/>
+                                <TextField size="small" type="number" label="Warranty (Years)" value={productData.attributes.warrantyInYears} onChange={(e)=>setProductData({...productData, attributes:{...productData.attributes, warrantyInYears: e.target.value}})}/>
+                                <TextField size="small" type="number" label="Avg Rating (out of 5)" value={productData.averageRating} onChange={(e)=>setProductData({...productData, averageRating: e.target.value})}/>
+                            </Box>
+                        </Box>
+                    </Box>
                 </Popup>}
 
         </Stack>

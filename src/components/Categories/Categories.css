@@ -28,7 +28,9 @@
   }
 
   .img-testimonial{
-    width: 450px;
-    height: 250px !important;
+    width: 100%;
+    max-width: 450px;
+    height: auto !important;
+    object-fit: cover;
   }
   

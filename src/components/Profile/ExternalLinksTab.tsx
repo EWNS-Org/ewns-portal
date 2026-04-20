@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import './ExternalLinkTab.css'; // Optional: Create a separate CSS file for styling
 import { Box, Button, Card, CardActions, CardContent, Checkbox, Grid, Stack, Tooltip, Typography } from '@mui/material';
@@ -172,11 +174,11 @@ const ExternalLinksTab = ({ profile, setProfile }: any) => {
     }
 
     const getPopularLinks = () => {
-        return (<div style={{ marginTop: "2%" }}>
-            <Typography variant='h6'>Popular Links</Typography>
-            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
+        return (<div style={{ marginTop: "12px" }}>
+            <Typography variant='h6' sx={{ fontSize: { xs: '1rem', md: '1.25rem' }, marginBottom: '8px' }}>Popular Links</Typography>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                 {popularSocialSites.map((site: any) => {
-                    return <Button sx={{ cursor: "pointer", padding: "2%" }} onClick={() => setFormValues({ ...formValues, title: site.title, logo: site.logo })}> <img src={site.logo} width="40px" height="40px" /></Button>
+                    return <Button key={site.title} sx={{ cursor: "pointer", padding: "8px", minWidth: "48px" }} onClick={() => setFormValues({ ...formValues, title: site.title, logo: site.logo })}> <img src={site.logo} width="32px" height="32px" alt={site.title} /></Button>
                 })}
             </div>
         </div>)
@@ -185,51 +187,43 @@ const ExternalLinksTab = ({ profile, setProfile }: any) => {
 
 
     return (
-        <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+        <div className="w-full" style={{ fontFamily: "source Sans pro" }}>
+            <div className="bg-white shadow-md w-full tab-wrapper-responsive" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", padding: "clamp(12px, 3vw, 24px)" }}>
                 <Stack spacing={4} width={"100%"} style={{ }}>
-                    <Card sx={{ padding: "2%", height: "630px" }}>
                         <Box sx={{  }}>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <Typography variant='h5'>All links</Typography>
+                            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                                <Typography variant='h5' sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }}>All links</Typography>
                                 <Button
                                     variant="contained"
                                     color="primary"
                                     onClick={() => { setFormValues(initialFormData); setIsPopupOpen({ ...isPopupOpen, createAddressPopup: true }); }}
-                                    sx={{ marginBottom: '20px', zIndex: 0, backgroundColor: "rgba(89, 50, 234, 1)" }}
+                                    sx={{ zIndex: 0, backgroundColor: "rgba(89, 50, 234, 1)" }}
                                 >
                                     Add New Link
                                 </Button>
                             </div>
 
-                            <Grid container spacing={2} sx={{ overflowY: "auto", padding: "1%" }}>
+                            <Grid container spacing={2} className="links-grid tab-scroll-area" sx={{ padding: "1%", marginTop: '8px' }}>
                                 {links?.length > 0 ? links.map((link: any) => (
-                                    <Grid item md={3} key={link._id} sx={{ width: "300px", height: "100px" }} >
-                                        <Card sx={{ borderTop: "1px solid gray", width: "100%", height: "100%" }}>
-                                            <CardContent sx={{ display: "flex", width: "100%", justifyContent: "space-between", }}>
-                                                <Tooltip
-                                                    title={`Go to : ${link.url}`}
-                                                    placement="top"
-                                                    arrow
-                                                >
-                                                    <div onClick={() => window.open(link.url, "_blank")} style={{ display: "flex", alignItems: "center", width: "60%", justifyContent: "start", cursor: "pointer" }}>
-                                                        <img src={link.logo} width="45" height="45" />
-                                                        <Typography variant="h6" sx={{ marginLeft: "5%", }}>{link.title}</Typography>
+                                    <Grid item xs={12} sm={6} md={3} key={link._id}>
+                                        <Card sx={{ borderTop: "1px solid gray", width: "100%" }}>
+                                            <CardContent sx={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 1, padding: { xs: '8px 12px', md: '16px' } }}>
+                                                <Tooltip title={`Go to : ${link.url}`} placement="top" arrow>
+                                                    <div onClick={() => window.open(link.url, "_blank")} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", minWidth: 0, flex: 1 }}>
+                                                        <img src={link.logo} width="35" height="35" style={{ borderRadius: 4, flexShrink: 0 }} />
+                                                        <Typography variant="subtitle1" noWrap>{link.title}</Typography>
                                                     </div>
                                                 </Tooltip>
-                                                <CardActions sx={{ display: "flex", }}>
-                                                    <EditIcon onClick={() => editLink(link._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
-                                                    <DeleteIcon onClick={() => deleteLink(link._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
+                                                <CardActions sx={{ display: "flex", padding: 0, gap: '4px' }}>
+                                                    <EditIcon onClick={() => editLink(link._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)", fontSize: 20 }} />
+                                                    <DeleteIcon onClick={() => deleteLink(link._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)", fontSize: 20 }} />
                                                 </CardActions>
-
                                             </CardContent>
-
                                         </Card>
                                     </Grid>)) :
-                                    <Typography > No links found</Typography>}
+                                    <Typography sx={{ padding: '16px' }}>No links found</Typography>}
                             </Grid>
                         </Box>
-                    </Card>
                 </Stack>
             </div>
 

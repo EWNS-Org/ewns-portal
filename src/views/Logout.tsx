@@ -1,11 +1,14 @@
+'use client';
+
 import React, { useEffect } from 'react'
 import useAuth from '../hooks/useAuth'
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 function Logout() {
 
     const { logout } = useAuth();
-    const navigate = useNavigate();
+    const router = useRouter();
+    const navigate = (path: string) => router.push(path);
     useEffect(() => {
         logout();
         navigate('/login');

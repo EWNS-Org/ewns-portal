@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Button, Card, Checkbox, DialogContent, FormControl, FormControlLabel, IconButton, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Tooltip, Typography } from '@mui/material'
 import React, { useCallback, useEffect, useState } from 'react'
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -297,10 +299,10 @@ function AllProducts({handleTabChange}: any) {
 
   return (
     <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-      <div className=" bg-white p-6 h-[720px] shadow-md w-full" style={{ borderRadius: "15px" }}>
+      <div className=" bg-white p-4 md:p-6 shadow-md w-full" style={{ borderRadius: "15px" }}>
         <Stack spacing={4} width={"100%"} style={{ padding: "1%" }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-               <Typography variant='h5'>All Products</Typography>
+              <div className="page-header-responsive">
+               <Typography variant='h5' sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }}>All Products</Typography>
                 <Button
                   variant="contained"
                   color="primary"
@@ -315,7 +317,7 @@ function AllProducts({handleTabChange}: any) {
               {rows && rows.length === 0 ? <div style={{display:"flex", justifyContent: "center"}}>
                           No Products
                         </div> : <TableContainer sx={{ maxHeight: 500 }}>
-                  <Table stickyHeader aria-label="sticky table">
+                  <Table stickyHeader aria-label="sticky table" sx={{ minWidth: { xs: 600, md: 'auto' } }}>
                     <TableHead>
                       <TableRow>
                         {columns.map((column: any) => (
@@ -430,8 +432,8 @@ function AllProducts({handleTabChange}: any) {
                     </div>
                   </Card>
                 </div>
-                <Card sx={{height: "100%", width: "100%", padding:"1%", overflowY: "auto", display:"flex", justifyContent:"space-between", marginBottom: "2%"}}>
-                  <div style={{display: "flex", flexDirection: "column", width:"40%", padding: "1%", height: "100%"}}>
+                <Card sx={{height: "100%", width: "100%", padding:"1%", overflowY: "auto", display:"flex", flexDirection: { xs: "column", md: "row" }, justifyContent:"space-between", marginBottom: "2%"}}>
+                  <div style={{display: "flex", flexDirection: "column", padding: "1%", height: "100%"}} className="w-full md:w-[40%]">
                     <div style={{display:"flex", justifyContent:"space-between", }}>
                       <Typography variant='h6' color="gray">Name:</Typography>                          
                       <Typography variant='h6' >{productDetails.name}</Typography>                          
@@ -469,7 +471,7 @@ function AllProducts({handleTabChange}: any) {
                       <Typography variant='h6' >{productDetails?.attributes?.brand || "-"}</Typography>                          
                     </div>
                   </div>
-                  <div style={{display: "flex", flexDirection: "column", width:"40%", height: "100%", padding: "1%"}}>
+                  <div style={{display: "flex", flexDirection: "column", height: "100%", padding: "1%"}} className="w-full md:w-[40%]">
                     <div style={{display:"flex", justifyContent:"space-between"}}>
                       <Typography variant='h6' color="gray">SKU:</Typography>                          
                       <Typography variant='h6' >{productDetails.sku || "-"}</Typography>                          

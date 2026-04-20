@@ -1,16 +1,32 @@
-import React, { createContext, useContext, useState } from "react";
+'use client';
+
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext({} as any);
 
 export const AuthProvider = ({ children }: any) => {
     const [token, setToken] = useState<string | null>(null);
     const [role, setRole] = useState<string | null>(null);
+    const [hydrated, setHydrated] = useState(false);
 
-    const login = (userToken: string, role: string) => {
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+        const storedRole = localStorage.getItem("userRole");
+        setToken(storedToken);
+        setRole(storedRole);
+        // Ensure cookies are in sync with localStorage (e.g. after hard refresh)
+        if (storedToken) document.cookie = `token=${storedToken}; path=/; SameSite=Lax`;
+        if (storedRole) document.cookie = `userRole=${storedRole}; path=/; SameSite=Lax`;
+        setHydrated(true);
+    }, []);
+
+    const login = (userToken: string, userRole: string) => {
         setToken(userToken);
-        setRole(role);
+        setRole(userRole);
         localStorage.setItem("token", userToken);
-        localStorage.setItem("userRole", role);
+        localStorage.setItem("userRole", userRole);
+        document.cookie = `token=${userToken}; path=/; SameSite=Lax`;
+        document.cookie = `userRole=${userRole}; path=/; SameSite=Lax`;
     };
 
     const logout = () => {
@@ -18,12 +34,15 @@ export const AuthProvider = ({ children }: any) => {
         setRole(null);
         localStorage.removeItem("token");
         localStorage.removeItem("userRole");
+        document.cookie = "token=; path=/; max-age=0";
+        document.cookie = "userRole=; path=/; max-age=0";
     };
 
-    const isAuthenticated = !!(localStorage.getItem("token") && localStorage.getItem("userRole"));
+    const isAuthenticated = hydrated ? !!(token && role) : false;
+    const userRole = hydrated ? role : null;
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, userRole, hydrated, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

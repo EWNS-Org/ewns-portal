@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -292,19 +294,23 @@ function Albums() {
     }
 
     return (
-    <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-        <div className=" bg-white p-6 h-[800px] shadow-md w-full" style={{ borderRadius: "15px" }}>
+    <div className="pg-root">
+        <div className="pg-header">
+            <h1 className="pg-title">Albums</h1>
+            <p className="pg-subtitle">Manage your photos and videos organized in albums</p>
+        </div>
+        <div className="pg-card">
             <Stack spacing={4} width={"100%"} style={{ }}>
-                <Card sx={{ padding: "2%", height: "760px" }}>
-                  <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
-                    <Typography variant='h4'>Albums</Typography>
-                    <div style={{ width: "30%", display:"flex", justifyContent:"space-between" }}>
-                        <Button variant='outlined' onClick={()=>{handleClickOpen()}} sx={{display:"flex", width:"50%", justifyContent:"space-between" }}>
-                            <Typography>Upload Files</Typography>
+                <Card sx={{ padding: "2%" }}>
+                  <div className="page-header-responsive" style={{width:"100%"}}>
+                    <Typography variant='h4' sx={{ fontSize: { xs: '1.5rem', md: '2.125rem' } }}>Albums</Typography>
+                    <div style={{ display:"flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                        <Button variant='outlined' onClick={()=>{handleClickOpen()}} sx={{display:"flex", gap: "8px", whiteSpace: "nowrap" }}>
+                            <Typography sx={{ fontSize: { xs: '0.75rem', md: '1rem' } }}>Upload Files</Typography>
                             <CloudUploadIcon />
                         </Button>
 
-                        <FormControl sx={{ width: "40%" }} >
+                        <FormControl sx={{ minWidth: "120px" }} size="small">
                             <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
@@ -327,9 +333,9 @@ function Albums() {
                         <IconButton onClick={()=>handleBack(albums)} disabled={currentAlbum === null}>
                             <ArrowBackIcon />
                         </IconButton>
-                    <Typography color="gray">{ (currentAlbum && "/Home" + currentAlbum?.path) || "/Home"}</Typography>
+                    <Typography color="gray" sx={{ fontSize: { xs: '0.85rem', md: '1rem' }, wordBreak: 'break-all' }}>{ (currentAlbum && "/Home" + currentAlbum?.path) || "/Home"}</Typography>
                     </div>
-                    <div className={view === 'list' ? 'list-view' : 'grid-view'} style={{height: view === "list" ? "600px" : "600px", overflow:"auto"}}>
+                    <div className={view === 'list' ? 'list-view' : 'grid-view'} style={{minHeight: "200px", maxHeight: "600px", overflow:"auto"}}>
                         <div className="folder-item" style={{cursor: "pointer"}} onClick={()=>{setIsCreateAlbumOpen(true)}}>
                                 <CreateNewFolderIcon sx={{color:"black"}} />
                             <div className="folder-details">

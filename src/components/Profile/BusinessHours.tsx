@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+'use client';
 
+import React, { useEffect, useState } from 'react'
 import {
     Box,
     Typography,
@@ -58,74 +59,67 @@ function BusinessHours({ profileDetails, setProfileDetails }: any) {
     };
 
     return (
-        <div className="container  w-full" style={{ fontFamily: "source Sans pro", }}>
-            <div className=" bg-white  p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", }}>
+        <div className="container w-full" style={{ fontFamily: "source Sans pro", }}>
+            <div className="bg-white shadow-md w-full tab-wrapper-responsive" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", padding: "clamp(12px, 3vw, 24px)" }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Stack  width={"100%"} style={{  }}>
-                        <Card sx={{  height:"560px" }}>
-                            <CardContent sx={{ width: "90%" }}>
+                        <Card sx={{ }} className="tab-card-responsive">
+                            <CardContent sx={{ width: "100%", padding: { xs: '8px', md: '16px' } }}>
 
                                 {Object.keys(profile.timings).map((day) => (
-                                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%", height: "100%", alignItems: "center", padding:"0.5% 5%" }}>
-                                        <div style={{ width: "20%", height: "60px", alignItems: "center", justifyContent: "start", display: "flex" }}>
-                                            <Grid item >
-                                                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>{day}</Typography>
-                                            </Grid>
+                                    <div className="hours-row" key={day}>
+                                        <div className="hours-day">
+                                            <Typography variant="body1" sx={{ textTransform: 'capitalize', fontSize: { xs: '0.85rem', md: '1rem' } }}>{day}</Typography>
                                         </div>
-                                        <div style={{ width: "30%", }}>
-                                            <Grid item sx={{ width: "100%", }}>
-                                                {profile.timings[day].isClosed ? (
-                                                    <Typography style={{ alignItems: "center", justifyContent: "start", display: "flex" }} variant="body1">Closed</Typography>
-                                                ) : (
-                                                    <TimePicker
-                                                        ampm={false} // Disables AM/PM to force 24-hour format
-                                                        label="Open Time"
-                                                        value={!profile.timings[day].isClosed ? dayjs(`${profile.timings[day].open}`, 'HH:mm') : null}
-                                                        onChange={(newValue) => handleTimeChange(day, 'open', newValue)}
-                                                    />
-                                                )}
-                                            </Grid>
-                                        </div>
-                                        <div style={{ width: "30%", }}>
-                                            <Grid item sx={{ width: "100%", }}>
-                                                {profile.timings[day].isClosed ? (
-                                                    <Typography style={{ alignSelf: "center", justifyContent: "start", display: "flex" }} variant="body1">Closed</Typography>
-                                                ) : (
-                                                    <TimePicker
-                                                        ampm={false} // Disables AM/PM to force 24-hour format
-                                                        label="Close Time"
-                                                        value={!profile.timings[day].isClosed ? dayjs(`${profile.timings[day].close}`, 'HH:mm') : null}
-                                                        onChange={(newValue) => handleTimeChange(day, 'close', newValue)}
-                                                    />
-                                                )}
-
-                                            </Grid>
-                                        </div>
-                                        <div>
-                                            <Grid item  sx={{ width: "20%" }}>
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            checked={profile.timings[day].isClosed}
-                                                            onChange={() => handleClosedChange(day)}
-                                                            sx={{ color: "rgba(89, 50, 234, 1)", }}
-                                                            color="primary"
-                                                        />
-                                                    }
-                                                    label="Closed"
+                                        <div className="hours-picker">
+                                            {profile.timings[day].isClosed ? (
+                                                <Typography className="hours-closed-label" variant="body1">Closed</Typography>
+                                            ) : (
+                                                <TimePicker
+                                                    ampm={false}
+                                                    label="Open"
+                                                    value={dayjs(`${profile.timings[day].open}`, 'HH:mm')}
+                                                    onChange={(newValue) => handleTimeChange(day, 'open', newValue)}
+                                                    slotProps={{ textField: { size: 'small', fullWidth: true } }}
                                                 />
-                                            </Grid>
+                                            )}
+                                        </div>
+                                        <div className="hours-picker">
+                                            {profile.timings[day].isClosed ? (
+                                                <Typography className="hours-closed-label" variant="body1">Closed</Typography>
+                                            ) : (
+                                                <TimePicker
+                                                    ampm={false}
+                                                    label="Close"
+                                                    value={dayjs(`${profile.timings[day].close}`, 'HH:mm')}
+                                                    onChange={(newValue) => handleTimeChange(day, 'close', newValue)}
+                                                    slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                                                />
+                                            )}
+                                        </div>
+                                        <div className="hours-check">
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={profile.timings[day].isClosed}
+                                                        onChange={() => handleClosedChange(day)}
+                                                        sx={{ color: "rgba(89, 50, 234, 1)" }}
+                                                        color="primary"
+                                                    />
+                                                }
+                                                label="Closed"
+                                            />
                                         </div>
                                     </div>
                                 ))}
                             </CardContent>
                         </Card>
                     </Stack>
-                    <div style={{display:"flex", justifyContent:"space-between", marginTop: "2%"}}>
+                    <div style={{display:"flex", justifyContent:"space-between", marginTop: "16px"}}>
                     <Button variant='outlined' >
                         Reset
                     </Button>
-                    <Button variant='contained' onClick={handleUpdateProfile} >
+                    <Button variant='contained' onClick={handleUpdateProfile} sx={{backgroundColor: "rgba(89, 50, 234, 1)"}}>
                         Update Profile
                     </Button>
                 </div>

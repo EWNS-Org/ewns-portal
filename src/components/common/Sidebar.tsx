@@ -1,22 +1,50 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Link, useNavigate } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import RssFeedOutlinedIcon from '@mui/icons-material/RssFeedOutlined';
+import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
+import CardMembershipOutlinedIcon from '@mui/icons-material/CardMembershipOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
+import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
+import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
+import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
+import { useRouter, usePathname } from 'next/navigation';
 import Header from '../common/Header';
-import { Avatar, Box, Button, Drawer, Icon, ListItemAvatar, ListItemText, ListSubheader, MenuItem, Select, SelectChangeEvent, drawerClasses, selectClasses, styled } from '@mui/material';
-import MuiDrawer from '@mui/material/Drawer';
-import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
+import { Avatar, Box, Button, Drawer, IconButton, ListItemAvatar, ListItemText, MenuItem, Select, SelectChangeEvent, selectClasses } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBusinessDetailsAction, getAllBusinessesAction } from '../../Redux/Actions/BusinessActions/business.actions';
-
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { getAvatar } from '../../Helpers/common.helper';
-
-
+import './Sidebar.css';
 
 const Sidebar = ({ userRole, children }: any) => {
-    const navigate = useNavigate();
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const router = useRouter();
+    const pathname = usePathname();
+    const navigate = (path: string) => router.push(path);
     const [selectedItem, setSelectedItem] = useState<string>('');
+    const [mobileSearchQuery, setMobileSearchQuery] = useState('');
     const [company, setCompany] = React.useState("");
     const [allBusinesses, setAllBusinesses] = React.useState([]);
     const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
@@ -30,8 +58,10 @@ const Sidebar = ({ userRole, children }: any) => {
     });
 
     useEffect(() => {
-        dispatch(getAllBusinessesAction() as any);
-    }, [dispatch]);
+        if (userRole !== 'ADMIN') {
+            dispatch(getAllBusinessesAction() as any);
+        }
+    }, [dispatch, userRole]);
 
     useEffect(() => {
         if (businesses?.length > 0) {
@@ -60,13 +90,14 @@ const Sidebar = ({ userRole, children }: any) => {
     }, [setCompany])
 
     useEffect(() => {
+        if (!pathname) return;
         if (userRole === "ADMIN") {
             adminSidebarItems.map((item: any, index: number) => {
-                if (window.location.pathname.includes(item.goto)) {
+                if (pathname.includes(item.goto)) {
                     handleItemClick(item, index);
                 } else if (item.hasChild) {
                     item.children.map((subItem: any, childIndex: number) => {
-                        if (window.location.pathname.includes(subItem.goto)) {
+                        if (pathname.includes(subItem.goto)) {
                             handleItemClick(subItem, childIndex);
                         }
                     })
@@ -74,57 +105,77 @@ const Sidebar = ({ userRole, children }: any) => {
             })
         } else {
             sidebarItems.map((item: any, index: number) => {
-                if (window.location.pathname.includes(item.goto)) {
+                if (pathname.includes(item.goto)) {
                     handleItemClick(item, index);
                 } else if (item.hasChild) {
                     item.children.map((subItem: any, childIndex: number) => {
-                        if (window.location.pathname.includes(subItem.goto)) {
+                        if (pathname.includes(subItem.goto)) {
                             handleItemClick(subItem, childIndex);
                         }
                     })
                 }
             })
         }
-    }, [navigate]);
+    }, [pathname]);
 
     const sidebarItems = [
-        { name: "Dashboard", hasChild: false, icon: "📊", isOpen: false, goto: '/dashboard' },
-        { name: "Profile", hasChild: false, icon: "👤", isOpen: false, goto: '/profile' },
-        { name: "Category & Testimonials", hasChild: false, icon: "📦", isOpen: false, goto: '/categories' },
-        { name: "Products", hasChild: false, icon: "🛒", isOpen: false, goto: '/products' },
-        { name: "Services", hasChild: false, icon: "💼", isOpen: false, goto: '/services' },
-        { name: "Albums", hasChild: false, icon: "🎵", isOpen: false, goto: '/albums' },
-        { name: "Appointments", hasChild: false, icon: "📅", isOpen: false, goto: '/appointments' },
-        { name: "Messages", hasChild: false, icon: "✉️", isOpen: false, goto: '/messages' },
-        { name: "Subscription", hasChild: false, icon: "📅", isOpen: false, goto: '/subscription' },
+        { name: "Dashboard", hasChild: false, icon: <DashboardOutlinedIcon fontSize="small" />, isOpen: false, goto: '/dashboard' },
+        { name: "Profile", hasChild: false, icon: <PersonOutlinedIcon fontSize="small" />, isOpen: false, goto: '/profile' },
+        { name: "Category & Testimonials", hasChild: false, icon: <CategoryOutlinedIcon fontSize="small" />, isOpen: false, goto: '/categories' },
+        { name: "Products", hasChild: false, icon: <ShoppingCartOutlinedIcon fontSize="small" />, isOpen: false, goto: '/products' },
+        {
+            name: "Content Studio",
+            hasChild: true,
+            icon: <WorkOutlineOutlinedIcon fontSize="small" />,
+            isOpen: true,
+            children: [
+                { name: "Services", hasChild: false, icon: <ArticleOutlinedIcon fontSize="small" />, isOpen: false, goto: '/services' },
+                { name: "Blogs", hasChild: false, icon: <RssFeedOutlinedIcon fontSize="small" />, isOpen: false, goto: '/blogs' },
+            ]
+        },
+        { name: "Albums", hasChild: false, icon: <PhotoLibraryOutlinedIcon fontSize="small" />, isOpen: false, goto: '/albums' },
+        { name: "Appointments", hasChild: false, icon: <CalendarTodayOutlinedIcon fontSize="small" />, isOpen: false, goto: '/appointments' },
+        { name: "Messages", hasChild: false, icon: <MailOutlinedIcon fontSize="small" />, isOpen: false, goto: '/messages' },
+        {
+            name: "AI Studio",
+            hasChild: true,
+            icon: <AutoAwesomeOutlinedIcon fontSize="small" />,
+            isOpen: true,
+            children: [
+                { name: "Manage SEO", hasChild: false, icon: <ManageSearchOutlinedIcon fontSize="small" />, isOpen: false, goto: '/seo-studio' },
+            ]
+        },
+        { name: "Subscription", hasChild: false, icon: <CardMembershipOutlinedIcon fontSize="small" />, isOpen: false, goto: '/subscription' },
         {
             name: "Settings",
             hasChild: true,
-            icon: "⚙️",
+            icon: <SettingsOutlinedIcon fontSize="small" />,
             isOpen: true,
             children: [
-                { name: "Account", hasChild: false, icon: "🧑‍💻", isOpen: false, goto: '/settings/your-account' },
+                { name: "Account", hasChild: false, icon: <ManageAccountsOutlinedIcon fontSize="small" />, isOpen: false, goto: '/settings/your-account' },
             ]
         },
         {
             name: "Plugins",
             hasChild: true,
-            icon: "🧩",
+            icon: <ExtensionOutlinedIcon fontSize="small" />,
             isOpen: true,
             children: [
-                { name: "Themes", hasChild: false, icon: "🎨", isOpen: false, goto: '/plugins/themes' },
-                { name: "Custom Domain", hasChild: false, icon: "🌐", isOpen: false, goto: '/plugins/custom-domain' },
-                { name: "Analytics", hasChild: false, icon: "📈", isOpen: false, goto: '/plugins/analytics' },
-                { name: "Marketing", hasChild: false, icon: "📋", isOpen: false, goto: '/plugins/marketing' },
+                { name: "Themes", hasChild: false, icon: <PaletteOutlinedIcon fontSize="small" />, isOpen: false, goto: '/plugins/themes' },
+                { name: "Custom Domain", hasChild: false, icon: <LanguageOutlinedIcon fontSize="small" />, isOpen: false, goto: '/plugins/custom-domain' },
+                { name: "Analytics", hasChild: false, icon: <TrendingUpOutlinedIcon fontSize="small" />, isOpen: false, goto: '/plugins/analytics' },
+                { name: "Marketing", hasChild: false, icon: <CampaignOutlinedIcon fontSize="small" />, isOpen: false, goto: '/plugins/marketing' },
             ]
         },
 
     ];
 
     const adminSidebarItems = [
-        { name: "All Merchants List", hasChild: false, icon: "📊", isOpen: false, goto: '/admin/all-merchants' },
-        { name: "Analytics", hasChild: false, icon: "📦", isOpen: false, goto: '/analytics' },
-        { name: "Products", hasChild: false, icon: "🛒", isOpen: false, goto: '/products' }
+        { name: "Dashboard", hasChild: false, icon: <DashboardOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/dashboard' },
+        { name: "Merchants", hasChild: false, icon: <PeopleOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/merchants' },
+        { name: "Businesses", hasChild: false, icon: <WorkOutlineOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/businesses' },
+        { name: "AI Quota", hasChild: false, icon: <AutoAwesomeOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/ai-quota' },
+        { name: "Manage Subscriptions", hasChild: false, icon: <CardMembershipOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/manage-subscriptions' },
     ];
 
     const [items, setItems] = useState(userRole === "ADMIN" ? adminSidebarItems : sidebarItems);
@@ -138,6 +189,7 @@ const Sidebar = ({ userRole, children }: any) => {
         } else {
             setSelectedItem(item.goto);
             navigate(item.goto);
+            setMobileOpen(false);
         }
     };
 
@@ -149,116 +201,163 @@ const Sidebar = ({ userRole, children }: any) => {
         }
     };
 
+    const sidebarContent = (isMobile = false) => (
+        <nav className={`sidebar-nav ${!isMobile && sidebarCollapsed ? 'sidebar-nav--collapsed' : ''}`}>
+            <div className="sidebar-logo">
+                {!(sidebarCollapsed && !isMobile) && (
+                    <img src="/assets/ewns-logo.svg" alt="Logo" className="sidebar-logo-img" />
+                )}
+                {/* Close button visible only on mobile */}
+                <IconButton className="sidebar-close-btn" onClick={() => setMobileOpen(false)} sx={{ display: { xs: 'flex', md: 'none' } }}>
+                    <CloseIcon />
+                </IconButton>
+                {/* Collapse/Expand toggle for desktop */}
+                {!isMobile && (
+                    <IconButton
+                        className="sidebar-collapse-btn"
+                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                        sx={{ display: { xs: 'none', md: 'flex' } }}
+                        size="small"
+                    >
+                        {sidebarCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                    </IconButton>
+                )}
+            </div>
+
+            {!(sidebarCollapsed && !isMobile) && userRole !== 'ADMIN' && (
+            <div className="sidebar-company-select">
+                <Box sx={{ display: 'flex', width: '100%' }}>
+                    <Select
+                        labelId="company-select"
+                        id="company-simple-select"
+                        value={company}
+                        onChange={handleChange}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Select company' }}
+                        fullWidth
+                        sx={{
+                            maxHeight: 56,
+                            width: '100%',
+                            [`& .${selectClasses.select}`]: {
+                                display: 'flex',
+                                alignItems: 'center',
+                            },
+                        }}
+                    >
+                        {allBusinesses?.length > 0 && allBusinesses.map((business: any) => (
+                            <MenuItem value={business?._id} key={business?._id} sx={{ marginBottom: '2%' }}>
+                                <ListItemAvatar>
+                                    <Avatar {...getAvatar(business?.businessName ? business?.businessName : "Prem Prakash")} />
+                                </ListItemAvatar>
+                                <ListItemText primary={business.businessName} secondary={business.businessUsername} />
+                            </MenuItem>
+                        ))}
+                        <MenuItem
+                            onClick={(e) => { e.stopPropagation(); handlePopupOpen(); setMobileOpen(false); }}
+                            sx={{ borderTop: '1px solid #eee', mt: 1, pt: 1, color: 'rgba(89, 50, 234, 1)', fontWeight: 600 }}
+                        >
+                            + Create Business
+                        </MenuItem>
+                    </Select>
+                </Box>
+            </div>
+            )}
+
+            {/* Search - mobile only, non-admin */}
+            {userRole !== 'ADMIN' && (
+            <div className="sidebar-mobile-extras">
+                <input
+                    type="text"
+                    placeholder="Search pages..."
+                    className="sidebar-mobile-search"
+                    value={mobileSearchQuery}
+                    onChange={(e) => setMobileSearchQuery(e.target.value)}
+                />
+            </div>
+            )}
+
+            <div className="sidebar-menu">
+                {items.filter((item: any) => {
+                    if (!mobileSearchQuery.trim() || !isMobile) return true;
+                    const q = mobileSearchQuery.toLowerCase();
+                    if (item.name.toLowerCase().includes(q)) return true;
+                    if (item.hasChild && item.children?.some((c: any) => c.name.toLowerCase().includes(q))) return true;
+                    return false;
+                }).map((item: any, index: any) => (
+                    <div key={index} className="sidebar-menu-item" style={selectedItem === item.goto ? { backgroundColor: 'rgba(89, 50, 234, 1)' } : {}}>
+                        <div
+                            className={`sidebar-menu-link ${selectedItem === item.goto ? 'sidebar-menu-link--active' : ''}`}
+                            onClick={() => handleItemClick(item, index)}
+                        >
+                            <div className="sidebar-menu-label">
+                                {item.icon && item.icon}
+                                {!(sidebarCollapsed && !isMobile) && <span>{item.name}</span>}
+                            </div>
+                            {item.hasChild && !(sidebarCollapsed && !isMobile) && (
+                                <div>
+                                    {item.isOpen ? <KeyboardArrowUpIcon className="h-5 w-5" /> : <KeyboardArrowDownIcon className="h-5 w-5" />}
+                                </div>
+                            )}
+                        </div>
+
+                        {item.isOpen && item.hasChild && !(sidebarCollapsed && !isMobile) && (
+                            <div className="sidebar-submenu">
+                                {item.children.map((child: any, childIndex: any) => (
+                                    <span
+                                        key={child.name}
+                                        className={`sidebar-submenu-item ${selectedItem === child.goto ? 'sidebar-submenu-item--active' : ''}`}
+                                        onClick={() => handleItemClick(child, childIndex)}
+                                    >
+                                        {child.icon && <span>{child.icon}</span>}
+                                        {!(sidebarCollapsed && !isMobile) && child.name}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </nav>
+    );
 
     return (
-        <div className='w-full h-full ' style={{ display: "flex", flexDirection: "row", justifyContent: "start" }}>
+        <div className="sidebar-layout">
+            {/* Desktop sidebar */}
+            <aside className={`sidebar-desktop ${sidebarCollapsed ? 'sidebar-desktop--collapsed' : ''}`}>
+                {sidebarContent(false)}
+            </aside>
 
+            {/* Mobile drawer */}
+            <Drawer
+                anchor="left"
+                open={mobileOpen}
+                onClose={() => setMobileOpen(false)}
+                ModalProps={{ keepMounted: true }}
+                sx={{
+                    display: { xs: 'block', md: 'none' },
+                    '& .MuiDrawer-paper': {
+                        width: 280,
+                        boxSizing: 'border-box',
+                    },
+                }}
+            >
+                {sidebarContent(true)}
+            </Drawer>
 
-
-            <div className=" h-[98vh] w-64 flex "  >
-                <nav className="flex-col h-full w-64 px-4 bg-white font-sans" style={{ justifySelf: "space-between", }}>
-
-                    <div className="flex h-[10%] w-full " style={{ alignItems: "center", justifyContent: "center", marginTop:"1%" }}>
-                        <img src="/assets/ewns-logo.svg" alt="Logo" className="h-12 w-full justify-center" />
-                    </div>
-
-                    <div className='h-[8%] flex w-full' style={{ justifyContent: "center", alignItems: "center" }} >
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                width: "100%"
-                            }}
-                        >
-                            <Select
-                                labelId="company-select"
-                                id="company-simple-select"
-                                value={company}
-                                onChange={handleChange}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Select company' }}
-                                fullWidth
-                                sx={{
-                                    maxHeight: 56,
-                                    width: 250,
-                                    '&.MuiList-root': {
-                                    },
-                                    [`& .${selectClasses.select}`]: {
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                    },
-                                }}
-                            >
-                                {allBusinesses?.length > 0 && allBusinesses.map((business: any) => {
-                                    return <MenuItem value={business?._id} key={business?._id} sx={{ marginBottom: "2%" }}>
-                                        <ListItemAvatar>
-                                        <Avatar {...getAvatar(business?.businessName ? business?.businessName : "Prem Prakash")} />
-                                        </ListItemAvatar>
-                                        <ListItemText primary={business.businessName} secondary={business.businessUsername} />
-                                    </MenuItem>
-                                })}
-
-                                <Button key="create-business" onClick={() => handlePopupOpen()} variant='contained' sx={{ height: "100%", width: "100%" }} >Create Business</Button>
-
-                            </Select>
-                        </Box>
-                    </div>
-
-                    <div>
-                        {items.map((item: any, index: any) => (
-                            <div key={index} style={{ marginBottom: "2%", borderRadius: "10px", padding: "5px", ...(selectedItem === item.goto ? { backgroundColor: "rgba(89, 50, 234, 1)" } : {}) }}>
-                                <div
-                                    className={`flex items-center justify-between cursor-pointer ${selectedItem === item.goto ? "text-white" : "text-gray-500"}  `}
-                                    style={{ marginBottom: "2%", }}
-                                    onClick={() => handleItemClick(item, index)}
-                                >
-                                    <div className="flex items-center space-x-3" style={{}}>
-                                        {item.icon && item.icon}
-                                        <span >{item.name}</span>
-                                    </div>
-                                    {item.hasChild && (
-                                        <div>
-                                            {item.isOpen ? (
-                                                <KeyboardArrowUpIcon className="h-5 w-5" />
-                                            ) : (
-                                                <KeyboardArrowDownIcon className="h-5 w-5" />
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Child links */}
-                                {item.isOpen && item.hasChild && (
-                                    <div className={`pl-4 flex flex-col space-y-1  `} >
-                                        {item.children.map((child: any, childIndex: any) => (
-                                            <span
-                                                key={child.name}
-                                                className={`pl-4 py-2 text-sm cursor-pointer  ${selectedItem === child.goto ? "text-white" : "text-gray-500"} `}
-                                                onClick={() => handleItemClick(child, childIndex)}
-                                                style={{ marginBottom: "4%", borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px", ...(selectedItem === child.goto ? { backgroundColor: "rgba(89, 50, 234, 1)", content: "white" } : {}) }}
-                                            >
-                                                {child.icon && <span>{child.icon}</span>}
-                                                {child.name}
-                                            </span>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        ))
-                        }
-                    </div>
-                </nav >
-            </div >
-            <div className='flex-col w-full h-full justify-center px-4'>
-                <Header isPopupOpen={isPopupOpen} handlePopupOpen={handlePopupOpen} handlePopupClose={handlePopupClose} />
-
-                <div className='w-full h-[98vh] p-[2%] justify-center align-center flex' style={{ backgroundColor: "lavender" }}>
-
+            {/* Main content area */}
+            <div className="sidebar-main">
+                <Header
+                    isPopupOpen={isPopupOpen}
+                    handlePopupOpen={handlePopupOpen}
+                    handlePopupClose={handlePopupClose}
+                    onMenuClick={() => setMobileOpen(true)}
+                    sidebarCollapsed={sidebarCollapsed}
+                />
+                <div className="sidebar-content-area">
                     {children}
                 </div>
             </div>
-
-        </div >
+        </div>
     );
 };
 

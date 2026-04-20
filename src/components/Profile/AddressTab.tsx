@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react'
 import Popup from '../common/Popup'
 import { FormControl, InputLabel, Select, TextField, Theme, Tooltip, styled } from "@mui/material";
@@ -10,7 +12,7 @@ import { createBusinessAddressAction, deleteBusinessAddressAction, getAllBusines
 import { countryList } from '../../utils/constants/country-flag';
 import { fetchPincodeDetails } from '../../services/api/postalcode.service';
 import { useLoader } from '../../contexts/LoaderContext';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { validateFields } from '../../Helpers/common.helper';
 import MapPopup from '../common/MapPopup';
@@ -44,7 +46,8 @@ function AddressTab() {
         editAddressPopup: false,
         createAddressPopup: false
     })
-    const navigate = useNavigate();
+    const router = useRouter();
+    const navigate = (path: string) => router.push(path);
     const dispatch = useDispatch();
 
     const { showLoader, hideLoader } = useLoader();
@@ -333,31 +336,30 @@ function AddressTab() {
     }));
 
     return (
-        <div className="w-full " style={{ fontFamily: "source Sans pro" }}>
-            <div className=" bg-white p-6 h-[680px] shadow-md w-full" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px" }}>
+        <div className="w-full" style={{ fontFamily: "source Sans pro" }}>
+            <div className="bg-white shadow-md w-full tab-wrapper-responsive" style={{ borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", padding: "clamp(12px, 3vw, 24px)" }}>
                 <Stack spacing={4} width={"100%"} style={{  }}>
-                    <Card sx={{ padding: "2%", height:"630px" }}>
                         <Box sx={{  }}>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <Typography variant='h5'>All Addresses</Typography>
+                            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                                <Typography variant='h5' sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }}>All Addresses</Typography>
                                 <Button
                                     variant="contained"
                                     color="primary"
+                                    size="small"
                                     onClick={() => { setFormValues(initialFormData); setIsPopupOpen({ ...isPopupOpen, createAddressPopup: true }); }}
-                                    sx={{ marginBottom: '20px', backgroundColor: "rgba(89, 50, 234, 1)" }}
+                                    sx={{ backgroundColor: "rgba(89, 50, 234, 1)" }}
                                 >
                                     Add New Address
                                 </Button>
                             </div>
 
-                            <Grid container spacing={2} sx={{ overflowY: "auto", height: "600px", padding: "1%" }}>
+                            <Grid container spacing={2} className="address-grid tab-scroll-area" sx={{ padding: "1%", marginTop: '8px' }}>
                                 {addresses?.length > 0 ? addresses.map((address: any) => (
-                                    <Grid item xs={12} sm={6} md={4} key={address.id} sx={{}} >
-                                        <Card sx={{ borderTop: "1px solid gray", height: "240px", padding: "2%" }}>
-                                            <CardContent sx={{ height: "180px" }}>
-                                                <Typography variant="h6">{address.name}</Typography>
-                                                <div style={{ margin: "2% 1%" }}>
-
+                                    <Grid item xs={12} sm={6} md={4} key={address.id}>
+                                        <Card sx={{ borderTop: "1px solid gray", padding: { xs: '8px', md: '2%' } }}>
+                                            <CardContent sx={{ padding: { xs: '8px', md: '16px' } }}>
+                                                <Typography variant="h6" sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}>{address.name}</Typography>
+                                                <div style={{ margin: "8px 0" }}>
                                                     <Typography variant="body2" color="text.secondary">
                                                         {address.addressLine1}, {address.addressLine2},
                                                     </Typography>
@@ -369,42 +371,34 @@ function AddressTab() {
                                                     </Typography>
                                                 </div>
 
-                                                {
-                                                    address?.coords?.lat && <Typography variant="body2" color="text.secondary">
-                                                        Coords: {address.coords.lat}, {address.coords.lng}
-                                                    </Typography>
-                                                }
+                                                {address?.coords?.lat && <Typography variant="body2" color="text.secondary">
+                                                    Coords: {address.coords.lat}, {address.coords.lng}
+                                                </Typography>}
 
                                                 <Typography variant="body2" color="text.secondary">
                                                     Phone: {address.phoneNumber}
                                                 </Typography>
                                             </CardContent>
-                                            <CardActions sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
-                                                <div style={{ width: "20%", display: "flex", justifyContent: "space-between" }}>
+                                            <CardActions sx={{ width: "100%", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
+                                                <div style={{ display: "flex", gap: 8 }}>
                                                     <EditIcon onClick={() => editAddress(address._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
                                                     <DeleteIcon onClick={() => deleteAddress(address._id)} sx={{ cursor: "pointer", color: "rgba(89, 50, 234, 1)" }} />
                                                 </div>
 
-                                                <div style={{ display: "flex" }}>
-                                                    <FormControlLabel
-                                                        control={<IOSSwitch sx={{ m: 1 }} checked={address.isDefault} />}
-                                                        label={`Is Default`}
-                                                        onChange={(e) =>
-                                                            makeAddressDefault(address._id)
-                                                        }
-                                                    />
-                                                </div>
-
+                                                <FormControlLabel
+                                                    control={<IOSSwitch sx={{ m: 1 }} checked={address.isDefault} />}
+                                                    label={`Is Default`}
+                                                    onChange={(e) => makeAddressDefault(address._id)}
+                                                />
                                             </CardActions>
                                         </Card>
                                     </Grid>)) :
-                                    <div style={{}}>
-                                        <Typography  > No Addresses found</Typography>
+                                    <div style={{ padding: '16px' }}>
+                                        <Typography>No Addresses found</Typography>
                                     </div>
                                 }
                             </Grid>
                         </Box>
-                    </Card>
                 </Stack>
             </div>
 
