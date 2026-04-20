@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import "./Login.css";
-import "./Signup.css";
+import "../views/Login.css";
+import "../views/Signup.css";
 import Grid from '@mui/material/Grid2';
 import { Button, TextField, Typography } from '@mui/material';
 import { useLoader } from '../contexts/LoaderContext';
