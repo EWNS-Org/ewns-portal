@@ -211,8 +211,12 @@ function AllCategories() {
     const renderTree = (node: any, parentId: any, categoryId: any, level = 1) => (
         <TreeItem2 key={node._id} itemId={node._id} label={
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                <div style={{display:"flex", alignItems:"center"}}>
-                    <img src={node.imageUrl} width="24px" height="24px" alt="cat-image"/>
+                <div style={{display:"flex", alignItems:"center", gap: "8px"}}>
+                    {node.imageUrl ? (
+                        <img src={node.imageUrl} width="24px" height="24px" style={{borderRadius: "4px", objectFit: "cover"}} alt="cat-image"/>
+                    ) : (
+                        <span style={{width: "24px", height: "24px", borderRadius: "4px", background: "#ede9fe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px"}}>🗂️</span>
+                    )}
                     <Typography variant="body1">{node.name}</Typography>
                     {level < 5 && (
                     <IconButton onClick={() => handleAdd(node._id, parentId, categoryId)} size='small'>

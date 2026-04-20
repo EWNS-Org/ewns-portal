@@ -41,6 +41,15 @@ export const forgotPassword = async (email: string) => {
     }
 };
 
+export const validateResetToken = async (token: string) => {
+    try {
+        const res: any = await get('/auth/validate-reset-token/' + token);
+        return res;
+    } catch (error: any) {
+        return null;
+    }
+};
+
 export const resetPassword = async (token: string, newPassword: string) => {
     try {
         const res: any = await post('/auth/reset-password', { token, newPassword });
