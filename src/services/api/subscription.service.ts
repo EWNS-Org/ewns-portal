@@ -1,6 +1,15 @@
 import toast from 'react-hot-toast';
 import { get, post } from './api-service';
 
+export const getActivePaymentGateway = async (): Promise<string | null> => {
+    try {
+        const res: any = await get('/payment/active-gateway');
+        return res?.data?.provider ?? null;
+    } catch {
+        return null;
+    }
+};
+
 export const getSubscriptionPlans = async () => {
     try {
         const res: any = await get('/subscription/all');
@@ -21,9 +30,9 @@ export const initiateSubscriptionPayment = async (businessId: string, planId: st
     }
 };
 
-export const verifySubscriptionPayment = async (businessId: string, razorpayResponse: object) => {
+export const verifySubscriptionPayment = async (businessId: string, gateway: string, paymentResponse: object) => {
     try {
-        const res: any = await post(`/payment/verify?businessId=${businessId}`, razorpayResponse);
+        const res: any = await post(`/payment/verify?businessId=${businessId}`, { gateway, ...paymentResponse });
         return res?.isSuccess ?? false;
     } catch (error: any) {
         toast.error(error.message || 'Payment verification failed');
@@ -45,7 +54,7 @@ export const getAiCreditsBalance = async (businessId: string) => {
     try {
         const res: any = await get(`/payment/addon-credits/balance?businessId=${businessId}`);
         return res?.data ?? null;
-    } catch (error: any) {
+    } catch {
         return null;
     }
 };
@@ -60,9 +69,9 @@ export const initiateAddonCreditsPayment = async (businessId: string, packId: st
     }
 };
 
-export const verifyAddonCreditsPayment = async (businessId: string, razorpayResponse: object) => {
+export const verifyAddonCreditsPayment = async (businessId: string, gateway: string, paymentResponse: object) => {
     try {
-        const res: any = await post(`/payment/addon-credits/verify?businessId=${businessId}`, razorpayResponse);
+        const res: any = await post(`/payment/addon-credits/verify?businessId=${businessId}`, { gateway, ...paymentResponse });
         return res?.isSuccess ?? false;
     } catch (error: any) {
         toast.error(error.message || 'Addon payment verification failed');

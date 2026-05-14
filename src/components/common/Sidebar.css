@@ -14,7 +14,13 @@
   background: #fff;
   border-right: 1px solid #e5e7eb;
   overflow-y: auto;
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE/Edge */
   transition: width 0.25s ease, min-width 0.25s ease;
+}
+
+.sidebar-desktop::-webkit-scrollbar {
+  display: none;               /* Chrome/Safari/Opera */
 }
 
 .sidebar-desktop--collapsed {
@@ -72,6 +78,12 @@
   flex: 1;
   overflow-y: auto;
   padding-bottom: 16px;
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE/Edge */
+}
+
+.sidebar-menu::-webkit-scrollbar {
+  display: none;               /* Chrome/Safari/Opera */
 }
 
 .sidebar-menu-item {

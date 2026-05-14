@@ -93,6 +93,17 @@ const PersonalProfile = () => {
         enableOrders: true,
     };
     const businessDetails = useSelector((state: any) => state.business.businessDetails);
+    const subDetails = businessDetails?.subscriptionDetails;
+    const aiCredits = businessDetails?.aiCredits;
+
+    const daysLeft = subDetails?.endDate
+        ? Math.max(0, Math.ceil((new Date(subDetails.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+        : null;
+    const startDateStr = subDetails?.startDate
+        ? new Date(subDetails.startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '—';
+    const planName = subDetails?.subscriptionName ?? 'Basic Free';
+    const totalCredits = ((aiCredits?.planCredits ?? 0) + (aiCredits?.addonCredits ?? 0));
 
     const [profile, setProfile] = useState(initialProfileDetails);
     const [showButtons, setShowButtons] = useState<boolean>(true);
@@ -148,40 +159,31 @@ const PersonalProfile = () => {
             <div className="profile-content">
                 {/* Subscription Banner */}
                 <div className="subscription-banner">
-                    <div className="subscription-banner-header">
-                        <Typography sx={{ fontSize: { xs: '16px', sm: '18px' }, color: "white", fontWeight: 600 }}>
-                            Subscription Details
-                        </Typography>
-                        <button className="subscription-more-btn" onClick={() => navigate("/subscription")}>
-                            More Details {">>"}
-                        </button>
-                    </div>
-                    <div className="subscription-banner-details">
-                        <div className="subscription-detail-item">
-                            <Typography sx={{ fontSize: { xs: '12px', sm: '14px' }, color: "rgba(255,255,255,0.7)" }}>
-                                Plan
-                            </Typography>
-                            <Typography sx={{ fontSize: { xs: '14px', sm: '16px' }, color: "white", fontWeight: 600 }}>
-                                Basic
-                            </Typography>
+                    <span className="subscription-banner-title">📋 Subscription</span>
+                    <div className="subscription-banner-stats">
+                        <div className="subscription-stat">
+                            <span className="subscription-stat__label">Plan</span>
+                            <span className="subscription-stat__value">{planName}</span>
                         </div>
-                        <div className="subscription-detail-item">
-                            <Typography sx={{ fontSize: { xs: '12px', sm: '14px' }, color: "rgba(255,255,255,0.7)" }}>
-                                Start Date
-                            </Typography>
-                            <Typography sx={{ fontSize: { xs: '14px', sm: '16px' }, color: "white", fontWeight: 600 }}>
-                                {"12 September, 2023"}
-                            </Typography>
+                        <div className="subscription-stat-divider" />
+                        <div className="subscription-stat">
+                            <span className="subscription-stat__label">Start Date</span>
+                            <span className="subscription-stat__value">{startDateStr}</span>
                         </div>
-                        <div className="subscription-detail-item">
-                            {!isMobile && <Typography sx={{ fontSize: { xs: '12px', sm: '14px' }, color: "rgba(255,255,255,0.7)" }}>
-                                Days Left
-                            </Typography>}
-                            <Typography sx={{ fontSize: { xs: '14px', sm: '16px' }, color: "white", fontWeight: 600 }}>
-                                {"Unlimited"}
-                            </Typography>
+                        <div className="subscription-stat-divider" />
+                        <div className="subscription-stat">
+                            <span className="subscription-stat__label">Days Left</span>
+                            <span className="subscription-stat__value">{daysLeft !== null ? `${daysLeft}d` : '—'}</span>
+                        </div>
+                        <div className="subscription-stat-divider" />
+                        <div className="subscription-stat">
+                            <span className="subscription-stat__label">⚡ AI Credits</span>
+                            <span className="subscription-stat__value">{totalCredits.toLocaleString()}</span>
                         </div>
                     </div>
+                    <button className="subscription-more-btn" onClick={() => navigate("/subscription")}>
+                        Manage
+                    </button>
                 </div>
 
                 {/* Tab Content */}

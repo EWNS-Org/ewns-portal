@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import { categories } from "../utils/constants/categories";
 
 export const validateFields = (fieldsToValidate: string[], showToast: boolean, formData: any) => {
+    console.log(fieldsToValidate);
     const validations: { [key: string]: () => boolean } = {
         businessName: () => {
             if (!formData.businessName || formData.businessName.trim() === "") {

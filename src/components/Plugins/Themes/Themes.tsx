@@ -5,13 +5,13 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import AllThemes from './AllThemes';
 import ThemesConfig from './ThemesConfig';
+import NimbusConfig from './NimbusConfig';
 
 function Themes() {
     const router = useRouter();
     const navigate = (path: string) => router.push(path);
     const [activeTab, setActiveTab] = useState('Themes');
-
-
+    const [configuringTheme, setConfiguringTheme] = useState<string | null>(null);
 
     const dispatch = useDispatch();
 
@@ -23,7 +23,24 @@ function Themes() {
 
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
+        setConfiguringTheme(null);
     };
+
+    const handleConfigureTheme = (themeName: string) => {
+        setConfiguringTheme(themeName.toLowerCase());
+    };
+
+    const handleBackFromConfig = () => {
+        setConfiguringTheme(null);
+    };
+
+    if (configuringTheme === 'nimbus') {
+        return (
+            <div className="w-full font-semibold font-sans" style={{ fontSize: "20px" }}>
+                <NimbusConfig onBack={handleBackFromConfig} />
+            </div>
+        );
+    }
 
     return (
         <div className="w-full font-semibold font-sans" style={{ fontSize: "20px" }}>
@@ -43,7 +60,7 @@ function Themes() {
             </div>
 
             <div className='w-full py-4'>
-                {activeTab === 'Themes' && <AllThemes  />}
+                {activeTab === 'Themes' && <AllThemes onConfigureTheme={handleConfigureTheme} />}
                 {activeTab === 'Theme Configuration' && <ThemesConfig />}
             </div>
 
