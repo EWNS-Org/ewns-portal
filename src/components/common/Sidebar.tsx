@@ -29,6 +29,9 @@ import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
+import ApiOutlinedIcon from '@mui/icons-material/ApiOutlined';
+import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
+import PsychologyOutlinedIcon from '@mui/icons-material/PsychologyOutlined';
 import { useRouter, usePathname } from 'next/navigation';
 import Header from '../common/Header';
 import { Avatar, Box, Button, Drawer, IconButton, ListItemAvatar, ListItemText, MenuItem, Select, SelectChangeEvent, selectClasses } from '@mui/material';
@@ -176,6 +179,16 @@ const Sidebar = ({ userRole, children }: any) => {
         { name: "Businesses", hasChild: false, icon: <WorkOutlineOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/businesses' },
         { name: "AI Quota", hasChild: false, icon: <AutoAwesomeOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/ai-quota' },
         { name: "Manage Subscriptions", hasChild: false, icon: <CardMembershipOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/manage-subscriptions' },
+        {
+            name: "Third Party Configs",
+            hasChild: true,
+            icon: <ApiOutlinedIcon fontSize="small" />,
+            isOpen: false,
+            children: [
+                { name: "Payment Gateway", hasChild: false, icon: <PaymentsOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/third-party-configs/payment-gateway' },
+                { name: "AI Intelligence", hasChild: false, icon: <PsychologyOutlinedIcon fontSize="small" />, isOpen: false, goto: '/admin/third-party-configs/ai-intelligence' },
+            ]
+        },
     ];
 
     const [items, setItems] = useState(userRole === "ADMIN" ? adminSidebarItems : sidebarItems);
@@ -338,6 +351,10 @@ const Sidebar = ({ userRole, children }: any) => {
                     '& .MuiDrawer-paper': {
                         width: 280,
                         boxSizing: 'border-box',
+                        overflow: 'hidden',
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                        '&::-webkit-scrollbar': { display: 'none' },
                     },
                 }}
             >

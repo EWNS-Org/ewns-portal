@@ -55,8 +55,39 @@
   color: #1e1b4b;
 }
 
+/* Discount badge */
+.sub-plan-discount-badge {
+  position: absolute;
+  top: -12px;
+  right: 16px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
 /* Price */
 .sub-plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.sub-plan-price__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sub-plan-price__original {
+  font-size: 13px;
+  color: #9ca3af;
+  text-decoration: line-through;
+  font-weight: 500;
+}
+.sub-plan-price__row {
   display: flex;
   align-items: baseline;
   gap: 2px;
@@ -127,6 +158,30 @@
   font-weight: 600;
   color: #22c55e;
   margin-top: auto;
+}
+
+.sub-plan-card--disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.4);
+}
+
+.sub-plan-lower-label {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-top: auto;
+  padding: 8px;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+}
+
+.sub-plan-prorated-hint {
+  font-size: 11px;
+  color: #059669;
+  font-weight: 500;
+  margin-top: 2px;
 }
 
 /* ─── AI Credits tab ─── */

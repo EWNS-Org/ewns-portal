@@ -150,7 +150,7 @@ const ProfileTab = ({ setProfileDetails, profileDetails }: any) => {
                         <Tooltip title="Visit" arrow>
                             <TextField
                                 label="Business URL"
-                                value={"https://" + profile.url}
+                                value={"https://" + profile.url + ""}
                                 fullWidth
                                 sx={{ input: { cursor: 'pointer' } }}
                                 onClick={() => window.open("https://" + profile.url, "_blank")}

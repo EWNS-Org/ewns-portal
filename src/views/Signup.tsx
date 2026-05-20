@@ -23,7 +23,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 function Signup() {
     const router = useRouter()
     const navigate = (path: string) => router.push(path)
-    const [hideNext, setHideNext] = useState(true)
+    const [hideNext, setHideNext] = useState(false)
 
     const { showLoader, hideLoader } = useLoader();
     const breakpoint = useTailwindBreakpoint();
@@ -51,28 +51,28 @@ function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    useEffect(() => {
-        console.log(formData, showStep, validateFields(["name", "email", "password", "confirmPassword", "countryCode", "mobileNumber"], false, formData))
-        if (showStep === 1) {
-            if (validateFields(["name", "email", "password", "confirmPassword", "countryCode", "mobileNumber"], true, formData)) {
-                setHideNext(false)
-            } else {
-                setHideNext(true)
-            }
-        } else if(showStep === 2){
-            if (validateFields(["addressLine1", "addressLine2", "pincode", "landmark", "city", "state", "country"], false, formData)) {
-                setHideNext(false)
-            } else {
-                setHideNext(true)
-            }
-        }else if(showStep === 3){
-            if (validateFields(["businessName", "category", "shortBio", "businessType"], false, formData)) {
-                setHideNext(false)
-            } else {
-                setHideNext(true)
-            }
-        }
-    }, [formData, showStep])
+    // useEffect(() => {
+    //     // console.log(formData, showStep, validateFields(["name", "email", "password", "confirmPassword", "countryCode", "mobileNumber"], false, formData))
+    //     if (showStep === 1) {
+    //         if (validateFields(["name", "email", "password", "confirmPassword", "countryCode", "mobileNumber"], false, formData)) {
+    //             setHideNext(false)
+    //         } else {
+    //             setHideNext(true)
+    //         }
+    //     } else if(showStep === 2){
+    //         if (validateFields(["addressLine1", "addressLine2", "pincode", "landmark", "city", "state", "country"], false, formData)) {
+    //             setHideNext(false)
+    //         } else {
+    //             setHideNext(true)
+    //         }
+    //     }else if(showStep === 3){
+    //         if (validateFields(["businessName", "category", "shortBio", "businessType"], false, formData)) {
+    //             setHideNext(false)
+    //         } else {
+    //             setHideNext(true)
+    //         }
+    //     }
+    // }, [formData, showStep])
 
 
     const handlePincodeChange = async (e: any) => {
@@ -122,10 +122,24 @@ function Signup() {
     }
 
     const handleNext = async () => {
-        if(showStep === 3){
+        console.log(showStep)
+        if(showStep === 1){
+            if (validateFields(["name", "email", "password", "confirmPassword", "countryCode", "mobileNumber"], true, formData)) {
+                setShowStep(showStep + 1);
+                return;
+            }
+        }else if(showStep === 2){
+            if (validateFields(["addressLine1", "addressLine2", "pincode", "landmark", "city", "state", "country"], true, formData)) {
+                setShowStep(showStep + 1);
+                return;
+            }
+        }else if(showStep === 3){
+            if (validateFields(["businessName", "category", "shortBio", "businessType"], true, formData)) {
+                setShowStep(showStep + 1);
+                return;
+            }
+        }else if (showStep >= 3){
             await handleSignup();
-        }else{
-            setShowStep(showStep + 1)
         }
     }
 
